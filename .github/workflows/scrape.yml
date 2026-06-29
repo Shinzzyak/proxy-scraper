@@ -1,0 +1,62 @@
+name: Scrape Proxies
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [main]
+    paths:
+      - 'scraper.py'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run scraper
+        run: |
+          python3 scraper.py -o proxies.txt --validate --max-validate 300
+
+      - name: Count proxies
+        run: |
+          COUNT=$(wc -l < proxies.txt)
+          echo "Proxies found: $COUNT"
+          if [ "$COUNT" -lt 10 ]; then
+            echo "⚠️ Low proxy count: $COUNT"
+          fi
+
+      - name: Commit results
+        run: |
+          git config user.name "proxy-scraper[bot]"
+          git config user.email "proxy-scraper[bot]@users.noreply.github.com"
+          git add proxies.txt
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+            COUNT=$(wc -l < proxies.txt)
+            git commit -m "🔄 update proxies: $COUNT alive [${TIMESTAMP}]"
+            git push
+          fi
+
+      - name: Summary
+        run: |
+          echo "## Proxy Scraper Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total proxies:** $(wc -l < proxies.txt)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Sample (first 20)" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          head -20 proxies.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
