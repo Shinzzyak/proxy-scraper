@@ -15,7 +15,7 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -28,7 +28,7 @@ jobs:
 
       - name: Run scraper
         run: |
-          python3 scraper.py -o proxies.txt --validate --max-validate 300
+          python3 scraper.py -o proxies.txt --validate --max-validate 500
 
       - name: Count proxies
         run: |

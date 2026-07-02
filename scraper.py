@@ -15,55 +15,157 @@ from typing import List, Set
 # ── Sources (25+) ──────────────────────────────────────────────────────
 
 PROXY_SOURCES = [
-    # monosans
+    # ── ORGANIC COLLECTION (30 repos) ──
+    # Tiievii
+    ("tiievii-http", "https://raw.githubusercontent.com/Tiievii/proxy-list/main/http.txt", "host:port"),
+    ("tiievii-socks4", "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks4.txt", "host:port"),
+    ("tiievii-socks5", "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks5.txt", "host:port"),
+    # prxylist
+    ("prxylist-http", "https://raw.githubusercontent.com/prxylist/ProxyLists/main/http.txt", "host:port"),
+    ("prxylist-socks4", "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks4.txt", "host:port"),
+    ("prxylist-socks5", "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks5.txt", "host:port"),
+    # ShiftyTrash
+    ("shiftytrash-http", "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/http.txt", "host:port"),
+    ("shiftytrash-socks4", "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/socks4.txt", "host:port"),
+    ("shiftytrash-socks5", "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/socks5.txt", "host:port"),
+    # ImKK666
+    ("imkk-http", "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/http.txt", "host:port"),
+    ("imkk-socks4", "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks4.txt", "host:port"),
+    ("imkk-socks5", "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks5.txt", "host:port"),
+    # mertguvencli
+    ("mertguvencli-http", "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/http.txt", "host:port"),
+    ("mertguvencli-socks4", "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks4.txt", "host:port"),
+    ("mertguvencli-socks5", "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks5.txt", "host:port"),
+    # Kalemulti
+    ("kalemulti-http", "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/http.txt", "host:port"),
+    ("kalemulti-socks4", "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks4.txt", "host:port"),
+    ("kalemulti-socks5", "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks5.txt", "host:port"),
+    # TheBootstrapTutorial
+    ("bootstrap-http", "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/http.txt", "host:port"),
+    ("bootstrap-socks4", "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks4.txt", "host:port"),
+    ("bootstrap-socks5", "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks5.txt", "host:port"),
+    # mksmg
+    ("mksmg-http", "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/http.txt", "host:port"),
+    ("mksmg-socks4", "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks4.txt", "host:port"),
+    ("mksmg-socks5", "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks5.txt", "host:port"),
+    # uzayatsiz
+    ("uzayatsiz-http", "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/http.txt", "host:port"),
+    ("uzayatsiz-socks4", "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/socks4.txt", "host:port"),
+    ("uzayatsiz-socks5", "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/socks5.txt", "host:port"),
+    # vvmd
+    ("vvmd-http", "https://raw.githubusercontent.com/vvmd/ProxyList/main/http.txt", "host:port"),
+    ("vvmd-socks4", "https://raw.githubusercontent.com/vvmd/ProxyList/main/socks4.txt", "host:port"),
+    ("vvmd-socks5", "https://raw.githubusercontent.com/vvmd/ProxyList/main/socks5.txt", "host:port"),
+    # Defacto2
+    ("defacto2-http", "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/http.txt", "host:port"),
+    ("defacto2-socks4", "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/socks4.txt", "host:port"),
+    ("defacto2-socks5", "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/socks5.txt", "host:port"),
+    # Jacobbin
+    ("jacobbin-http", "https://raw.githubusercontent.com/Jacobbin/Proxy-List/refs/heads/main/http.txt", "host:port"),
+    ("jacobbin-socks4", "https://raw.githubusercontent.com/Jacobbin/Proxy-List/refs/heads/main/socks4.txt", "host:port"),
+    ("jacobbin-socks5", "https://raw.githubusercontent.com/Jacobbin/Proxy-List/refs/heads/main/socks5.txt", "host:port"),
+    # Mahdi-Zarei
+    ("mahdizarei-http", "https://raw.githubusercontent.com/Mahdi-Zarei/Free-Proxies/refs/heads/main/http.txt", "host:port"),
+    ("mahdizarei-socks4", "https://raw.githubusercontent.com/Mahdi-Zarei/Free-Proxies/refs/heads/main/socks4.txt", "host:port"),
+    ("mahdizarei-socks5", "https://raw.githubusercontent.com/Mahdi-Zarei/Free-Proxies/refs/heads/main/socks5.txt", "host:port"),
+    # UptimerBot
+    ("uptimer-http", "https://raw.githubusercontent.com/UptimerBot/proxy-list/refs/heads/main/http.txt", "host:port"),
+    ("uptimer-socks4", "https://raw.githubusercontent.com/UptimerBot/proxy-list/refs/heads/main/socks4.txt", "host:port"),
+    ("uptimer-socks5", "https://raw.githubusercontent.com/UptimerBot/proxy-list/refs/heads/main/socks5.txt", "host:port"),
+    # ByteBlitz
+    ("byteblitz-http", "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/refs/heads/main/http.txt", "host:port"),
+    ("byteblitz-socks4", "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/refs/heads/main/socks4.txt", "host:port"),
+    ("byteblitz-socks5", "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/refs/heads/main/socks5.txt", "host:port"),
+    # mermald
+    ("mermald-http", "https://raw.githubusercontent.com/mermald/proxy/refs/heads/main/http.txt", "host:port"),
+    ("mermald-socks4", "https://raw.githubusercontent.com/mermald/proxy/refs/heads/main/socks4.txt", "host:port"),
+    ("mermald-socks5", "https://raw.githubusercontent.com/mermald/proxy/refs/heads/main/socks5.txt", "host:port"),
+    # Anongrp
+    ("anongrp-http", "https://raw.githubusercontent.com/Anongrp/Free-Proxy-List/refs/heads/main/http.txt", "host:port"),
+    ("anongrp-socks4", "https://raw.githubusercontent.com/Anongrp/Free-Proxy-List/refs/heads/main/socks4.txt", "host:port"),
+    ("anongrp-socks5", "https://raw.githubusercontent.com/Anongrp/Free-Proxy-List/refs/heads/main/socks5.txt", "host:port"),
+    # sgbviper
+    ("sgbviper-http", "https://raw.githubusercontent.com/sgbviper/Proxy-List/refs/heads/main/http.txt", "host:port"),
+    ("sgbviper-socks4", "https://raw.githubusercontent.com/sgbviper/Proxy-List/refs/heads/main/socks4.txt", "host:port"),
+    ("sgbviper-socks5", "https://raw.githubusercontent.com/sgbviper/Proxy-List/refs/heads/main/socks5.txt", "host:port"),
+    # vlfedr
+    ("vlfedr-http", "https://raw.githubusercontent.com/vlfedr/proxy-list/main/http.txt", "host:port"),
+    ("vlfedr-socks5", "https://raw.githubusercontent.com/vlfedr/proxy-list/main/socks5.txt", "host:port"),
+    # ── CLASSIC HEAVY HITTERS ──
+    # Monosans
     ("monosans-http", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", "host:port"),
+    ("monosans-socks4", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks4.txt", "host:port"),
     ("monosans-socks5", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt", "host:port"),
     # mmpx12
     ("mmpx12-http", "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt", "host:port"),
     ("mmpx12-https", "https://raw.githubusercontent.com/mmpx12/proxy-list/master/https.txt", "host:port"),
+    ("mmpx12-socks5", "https://raw.githubusercontent.com/mmpx12/proxy-list/master/socks5.txt", "host:port"),
     # hookzof
     ("hookzof-socks5", "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "host:port"),
     # roosterkid
-    ("roosterkid", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTP_RAW.txt", "host:port"),
+    ("roosterkid-http", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTP_RAW.txt", "host:port"),
+    ("roosterkid-socks4", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt", "host:port"),
+    ("roosterkid-socks5", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt", "host:port"),
     # proxyscrape
     ("proxyscrape-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&timeout=10000", "host:port"),
+    ("proxyscrape-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&timeout=10000", "host:port"),
     ("proxyscrape-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&timeout=10000", "host:port"),
-    # free-proxy-list
-    ("free-proxy-list-http", "https://www.proxy-list.download/api/v1/get?type=http", "host:port"),
-    ("free-proxy-list-https", "https://www.proxy-list.download/api/v1/get?type=https", "host:port"),
-    # openproxy
+    # free-proxy-list.download
+    ("fpl-http", "https://www.proxy-list.download/api/v1/get?type=http", "host:port"),
+    ("fpl-https", "https://www.proxy-list.download/api/v1/get?type=https", "host:port"),
+    ("fpl-socks4", "https://www.proxy-list.download/api/v1/get?type=socks4", "host:port"),
+    ("fpl-socks5", "https://www.proxy-list.download/api/v1/get?type=socks5", "host:port"),
+    # openproxylist.xyz
     ("openproxy-http", "https://openproxylist.xyz/http.txt", "host:port"),
+    ("openproxy-socks4", "https://openproxylist.xyz/socks4.txt", "host:port"),
+    ("openproxy-socks5", "https://openproxylist.xyz/socks5.txt", "host:port"),
     # komutan234
     ("komutan234-http", "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/http.txt", "host:port"),
     ("komutan234-socks4", "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/socks4.txt", "host:port"),
+    ("komutan234-socks5", "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/socks5.txt", "host:port"),
     # VPSLabCloud
     ("vpslab-http", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_anonymous.txt", "host:port"),
     ("vpslab-ssl", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/all_ssl.txt", "host:port"),
     # databay-labs
     ("databay-http", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/main/http.txt", "host:port"),
     ("databay-socks4", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/main/socks4.txt", "host:port"),
+    ("databay-socks5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/main/socks5.txt", "host:port"),
     # gfpcom
     ("gfpcom-http", "https://raw.githubusercontent.com/gfpcom/free-proxy-list/main/http.txt", "host:port"),
     ("gfpcom-socks5", "https://raw.githubusercontent.com/gfpcom/free-proxy-list/main/socks5.txt", "host:port"),
     # proxy4parsing
     ("proxy4parsing-http", "https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/http.txt", "host:port"),
-    # officialputuid
-    ("officialputuid-socks5", "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy-SOCKS5/socks5.txt", "host:port"),
+    # officialputuid KangProxy
+    ("kangproxy-http", "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy-RAW/http/http.txt", "host:port"),
+    ("kangproxy-socks4", "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy-RAW/socks4/socks4.txt", "host:port"),
+    ("kangproxy-socks5", "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy-RAW/socks5/socks5.txt", "host:port"),
+    ("kangproxy-https", "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy-RAW/https/https.txt", "host:port"),
+    # Nsttt
+    ("nsttt-socks5", "https://raw.githubusercontent.com/Nsttt/SOCKS5-proxy-list/main/proxy-list.txt", "host:port"),
     # TheSpeedX
     ("thespeedx-http", "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt", "host:port"),
     ("thespeedx-socks5", "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", "host:port"),
     # clarketm
     ("clarketm-http", "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", "host:port"),
+    ("clarketm-socks4", "https://raw.githubusercontent.com/clarketm/proxy-list/master/socks4-list-raw.txt", "host:port"),
+    ("clarketm-socks5", "https://raw.githubusercontent.com/clarketm/proxy-list/master/socks5-list-raw.txt", "host:port"),
     # Sunny9577
     ("sunny-http", "https://raw.githubusercontent.com/Sunny9577/proxy-list/master/generated/http.txt", "host:port"),
+    ("sunny-socks4", "https://raw.githubusercontent.com/Sunny9577/proxy-list/master/generated/socks4.txt", "host:port"),
+    ("sunny-socks5", "https://raw.githubusercontent.com/Sunny9577/proxy-list/master/generated/socks5.txt", "host:port"),
     # zjev
     ("zjev-http", "https://raw.githubusercontent.com/zjev/proxy-list/main/http.txt", "host:port"),
+    ("zjev-socks5", "https://raw.githubusercontent.com/zjev/proxy-list/main/socks5.txt", "host:port"),
     # ermaozi
     ("ermaozi-http", "https://raw.githubusercontent.com/ermaozi/get_proxy/main/alive_proxy.txt", "host:port"),
     # tsayen
     ("tsayen-http", "https://raw.githubusercontent.com/tsayen/proxy-list/refs/heads/master/http.txt", "host:port"),
     # hawspider
     ("hawspider-http", "https://raw.githubusercontent.com/hawspider/Proxy-List/refs/heads/main/http.txt", "host:port"),
+    # jetkai
+    ("jetkai-http", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt", "host:port"),
+    ("jetkai-socks4", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks4.txt", "host:port"),
+    ("jetkai-socks5", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks5.txt", "host:port"),
 ]
 
 # ── Helpers ────────────────────────────────────────────────────────────
