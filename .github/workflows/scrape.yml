@@ -9,6 +9,9 @@ on:
     paths:
       - 'scraper.py'
 
+permissions:
+  contents: write
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
