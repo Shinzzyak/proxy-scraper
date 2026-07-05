@@ -28,7 +28,7 @@ jobs:
 
       - name: Run scraper
         run: |
-          python3 scraper.py -o proxies.txt --validate --max-validate 500
+          python3 scraper.py -o proxies.txt --validate --max-validate 500 --discover
 
       - name: Count proxies
         run: |

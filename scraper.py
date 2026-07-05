@@ -207,6 +207,7 @@ HEADERS = {
 }
 PROXY_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})")
 CRED_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})\s*[:\s]\s*(\S+)\s*[:\s]\s*(\S+)")
+URL_CREDS_RE = re.compile(r"https?://([^:]+):([^@]+)@(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})")
 
 
 # ── Helpers ────────────────────────────────────────────────────────────
@@ -250,6 +251,12 @@ def extract_creds(text):
         line = line.strip()
         if not line or line.startswith(("#", "//")):
             continue
+        # Format 1: http://user:pass@ip:port
+        um = URL_CREDS_RE.search(line)
+        if um and int(um.group(4)) <= 65535:
+            creds.append(f"{um.group(3)}:{um.group(4)}:{um.group(1)}:{um.group(2)}")
+            continue
+        # Format 2: ip:port:user:pass
         cm = CRED_RE.search(line)
         if cm and int(cm.group(2)) <= 65535:
             creds.append(f"{cm.group(1)}:{cm.group(2)}:{cm.group(3)}:{cm.group(4)}")
