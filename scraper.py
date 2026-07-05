@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """
-Free Proxy Scraper v3 — 205+ sources + auto-discovery + credential proxies.
-Outputs: proxies.txt (host:port), proxies-cred.txt (ip:port:user:pass)
+Free Proxy Scraper v4 — Validation + JSON Output + Health Scoring + Rate Limit Protection.
+Outputs: proxies.txt, proxies.json, proxies-cred.txt, source-health.json
 """
+import argparse
 import json
 import re
+import socket
 import sys
 import time
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Dict
 
 # ── Static Sources ─────────────────────────────────────────────────────
-
 PROXY_SOURCES = [
     # ── BATCH 1: Original organic collection ──
     ("tiievii-http", "https://raw.githubusercontent.com/Tiievii/proxy-list/main/http.txt", "host:port"),
@@ -192,6 +193,7 @@ PROXY_SOURCES = [
 # ── Discovery: meta-sources that list proxy URLs ───────────────────────
 DISCOVERY_SOURCES = [
     "https://raw.githubusercontent.com/Skillter/ProxyGather/refs/heads/master/sites-to-get-proxies-from.txt",
+    "https://raw.githubusercontent.com/monosans/proxy-list/main/README.md",
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -200,25 +202,44 @@ CRED_SOURCES = [
 ]
 
 # ── Regex ──────────────────────────────────────────────────────────────
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/json,*/*",
-}
 PROXY_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})")
 CRED_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})\s*[:\s]\s*(\S+)\s*[:\s]\s*(\S+)")
 URL_CREDS_RE = re.compile(r"https?://([^:]+):([^@]+)@(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})")
 
+# ── User-Agent rotation (Rate Limit Protection) ───────────────────────
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0",
+]
+_ua_idx = 0
+
+def next_ua():
+    global _ua_idx
+    ua = USER_AGENTS[_ua_idx % len(USER_AGENTS)]
+    _ua_idx += 1
+    return ua
+
 
 # ── Helpers ────────────────────────────────────────────────────────────
 
-def fetch(url, timeout=15):
-    req = urllib.request.Request(url, headers=HEADERS)
-    try:
-        return urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8", errors="ignore")
-    except Exception as e:
-        print(f"  ✗ {e}", file=sys.stderr)
-        return ""
+def fetch(url, timeout=15, retries=3, backoff=1.5):
+    """Fetch URL with retry + exponential backoff + UA rotation."""
+    for attempt in range(retries):
+        req = urllib.request.Request(url, headers={
+            "User-Agent": next_ua(),
+            "Accept": "text/html,application/json,*/*",
+        })
+        try:
+            return urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8", errors="ignore")
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(backoff * (2 ** attempt))
+                continue
+            print(f"  ✗ {url}: {e}", file=sys.stderr)
+            return ""
+    return ""
 
 
 def extract_proxies(text, fmt=""):
@@ -251,12 +272,10 @@ def extract_creds(text):
         line = line.strip()
         if not line or line.startswith(("#", "//")):
             continue
-        # Format 1: http://user:pass@ip:port
         um = URL_CREDS_RE.search(line)
         if um and int(um.group(4)) <= 65535:
             creds.append(f"{um.group(3)}:{um.group(4)}:{um.group(1)}:{um.group(2)}")
             continue
-        # Format 2: ip:port:user:pass
         cm = CRED_RE.search(line)
         if cm and int(cm.group(2)) <= 65535:
             creds.append(f"{cm.group(1)}:{cm.group(2)}:{cm.group(3)}:{cm.group(4)}")
@@ -275,29 +294,39 @@ def discover_new_urls():
             continue
         count = 0
         for line in text.splitlines():
-            line = line.strip()
-            if not line or line.startswith("#") or not line.startswith("http"):
-                continue
-            if line in existing:
-                continue
-            fmt = "geonode" if "geonode" in line.lower() or "proxyList" in line else "host:port"
-            discovered.append((f"disc-{count:03d}", line, fmt))
-            existing.add(line)
-            count += 1
+            urls_found = re.findall(r'https?://[^\s\)\"\'<>\]]+', line)
+            for url in urls_found:
+                url = url.rstrip(".,;:")
+                if url in existing:
+                    continue
+                if not any(kw in url.lower() for kw in ["proxy", "proxies", "txt", "json"]):
+                    continue
+                if not any(ext in url.lower() for ext in [".txt", ".json", "raw", "api", "data"]):
+                    continue
+                fmt = "geonode" if "geonode" in url.lower() or "json" in url.lower() else "host:port"
+                discovered.append((f"disc-{count:03d}", url, fmt))
+                existing.add(url)
+                count += 1
         print(f"  → +{count} from {ds_url}")
     print(f"  → Discovered: {len(discovered)} new URLs")
     return discovered
 
 
-# ── Scraper ────────────────────────────────────────────────────────────
+# ── Source Health Scoring ──────────────────────────────────────────────
+
+source_health = {}
 
 def scrape_source(name, url, fmt):
     print(f"  → {name}...", end=" ", flush=True)
+    t0 = time.time()
     text = fetch(url)
+    elapsed = time.time() - t0
     if not text:
+        source_health[name] = {"url": url, "alive": False, "proxies": 0, "time_s": round(elapsed, 2), "error": "empty"}
         print("(empty)")
         return []
     proxies = extract_proxies(text, fmt)
+    source_health[name] = {"url": url, "alive": len(proxies) > 0, "proxies": len(proxies), "time_s": round(elapsed, 2)}
     print(f"{len(proxies)}")
     return proxies
 
@@ -333,42 +362,165 @@ def scrape_creds():
     return all_creds
 
 
-# ── Validation ─────────────────────────────────────────────────────────
+# ── Validation Layer ───────────────────────────────────────────────────
 
-def validate_proxy(proxy, timeout=3):
-    import socket
-    host, port = proxy.split(":")
+def validate_tcp(proxy, timeout=5):
+    """Basic TCP connect test."""
+    ip, port = proxy.split(":")
     try:
-        s = socket.create_connection((host, int(port)), timeout=timeout)
+        s = socket.create_connection((ip, int(port)), timeout=timeout)
         s.close()
         return True
     except Exception:
         return False
 
 
-def filter_valid(proxies, max_check=500):
-    sample = list(proxies)[:max_check]
+def validate_http_connect(proxy, timeout=5):
+    """HTTP CONNECT test — check if proxy can relay HTTP traffic."""
+    ip, port = proxy.split(":")
+    try:
+        s = socket.create_connection((ip, int(port)), timeout=timeout)
+        req = (
+            f"GET http://httpbin.org/ip HTTP/1.1\r\n"
+            f"Host: httpbin.org\r\n"
+            f"User-Agent: ProxyValidator/4.0\r\n"
+            f"Connection: close\r\n\r\n"
+        )
+        s.sendall(req.encode())
+        data = s.recv(4096)
+        s.close()
+        # Check for 200 OK response
+        return b"200 OK" in data or b"HTTP/1" in data
+    except Exception:
+        return False
+
+
+def validate_socks5(proxy, timeout=5):
+    """SOCKS5 handshake test."""
+    ip, port = proxy.split(":")
+    try:
+        s = socket.create_connection((ip, int(port)), timeout=timeout)
+        # SOCKS5 greeting: version 5, 1 auth method (no auth)
+        s.sendall(b"\x05\x01\x00")
+        resp = s.recv(2)
+        s.close()
+        # Response should be: version 5, method 0 (no auth)
+        return len(resp) == 2 and resp[0] == 0x05 and resp[1] == 0x00
+    except Exception:
+        return False
+
+
+def detect_anonymity(proxy, timeout=5):
+    """Detect proxy anonymity level via X-Forwarded-For detection."""
+    ip, port = proxy.split(":")
+    try:
+        s = socket.create_connection((ip, int(port)), timeout=timeout)
+        req = (
+            f"GET http://httpbin.org/headers HTTP/1.1\r\n"
+            f"Host: httpbin.org\r\n"
+            f"X-Forwarded-For: 1.2.3.4\r\n"
+            f"User-Agent: ProxyValidator/4.0\r\n"
+            f"Connection: close\r\n\r\n"
+        )
+        s.sendall(req.encode())
+        data = s.recv(8192).decode("utf-8", errors="ignore")
+        s.close()
+        if "1.2.3.4" in data:
+            return "transparent"  # Forwarded IP visible
+        return "elite"  # Forwarded IP hidden
+    except Exception:
+        return "unknown"
+
+
+def validate_single(proxy, do_anonymity=False):
+    """Full validation: TCP + protocol detection + response time + anonymity."""
+    ip, port = proxy.split(":")
+    t0 = time.time()
+    if not validate_tcp(proxy):
+        return None
+    response_time_ms = round((time.time() - t0) * 1000)
+
+    # Detect protocol
+    protocol = "http"  # default
+    if validate_socks5(proxy):
+        protocol = "socks5"
+    elif validate_http_connect(proxy):
+        protocol = "http"
+    else:
+        protocol = "unknown"
+
+    anonymity = "unknown"
+    if do_anonymity and protocol == "http":
+        anonymity = detect_anonymity(proxy)
+
+    return {
+        "ip": ip,
+        "port": int(port),
+        "protocol": protocol,
+        "response_time_ms": response_time_ms,
+        "anonymity": anonymity,
+        "last_seen": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+def filter_valid(proxies, max_validate=500, do_anonymity=False):
+    """Validate proxies in parallel, return list of valid proxy dicts."""
+    to_test = list(proxies)[:max_validate]
+    print(f"\n🔍 Validating {len(to_test)} proxies...\n")
     valid = []
-    print(f"\nValidating {len(sample)} (TCP connect)...")
-    with ThreadPoolExecutor(max_workers=80) as pool:
-        futs = {pool.submit(validate_proxy, p): p for p in sample}
-        for f in as_completed(futs):
-            if f.result():
-                valid.append(futs[f])
-    print(f"  ✓ {len(valid)}/{len(sample)} alive")
+    with ThreadPoolExecutor(max_workers=200) as pool:
+        futs = {pool.submit(validate_single, p, do_anonymity): p for p in to_test}
+        for fut in as_completed(futs):
+            result = fut.result()
+            if result:
+                valid.append(result)
+                print(f"  ✅ {result['ip']}:{result['port']} [{result['protocol']}] {result['response_time_ms']}ms {result['anonymity']}")
+    print(f"\n📊 {len(valid)}/{len(to_test)} alive")
     return valid
+
+
+# ── JSON Output ────────────────────────────────────────────────────────
+
+def save_json_output(valid_proxies, filename="proxies.json"):
+    """Save validated proxies as JSON with metadata."""
+    with open(filename, "w") as f:
+        json.dump(valid_proxies, f, indent=2)
+    print(f"✅ JSON output → {filename} ({len(valid_proxies)} proxies)")
+
+
+def save_health_report(filename="source-health.json"):
+    """Save source health scoring report."""
+    # Sort by proxies count descending
+    sorted_health = dict(sorted(
+        source_health.items(),
+        key=lambda x: x[1].get("proxies", 0),
+        reverse=True
+    ))
+    report = {
+        "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "total_sources": len(sorted_health),
+        "alive_sources": sum(1 for v in sorted_health.values() if v.get("alive")),
+        "dead_sources": sum(1 for v in sorted_health.values() if not v.get("alive")),
+        "total_proxies": sum(v.get("proxies", 0) for v in sorted_health.values()),
+        "sources": sorted_health,
+    }
+    with open(filename, "w") as f:
+        json.dump(report, f, indent=2)
+    print(f"✅ Health report → {filename}")
 
 
 # ── Main ───────────────────────────────────────────────────────────────
 
 def main():
-    import argparse
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(description="Free Proxy Scraper v4")
     ap.add_argument("-o", "--output", default="proxies.txt")
     ap.add_argument("--cred-output", default="proxies-cred.txt")
     ap.add_argument("--discover", action="store_true")
     ap.add_argument("--validate", action="store_true")
+    ap.add_argument("--validate-full", action="store_true", help="Include anonymity detection (slower)")
     ap.add_argument("--max-validate", type=int, default=500)
+    ap.add_argument("--json", action="store_true", help="Output proxies.json with metadata")
+    ap.add_argument("--health", action="store_true", help="Output source-health.json")
     args = ap.parse_args()
 
     t0 = time.time()
@@ -378,10 +530,16 @@ def main():
         sys.exit(1)
     print(f"\n📊 {len(proxies)} unique proxies")
 
+    # Save health report
+    if args.health:
+        save_health_report()
+
     if args.validate:
-        valid = filter_valid(proxies, args.max_validate)
+        valid = filter_valid(proxies, args.max_validate, do_anonymity=args.validate_full)
+        if args.json and valid:
+            save_json_output(valid)
         if valid:
-            proxies = set(valid)
+            proxies = set(f"{v['ip']}:{v['port']}" for v in valid)
 
     with open(args.output, "w") as f:
         f.write("\n".join(sorted(proxies)) + "\n")

@@ -28,7 +28,7 @@ jobs:
 
       - name: Run scraper
         run: |
-          python3 scraper.py -o proxies.txt --validate --max-validate 500 --discover
+          python3 scraper.py -o proxies.txt --validate --max-validate 500 --discover --health --json
 
       - name: Count proxies
         run: |
@@ -42,7 +42,7 @@ jobs:
         run: |
           git config user.name "proxy-scraper[bot]"
           git config user.email "proxy-scraper[bot]@users.noreply.github.com"
-          git add proxies.txt
+          git add proxies.txt proxies.json source-health.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
@@ -59,6 +59,21 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Total proxies:** $(wc -l < proxies.txt)" >> $GITHUB_STEP_SUMMARY
           echo "- **Timestamp:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f source-health.json ]; then
+            echo "### Source Health" >> $GITHUB_STEP_SUMMARY
+            python3 -c "
+          import json
+          d=json.load(open('source-health.json'))
+          print(f'- **Sources:** {d[\"total_sources\"]} total, {d[\"alive_sources\"]} alive, {d[\"dead_sources\"]} dead')
+          print(f'- **Raw proxies:** {d[\"total_proxies\"]}')
+          alive = [(k,v) for k,v in d['sources'].items() if v.get('alive')]
+          print()
+          print('**Top 5 sources:**')
+          for k,v in alive[:5]:
+              print(f'  - {k}: {v[\"proxies\"]} proxies')
+          " >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Sample (first 20)" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
