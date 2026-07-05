@@ -502,6 +502,66 @@ def validate_single(proxy, do_anonymity=False):
     }
 
 
+# ── Geolocation (batch) ───────────────────────────────────────────────
+
+def geo_batch_lookup(ips, batch_size=100, timeout=10):
+    """Batch geolocation via ip-api.com. Returns {ip: {country, countryCode, city, isp}}."""
+    geo = {}
+    ip_list = list(set(ips))[:2000]  # cap at 2000
+    for i in range(0, len(ip_list), batch_size):
+        batch = ip_list[i:i+batch_size]
+        try:
+            req = urllib.request.Request(
+                "http://ip-api.com/batch",
+                data=json.dumps([{"query": ip, "fields": "country,countryCode,city,isp"} for ip in batch]).encode(),
+                headers={"Content-Type": "application/json", "User-Agent": "ProxyScraper/5.0"},
+                method="POST",
+            )
+            resp = urllib.request.urlopen(req, timeout=timeout)
+            results = json.loads(resp.read().decode())
+            for r in results:
+                if r.get("status") == "success":
+                    geo[r["query"]] = {
+                        "country": r.get("country", ""),
+                        "country_code": r.get("countryCode", ""),
+                        "city": r.get("city", ""),
+                        "isp": r.get("isp", ""),
+                    }
+        except Exception as e:
+            print(f"  ⚠ geo batch failed: {e}", file=sys.stderr)
+            continue
+        time.sleep(0.5)  # respect 45 req/min limit
+    return geo
+
+
+# ── Proxy Scoring ─────────────────────────────────────────────────────
+
+def compute_score(proxy_dict):
+    """Composite score 0-100 based on response time, anonymity, protocol."""
+    # Speed score (40% weight)
+    rt = proxy_dict.get("response_time_ms", 9999)
+    if rt < 500: speed = 10
+    elif rt < 1000: speed = 8
+    elif rt < 2000: speed = 6
+    elif rt < 5000: speed = 4
+    else: speed = 2
+
+    # Anonymity score (30% weight)
+    anon = proxy_dict.get("anonymity", "unknown")
+    if anon == "elite": anonymity = 10
+    elif anon == "transparent": anonymity = 4
+    else: anonymity = 3
+
+    # Protocol score (30% weight)
+    proto = proxy_dict.get("protocol", "unknown")
+    if proto == "socks5": protocol = 10
+    elif proto == "http": protocol = 8
+    else: protocol = 3
+
+    score = round(speed * 4 + anonymity * 3 + protocol * 3)  # 0-100
+    return score
+
+
 def filter_valid(proxies, max_validate=500, do_anonymity=False):
     """Validate proxies in parallel, return list of valid proxy dicts."""
     to_test = list(proxies)[:max_validate]
@@ -515,6 +575,24 @@ def filter_valid(proxies, max_validate=500, do_anonymity=False):
                 valid.append(result)
                 print(f"  ✅ {result['ip']}:{result['port']} [{result['protocol']}] {result['response_time_ms']}ms {result['anonymity']}")
     print(f"\n📊 {len(valid)}/{len(to_test)} alive")
+
+    # Geolocation
+    print(f"\n🌍 Looking up geolocation for {len(valid)} proxies...")
+    ips = [p["ip"] for p in valid]
+    geo = geo_batch_lookup(ips)
+    for p in valid:
+        g = geo.get(p["ip"], {})
+        p["country"] = g.get("country", "")
+        p["country_code"] = g.get("country_code", "")
+        p["city"] = g.get("city", "")
+        p["isp"] = g.get("isp", "")
+
+    # Scoring
+    for p in valid:
+        p["score"] = compute_score(p)
+
+    # Sort by score descending
+    valid.sort(key=lambda x: x.get("score", 0), reverse=True)
     return valid
 
 
@@ -525,6 +603,48 @@ def save_json_output(valid_proxies, filename="proxies.json"):
     with open(filename, "w") as f:
         json.dump(valid_proxies, f, indent=2)
     print(f"✅ JSON output → {filename} ({len(valid_proxies)} proxies)")
+
+
+def save_grouped_output(valid_proxies):
+    """Save grouped outputs: by country, by protocol."""
+    # By country
+    by_country = {}
+    for p in valid_proxies:
+        cc = p.get("country_code", "XX") or "XX"
+        by_country.setdefault(cc, []).append(p)
+    by_country = {k: sorted(v, key=lambda x: x.get("score", 0), reverse=True) for k, v in sorted(by_country.items())}
+    with open("proxies-by-country.json", "w") as f:
+        json.dump(by_country, f, indent=2)
+    print(f"✅ By country → proxies-by-country.json ({len(by_country)} countries)")
+
+    # By protocol
+    by_protocol = {}
+    for p in valid_proxies:
+        proto = p.get("protocol", "unknown")
+        by_protocol.setdefault(proto, []).append(p)
+    by_protocol = {k: sorted(v, key=lambda x: x.get("score", 0), reverse=True) for k, v in sorted(by_protocol.items())}
+    with open("proxies-by-protocol.json", "w") as f:
+        json.dump(by_protocol, f, indent=2)
+    print(f"✅ By protocol → proxies-by-protocol.json ({', '.join(f'{k}:{len(v)}' for k,v in by_protocol.items())})")
+
+    # Stats summary
+    stats = {
+        "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "total": len(valid_proxies),
+        "by_country": {k: len(v) for k, v in by_country.items()},
+        "by_protocol": {k: len(v) for k, v in by_protocol.items()},
+        "by_anonymity": {},
+        "score_distribution": {},
+        "avg_response_time_ms": round(sum(p.get("response_time_ms", 0) for p in valid_proxies) / max(len(valid_proxies), 1)),
+    }
+    for p in valid_proxies:
+        a = p.get("anonymity", "unknown")
+        stats["by_anonymity"][a] = stats["by_anonymity"].get(a, 0) + 1
+        s = str(p.get("score", 0) // 10 * 10)  # bucket by 10
+        stats["score_distribution"][f"{s}-{int(s)+9}"] = stats["score_distribution"].get(f"{s}-{int(s)+9}", 0) + 1
+    with open("proxies-stats.json", "w") as f:
+        json.dump(stats, f, indent=2)
+    print(f"✅ Stats → proxies-stats.json")
 
 
 def save_health_report(filename="source-health.json"):
@@ -559,6 +679,7 @@ def main():
     ap.add_argument("--validate-full", action="store_true", help="Include anonymity detection (slower)")
     ap.add_argument("--max-validate", type=int, default=500)
     ap.add_argument("--json", action="store_true", help="Output proxies.json with metadata")
+    ap.add_argument("--grouped", action="store_true", help="Output by-country, by-protocol, stats JSON")
     ap.add_argument("--health", action="store_true", help="Output source-health.json")
     ap.add_argument("--relay-url", help="Private Vercel relay base URL (sets PROXY_RELAY_URL)")
     ap.add_argument("--relay-token", help="Private Vercel relay token (sets PROXY_RELAY_TOKEN)")
@@ -587,6 +708,8 @@ def main():
         valid = filter_valid(proxies, args.max_validate, do_anonymity=args.validate_full)
         if args.json and valid:
             save_json_output(valid)
+        if args.grouped and valid:
+            save_grouped_output(valid)
         if valid:
             proxies = set(f"{v['ip']}:{v['port']}" for v in valid)
 

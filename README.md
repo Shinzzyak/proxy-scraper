@@ -1,81 +1,85 @@
-# 🔄 Proxy Scraper
+# 🔄 Proxy Scraper v5
 
-Free proxy scraper with validation, JSON output, source-health scoring, auto-discovery, and optional private Vercel fetch relay.
+Free proxy scraper with validation, scoring, geolocation, and dashboard.
 
 ## Outputs
 
-- `proxies.txt` — validated alive proxies (`host:port`)
-- `proxies.json` — metadata per proxy (`ip`, `port`, `protocol`, `response_time_ms`, `anonymity`, `last_seen`)
-- `source-health.json` — per-source health (`alive`, `proxies`, `time_s`)
-- `proxies-cred.txt` — credential proxies when found (`host:port:user:pass`)
+| File | Description |
+|------|-------------|
+| `proxies.txt` | Validated alive proxies (`host:port`) |
+| `proxies.json` | Metadata per proxy (score, geo, speed, anonymity) |
+| `proxies-by-country.json` | Grouped by country code |
+| `proxies-by-protocol.json` | Grouped by protocol (http/socks5) |
+| `proxies-stats.json` | Summary statistics |
+| `source-health.json` | Per-source health report |
+| `index.html` | Dashboard UI |
+| `proxies-cred.txt` | Credential proxies (when found) |
 
-## Usage
+## Quick Start
 
-### As a dependency
 ```bash
-# Add to your project
-git submodule add https://github.com/Shinzzyak/proxy-scraper.git
+# Full scrape + validate + dashboard
+python3 scraper.py --validate --max-validate 500 --discover --health --json --grouped
 
-# Or just grab the file
+# Just fetch (no validation, fast)
+python3 scraper.py
+
+# With private Vercel relay
+python3 scraper.py --validate --relay-url https://your-relay.vercel.app --relay-token *** --relay-first
+```
+
+## Proxy Scoring (0-100)
+
+| Factor | Weight | Range |
+|--------|--------|-------|
+| Speed | 40% | 2-10 (based on response time) |
+| Anonymity | 30% | 3-10 (elite > transparent > unknown) |
+| Protocol | 30% | 3-10 (socks5 > http > unknown) |
+
+## Dashboard
+
+Open `index.html` in browser. Features:
+- Filter by protocol, country, anonymity
+- Search by IP
+- Sort by score, speed, country
+- Stats overview (total, countries, avg speed)
+
+## As a dependency
+
+```bash
+# Grab the files
 curl -sO https://raw.githubusercontent.com/Shinzzyak/proxy-scraper/main/proxies.txt
 curl -sO https://raw.githubusercontent.com/Shinzzyak/proxy-scraper/main/proxies.json
 ```
 
-### Local run
-```bash
-python3 scraper.py -o proxies.txt --validate --max-validate 500 --discover --health --json
-```
+## GitHub Actions
 
-### Optional: private Vercel fetch relay
+- ⏰ Runs every 3 hours
+- 🔍 Validates (TCP + HTTP CONNECT + SOCKS5 handshake)
+- 🌍 Geolocation lookup
+- 📊 Scoring + grouped output
+- 📝 Auto-commits updated list
+- 🚀 Manual trigger via `workflow_dispatch`
 
-This is **not** a public open proxy. It is a token-gated source fetch relay for scraper reliability when GitHub runner IPs are blocked/rate-limited by some source sites.
+## Private Vercel Relay
 
-Deploy:
+Optional: deploy `api/fetch.js` to Vercel for relay fetching when GitHub IPs are blocked.
+
 ```bash
 vercel --prod
 vercel env add RELAY_TOKEN production
 ```
 
-Run scraper through relay:
-```bash
-export PROXY_RELAY_URL="https://your-project.vercel.app"
-export PROXY_RELAY_TOKEN="your-secret-token"
-python3 scraper.py --validate --max-validate 500 --discover --health --json --relay-first
-```
+Relay features:
+- Token-gated (bearer auth)
+- SSRF protection (blocks private IPs)
+- Timeout + size caps
+- DNS resolution check
 
-Or CLI args:
-```bash
-python3 scraper.py \
-  --validate --max-validate 500 --discover --health --json \
-  --relay-url "https://your-project.vercel.app" \
-  --relay-token "your-secret-token" \
-  --relay-first
-```
+## Sources
 
-Relay safety guardrails:
-- Optional bearer token (`RELAY_TOKEN`)
-- Blocks `localhost`, private IPs, link-local, CGNAT, `.local`
-- DNS resolution checked for private targets (SSRF guard)
-- `http`/`https` only
-- Blocks URL credentials
-- Timeout cap 25s
-- Response size cap 1 MiB by default (`RELAY_MAX_BYTES`)
+170+ GitHub repos + public APIs + auto-discovered sources. Health scoring tracks alive/dead status per source.
 
-## Format
+## License
 
-```txt
-host:port
-host:port:user:pass
-```
-
-## GitHub Actions
-
-- ⏰ Runs every 3 hours via cron
-- 🔍 Validates proxy liveness (TCP + protocol detection)
-- 🧾 Writes `proxies.json` + `source-health.json`
-- 📝 Auto-commits updated list
-- 🚀 Manual trigger via `workflow_dispatch`
-
-## Notes
-
-Authenticated public proxies are rare. Most credential proxies are private provider resources (Bright Data, Oxylabs, Webshare, etc.), so `proxies-cred.txt` is usually empty unless you add a private source.
+Public domain. Use freely.
