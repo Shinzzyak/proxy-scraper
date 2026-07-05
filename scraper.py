@@ -4,11 +4,14 @@ Free Proxy Scraper v4 — Validation + JSON Output + Health Scoring + Rate Limit
 Outputs: proxies.txt, proxies.json, proxies-cred.txt, source-health.json
 """
 import argparse
+import base64
 import json
+import os
 import re
 import socket
 import sys
 import time
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Set, Tuple, Dict
@@ -224,21 +227,57 @@ def next_ua():
 
 # ── Helpers ────────────────────────────────────────────────────────────
 
+def fetch_direct(url, timeout=15):
+    """Direct URL fetch with UA rotation."""
+    req = urllib.request.Request(url, headers={
+        "User-Agent": next_ua(),
+        "Accept": "text/html,application/json,*/*",
+    })
+    return urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8", errors="ignore")
+
+
+def fetch_via_relay(url, timeout=15):
+    """Fetch through a private Vercel relay. Requires PROXY_RELAY_URL (+ optional PROXY_RELAY_TOKEN)."""
+    relay_url = os.getenv("PROXY_RELAY_URL", "").rstrip("/")
+    if not relay_url:
+        return ""
+    token = os.getenv("PROXY_RELAY_TOKEN", "")
+    qs = urllib.parse.urlencode({"url": url, "timeout": str(timeout * 1000)})
+    req = urllib.request.Request(
+        f"{relay_url}/api/fetch?{qs}",
+        headers={
+            "Authorization": f"Bearer {token}" if token else "",
+            "User-Agent": "ProxyScraper/4.1",
+            "Accept": "application/json",
+        },
+    )
+    data = json.loads(urllib.request.urlopen(req, timeout=timeout + 5).read().decode("utf-8", errors="ignore"))
+    if not data.get("ok"):
+        raise RuntimeError(data.get("error", "relay fetch failed"))
+    body = data.get("body", "")
+    if data.get("encoding") == "base64":
+        return base64.b64decode(body).decode("utf-8", errors="ignore")
+    return body
+
+
 def fetch(url, timeout=15, retries=3, backoff=1.5):
-    """Fetch URL with retry + exponential backoff + UA rotation."""
+    """Fetch URL with retry + exponential backoff + UA rotation + optional relay fallback."""
+    prefer_relay = os.getenv("PROXY_RELAY_FIRST", "").lower() in {"1", "true", "yes"}
+    methods = [fetch_via_relay, fetch_direct] if prefer_relay else [fetch_direct, fetch_via_relay]
+    last_err = None
     for attempt in range(retries):
-        req = urllib.request.Request(url, headers={
-            "User-Agent": next_ua(),
-            "Accept": "text/html,application/json,*/*",
-        })
-        try:
-            return urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8", errors="ignore")
-        except Exception as e:
-            if attempt < retries - 1:
-                time.sleep(backoff * (2 ** attempt))
+        for method in methods:
+            try:
+                text = method(url, timeout=timeout)
+                if text:
+                    return text
+            except Exception as e:
+                last_err = e
                 continue
-            print(f"  ✗ {url}: {e}", file=sys.stderr)
-            return ""
+        if attempt < retries - 1:
+            time.sleep(backoff * (2 ** attempt))
+    if last_err:
+        print(f"  ✗ {url}: {last_err}", file=sys.stderr)
     return ""
 
 
@@ -521,7 +560,17 @@ def main():
     ap.add_argument("--max-validate", type=int, default=500)
     ap.add_argument("--json", action="store_true", help="Output proxies.json with metadata")
     ap.add_argument("--health", action="store_true", help="Output source-health.json")
+    ap.add_argument("--relay-url", help="Private Vercel relay base URL (sets PROXY_RELAY_URL)")
+    ap.add_argument("--relay-token", help="Private Vercel relay token (sets PROXY_RELAY_TOKEN)")
+    ap.add_argument("--relay-first", action="store_true", help="Try relay before direct fetch")
     args = ap.parse_args()
+
+    if args.relay_url:
+        os.environ["PROXY_RELAY_URL"] = args.relay_url
+    if args.relay_token:
+        os.environ["PROXY_RELAY_TOKEN"] = args.relay_token
+    if args.relay_first:
+        os.environ["PROXY_RELAY_FIRST"] = "1"
 
     t0 = time.time()
     proxies = scrape_all(discover=args.discover)
