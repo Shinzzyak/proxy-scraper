@@ -24,12 +24,12 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     env:
-      PROXY_VALIDATION_WALL_TIMEOUT: '300'
-      PROXY_SOURCE_MAX_BYTES: '2000000'
-      PROXY_MAX_PROXIES_PER_SOURCE: '15000'
+      PROXY_VALIDATION_WALL_TIMEOUT: '180'
+      PROXY_SOURCE_MAX_BYTES: '1000000'
+      PROXY_MAX_PROXIES_PER_SOURCE: '8000'
       PROXY_DB: data/proxies.db
 
     steps:
@@ -54,7 +54,7 @@ jobs:
           python3 freshen_pool.py \
             --telegram \
             --telegram-pages 3 \
-            --max-validate 1500 \
+            --max-validate 800 \
             --export-max-age-minutes 1440
 
       - name: Count proxies

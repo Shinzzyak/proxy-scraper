@@ -109,11 +109,11 @@ This repo has `.github/workflows/scrape.yml`.
 
 Expected behavior:
 - scheduled refresh
-- bounded validation
+- lighter bounded validation than VPS cron (`max-validate 800`, 180s validation wall timeout)
 - Telegram public preview scraping
 - generated snapshots committed back to `main`
 
-If an external agent depends on GitHub snapshots, prefer reading files from `main` after the Action has run.
+If an external agent depends on GitHub snapshots, prefer reading files from `main` after the Action has run. If the agent needs stronger freshness/quality, rebuild a local DB with the 1500-sample VPS command instead.
 
 ## Quality Rules
 
