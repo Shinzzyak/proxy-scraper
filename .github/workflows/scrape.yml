@@ -24,12 +24,13 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
 
     env:
-      PROXY_VALIDATION_WALL_TIMEOUT: '180'
-      PROXY_SOURCE_MAX_BYTES: '1000000'
-      PROXY_MAX_PROXIES_PER_SOURCE: '8000'
+      # CI is a deterministic snapshot refresh, not the heavy VPS maintenance job.
+      PROXY_VALIDATION_WALL_TIMEOUT: '90'
+      PROXY_SOURCE_MAX_BYTES: '600000'
+      PROXY_MAX_PROXIES_PER_SOURCE: '3000'
       PROXY_DB: data/proxies.db
 
     steps:
@@ -49,19 +50,22 @@ jobs:
       - name: Static syntax check
         run: python3 -m py_compile *.py api/*.py
 
-      - name: Freshen pool and export snapshots
+      - name: Refresh lightweight GitHub snapshot
         run: |
-          python3 freshen_pool.py \
-            --telegram \
-            --telegram-pages 3 \
-            --max-validate 800 \
-            --export-max-age-minutes 1440
+          python3 scraper.py \
+            --validate \
+            --pool \
+            --json \
+            --grouped \
+            --health \
+            --max-validate 300 \
+            -o proxies.txt
 
       - name: Count proxies
         run: |
           COUNT=$(wc -l < proxies.txt)
           echo "Proxies found: $COUNT"
-          if [ "$COUNT" -lt 100 ]; then
+          if [ "$COUNT" -lt 50 ]; then
             echo "⚠️ Low proxy count: $COUNT"
           fi
 
@@ -69,7 +73,7 @@ jobs:
         run: |
           git config user.name "proxy-scraper[bot]"
           git config user.email "proxy-scraper[bot]@users.noreply.github.com"
-          git add proxies.txt proxies.json source-health.json proxies-by-country.json proxies-by-protocol.json proxies-stats.json report-weekly.md data/tg_channels.json
+          git add proxies.txt proxies.json source-health.json proxies-by-country.json proxies-by-protocol.json proxies-stats.json data/tg_channels.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
@@ -90,29 +94,31 @@ jobs:
           if [ -f proxies-stats.json ]; then
             echo "### Stats" >> $GITHUB_STEP_SUMMARY
             python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
-          import json
-          d=json.load(open('proxies-stats.json'))
-          print(f'- **Avg response time:** {d.get("avg_response_time_ms", 0)}ms')
-          print(f'- **Avg score:** {d.get("avg_score", 0)}')
-          print(f'- **Countries:** {len(d.get("by_country", {}))}')
-          print(f'- **Protocols:** {d.get("by_protocol", {})}')
-          print(f'- **Anonymity:** {d.get("by_anonymity", {})}')
-          PY
+import json
+with open('proxies-stats.json') as f:
+    d=json.load(f)
+print(f'- **Avg response time:** {d.get("avg_response_time_ms", 0)}ms')
+print(f'- **Avg score:** {d.get("avg_score", 0)}')
+print(f'- **Countries:** {len(d.get("by_country", {}))}')
+print(f'- **Protocols:** {d.get("by_protocol", {})}')
+print(f'- **Anonymity:** {d.get("by_anonymity", {})}')
+PY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f source-health.json ]; then
             echo "### Source Health" >> $GITHUB_STEP_SUMMARY
             python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
-          import json
-          d=json.load(open('source-health.json'))
-          print(f'- **Sources:** {d["total_sources"]} total, {d["alive_sources"]} alive, {d["dead_sources"]} dead')
-          print(f'- **Raw proxies:** {d["total_proxies"]}')
-          alive = [(k,v) for k,v in d['sources'].items() if v.get('alive')]
-          print()
-          print('**Top 5 sources:**')
-          for k,v in alive[:5]:
-              print(f'  - {k}: {v["proxies"]} proxies')
-          PY
+import json
+with open('source-health.json') as f:
+    d=json.load(f)
+print(f'- **Sources:** {d["total_sources"]} total, {d["alive_sources"]} alive, {d["dead_sources"]} dead')
+print(f'- **Raw proxies:** {d["total_proxies"]}')
+alive = [(k,v) for k,v in d['sources'].items() if v.get('alive')]
+print()
+print('**Top 5 sources:**')
+for k,v in alive[:5]:
+    print(f'  - {k}: {v["proxies"]} proxies')
+PY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Sample (first 20)" >> $GITHUB_STEP_SUMMARY

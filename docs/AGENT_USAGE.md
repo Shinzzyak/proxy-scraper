@@ -109,7 +109,7 @@ This repo has `.github/workflows/scrape.yml`.
 
 Expected behavior:
 - scheduled refresh
-- lighter bounded validation than VPS cron (`max-validate 800`, 180s validation wall timeout)
+- lighter bounded validation than VPS cron (`max-validate 300`, 90s validation wall timeout)
 - Telegram public preview scraping
 - generated snapshots committed back to `main`
 

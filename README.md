@@ -187,7 +187,7 @@ High-signal channels currently configured include:
 
 `.github/workflows/scrape.yml` refreshes snapshots on a schedule/manual dispatch.
 
-The action uses lighter bounded defaults than VPS cron (`max-validate 800`, 180s validation wall timeout) so GitHub snapshot refresh stays deterministic. VPS agents should still use the stronger 1500-sample command above when they need a local live pool.
+The action uses lighter bounded defaults than VPS cron (`max-validate 300`, 90s validation wall timeout) so GitHub snapshot refresh stays deterministic. VPS agents should still use the stronger 1500-sample command above when they need a local live pool.
 
 ## Private Vercel relay
 
