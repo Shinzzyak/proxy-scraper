@@ -93,32 +93,12 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f proxies-stats.json ]; then
             echo "### Stats" >> $GITHUB_STEP_SUMMARY
-            python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
-import json
-with open('proxies-stats.json') as f:
-    d=json.load(f)
-print(f'- **Avg response time:** {d.get("avg_response_time_ms", 0)}ms')
-print(f'- **Avg score:** {d.get("avg_score", 0)}')
-print(f'- **Countries:** {len(d.get("by_country", {}))}')
-print(f'- **Protocols:** {d.get("by_protocol", {})}')
-print(f'- **Anonymity:** {d.get("by_anonymity", {})}')
-PY
+            python3 -c 'import json; d=json.load(open("proxies-stats.json")); print(f"- **Avg response time:** {d.get(\"avg_response_time_ms\", 0)}ms"); print(f"- **Avg score:** {d.get(\"avg_score\", 0)}"); print(f"- **Countries:** {len(d.get(\"by_country\", {}))}"); print(f"- **Protocols:** {d.get(\"by_protocol\", {})}"); print(f"- **Anonymity:** {d.get(\"by_anonymity\", {})}")' >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f source-health.json ]; then
             echo "### Source Health" >> $GITHUB_STEP_SUMMARY
-            python3 - <<'PY' >> $GITHUB_STEP_SUMMARY
-import json
-with open('source-health.json') as f:
-    d=json.load(f)
-print(f'- **Sources:** {d["total_sources"]} total, {d["alive_sources"]} alive, {d["dead_sources"]} dead')
-print(f'- **Raw proxies:** {d["total_proxies"]}')
-alive = [(k,v) for k,v in d['sources'].items() if v.get('alive')]
-print()
-print('**Top 5 sources:**')
-for k,v in alive[:5]:
-    print(f'  - {k}: {v["proxies"]} proxies')
-PY
+            python3 -c 'import json; d=json.load(open("source-health.json")); print(f"- **Sources:** {d[\"total_sources\"]} total, {d[\"alive_sources\"]} alive, {d[\"dead_sources\"]} dead"); print(f"- **Raw proxies:** {d[\"total_proxies\"]}"); alive=[(k,v) for k,v in d["sources"].items() if v.get("alive")]; print(); print("**Top 5 sources:**"); [print(f"  - {k}: {v[\"proxies\"]} proxies") for k,v in alive[:5]]' >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Sample (first 20)" >> $GITHUB_STEP_SUMMARY
