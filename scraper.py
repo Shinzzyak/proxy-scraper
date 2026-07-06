@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Free Proxy Scraper v4 — Validation + JSON Output + Health Scoring + Rate Limit Protection.
-Outputs: proxies.txt, proxies.json, proxies-cred.txt, source-health.json
+Free Proxy Scraper v5 — Validation + JSON + Scoring + Geolocation + Pool + Alerts.
+Outputs: proxies.txt, proxies.json, proxies-cred.txt, source-health.json, pool.json
 """
 import argparse
 import base64
@@ -15,6 +15,16 @@ import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Set, Tuple, Dict
+
+try:
+    from proxy_pool import (
+        upsert_proxy, log_usage, log_source_health, log_scrape_run,
+        get_pool_stats, get_usage_leaderboard, export_pool_json,
+        update_fingerprints, get_best_proxy, get_quality_metrics,
+    )
+    POOL_AVAILABLE = True
+except ImportError:
+    POOL_AVAILABLE = False
 
 # ── Static Sources ─────────────────────────────────────────────────────
 PROXY_SOURCES = [
@@ -697,6 +707,7 @@ def main():
     ap.add_argument("--max-validate", type=int, default=2000)
     ap.add_argument("--json", action="store_true", help="Output proxies.json with metadata")
     ap.add_argument("--grouped", action="store_true", help="Output by-country, by-protocol, stats JSON")
+    ap.add_argument("--pool", action="store_true", help="Update proxy pool database")
     ap.add_argument("--health", action="store_true", help="Output source-health.json")
     ap.add_argument("--relay-url", help="Private Vercel relay base URL (sets PROXY_RELAY_URL)")
     ap.add_argument("--relay-token", help="Private Vercel relay token (sets PROXY_RELAY_TOKEN)")
@@ -727,6 +738,23 @@ def main():
             save_json_output(valid)
         if args.grouped and valid:
             save_grouped_output(valid)
+        if valid and POOL_AVAILABLE:
+            print(f"\n📦 Updating proxy pool...")
+            for p in valid:
+                upsert_proxy(p)
+            update_fingerprints()
+            print(f"✅ Pool updated with {len(valid)} proxies")
+        if POOL_AVAILABLE:
+            for name, health in source_health.items():
+                log_source_health(name, health.get("alive", False), health.get("proxies", 0))
+            log_scrape_run(
+                len(raw), len(valid) if valid else 0,
+                len(source_health),
+                sum(1 for v in source_health.values() if v.get("alive")),
+                time.time() - t0
+            )
+            if valid and len(valid) < 50:
+                print(f"\n⚠️  ALERT: Only {len(valid)} alive proxies (threshold: 50)")
         if valid:
             proxies = set(f"{v['ip']}:{v['port']}" for v in valid)
 

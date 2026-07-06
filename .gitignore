@@ -2,3 +2,4 @@
 __pycache__/
 .env
 proxies_alive.txt
+data/proxies.db

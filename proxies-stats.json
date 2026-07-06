@@ -1,19 +1,23 @@
 {
-  "generated_at": "2026-07-05T21:23:41Z",
-  "total": 7,
+  "generated_at": "2026-07-06T00:23:41Z",
+  "total": 850,
   "by_country": {
-    "XX": 7
+    "XX": 850
   },
   "by_protocol": {
-    "http": 6,
-    "unknown": 1
+    "http": 724,
+    "socks5": 48,
+    "unknown": 78
   },
   "by_anonymity": {
-    "unknown": 7
+    "unknown": 850
   },
   "score_distribution": {
-    "70-79": 6,
-    "50-59": 1
+    "70-79": 762,
+    "60-69": 1,
+    "50-59": 60,
+    "40-49": 10,
+    "30-39": 17
   },
-  "avg_response_time_ms": 34
+  "avg_response_time_ms": 146
 }

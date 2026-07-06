@@ -1,57 +1,75 @@
 {
-  "generated_at": "2026-07-05T21:23:34Z",
-  "total_sources": 169,
-  "alive_sources": 51,
-  "dead_sources": 118,
-  "total_proxies": 271738,
+  "generated_at": "2026-07-06T00:22:48Z",
+  "total_sources": 199,
+  "alive_sources": 67,
+  "dead_sources": 132,
+  "total_proxies": 502993,
   "sources": {
     "murongpig-http": {
       "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt",
       "alive": true,
       "proxies": 101619,
-      "time_s": 0.06
+      "time_s": 0.18
+    },
+    "mmpx12-http": {
+      "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt",
+      "alive": true,
+      "proxies": 101619,
+      "time_s": 0.1
     },
     "murongpig-socks5": {
       "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt",
       "alive": true,
       "proxies": 100663,
-      "time_s": 0.25
+      "time_s": 0.48
+    },
+    "mmpx12-socks5": {
+      "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt",
+      "alive": true,
+      "proxies": 100663,
+      "time_s": 0.12
     },
     "goodproxy-raw": {
       "url": "https://raw.githubusercontent.com/yuceltoluyag/GoodProxy/main/raw.txt",
       "alive": true,
       "proxies": 19031,
-      "time_s": 0.42
+      "time_s": 0.39
     },
     "openproxylist-http": {
       "url": "https://openproxylist.xyz/http.txt",
       "alive": true,
-      "proxies": 5663,
-      "time_s": 0.26
+      "proxies": 5536,
+      "time_s": 0.23
     },
-    "openproxylist-socks4": {
-      "url": "https://openproxylist.xyz/socks4.txt",
+    "disc-014": {
+      "url": "https://raw.githubusercontent.com/jetkai/proxy-list/refs/heads/main/online-proxies/txt/proxies.txt",
       "alive": true,
-      "proxies": 4044,
-      "time_s": 0.19
+      "proxies": 4232,
+      "time_s": 0.55
     },
     "openproxylist-socks5": {
       "url": "https://openproxylist.xyz/socks5.txt",
       "alive": true,
-      "proxies": 3631,
+      "proxies": 4095,
       "time_s": 0.2
+    },
+    "openproxylist-socks4": {
+      "url": "https://openproxylist.xyz/socks4.txt",
+      "alive": true,
+      "proxies": 4066,
+      "time_s": 0.21
+    },
+    "anon-socks5": {
+      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt",
+      "alive": true,
+      "proxies": 3177,
+      "time_s": 0.52
     },
     "anon-http": {
       "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/http_proxies.txt",
       "alive": true,
-      "proxies": 2907,
-      "time_s": 0.4
-    },
-    "speedx-http": {
-      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
-      "alive": true,
-      "proxies": 2869,
-      "time_s": 0.03
+      "proxies": 3108,
+      "time_s": 0.67
     },
     "speedx-http-cdn": {
       "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/http.txt",
@@ -59,83 +77,149 @@
       "proxies": 2805,
       "time_s": 0.02
     },
+    "speedx-socks5": {
+      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
+      "alive": true,
+      "proxies": 2762,
+      "time_s": 0.04
+    },
+    "disc-006": {
+      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/refs/heads/master/socks5.txt",
+      "alive": true,
+      "proxies": 2762,
+      "time_s": 0.42
+    },
+    "speedx-http": {
+      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
+      "alive": true,
+      "proxies": 2695,
+      "time_s": 0.01
+    },
+    "disc-004": {
+      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/refs/heads/master/http.txt",
+      "alive": true,
+      "proxies": 2695,
+      "time_s": 0.31
+    },
+    "disc-008": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/all/data.txt",
+      "alive": true,
+      "proxies": 2663,
+      "time_s": 0.02
+    },
+    "disc-009": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/refs/heads/main/proxies/all/data.txt",
+      "alive": true,
+      "proxies": 2663,
+      "time_s": 0.23
+    },
     "speedx-socks4-cdn": {
       "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks4.txt",
       "alive": true,
       "proxies": 2572,
-      "time_s": 0.03
+      "time_s": 0.02
     },
     "speedx-socks4": {
       "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
       "alive": true,
-      "proxies": 2451,
-      "time_s": 0.04
+      "proxies": 2422,
+      "time_s": 0.03
+    },
+    "disc-005": {
+      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/refs/heads/master/socks4.txt",
+      "alive": true,
+      "proxies": 2422,
+      "time_s": 0.3
     },
     "speedx-socks5-cdn": {
       "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks5.txt",
       "alive": true,
       "proxies": 2415,
-      "time_s": 0.03
-    },
-    "speedx-socks5": {
-      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
-      "alive": true,
-      "proxies": 2377,
-      "time_s": 0.03
+      "time_s": 0.02
     },
     "proxifly-all": {
       "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/all/data.txt",
       "alive": true,
       "proxies": 2258,
-      "time_s": 0.03
+      "time_s": 0.02
     },
     "jetkai-https": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-https.txt",
       "alive": true,
       "proxies": 2161,
-      "time_s": 0.04
+      "time_s": 0.03
     },
     "jetkai-http": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt",
       "alive": true,
       "proxies": 1801,
-      "time_s": 0.02
+      "time_s": 0.01
+    },
+    "sunny9577-raw-http": {
+      "url": "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
+      "alive": true,
+      "proxies": 1799,
+      "time_s": 0.03
     },
     "jetkai-socks4": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks4.txt",
       "alive": true,
       "proxies": 1603,
-      "time_s": 0.04
+      "time_s": 0.01
     },
-    "anon-socks5": {
-      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt",
+    "rawproxys-socks5": {
+      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks5.txt",
       "alive": true,
-      "proxies": 1408,
-      "time_s": 0.26
+      "proxies": 1304,
+      "time_s": 0.02
+    },
+    "proxyscrape-api-socks5": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all",
+      "alive": true,
+      "proxies": 1202,
+      "time_s": 0.03
     },
     "proxifly-https": {
       "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.txt",
       "alive": true,
       "proxies": 1119,
-      "time_s": 0.05
+      "time_s": 0.01
+    },
+    "rawproxys-http": {
+      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/http.txt",
+      "alive": true,
+      "proxies": 1080,
+      "time_s": 0.03
+    },
+    "proxyscrape-api-http": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all",
+      "alive": true,
+      "proxies": 1039,
+      "time_s": 0.03
+    },
+    "zaeem20-https": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/https.txt",
+      "alive": true,
+      "proxies": 966,
+      "time_s": 0.02
     },
     "vpslab-http": {
       "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_all.txt",
       "alive": true,
-      "proxies": 766,
-      "time_s": 0.24
+      "proxies": 943,
+      "time_s": 0.26
     },
     "proxylist-to-http": {
       "url": "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/http.txt",
       "alive": true,
       "proxies": 749,
-      "time_s": 0.35
+      "time_s": 0.16
     },
-    "zaeem20-https": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/https.txt",
+    "disc-007": {
+      "url": "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxylist.txt",
       "alive": true,
-      "proxies": 708,
-      "time_s": 0.01
+      "proxies": 722,
+      "time_s": 0.29
     },
     "proxifly-http": {
       "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.txt",
@@ -143,417 +227,429 @@
       "proxies": 627,
       "time_s": 0.02
     },
+    "hookzof-socks5": {
+      "url": "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+      "alive": true,
+      "proxies": 531,
+      "time_s": 0.02
+    },
+    "hookzof-socks5-v2": {
+      "url": "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+      "alive": true,
+      "proxies": 531,
+      "time_s": 0.01
+    },
+    "zaeem20-socks5": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks5.txt",
+      "alive": true,
+      "proxies": 515,
+      "time_s": 0.3
+    },
     "ahahaabas-st-http": {
       "url": "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt",
       "alive": true,
       "proxies": 500,
-      "time_s": 0.6
-    },
-    "geonode-socks5": {
-      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5",
-      "alive": true,
-      "proxies": 410,
-      "time_s": 3.93
+      "time_s": 0.57
     },
     "jetkai-socks5": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks5.txt",
       "alive": true,
       "proxies": 405,
-      "time_s": 0.02
+      "time_s": 0.22
     },
     "clarketm-http": {
       "url": "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt",
       "alive": true,
       "proxies": 400,
-      "time_s": 0.03
+      "time_s": 0.01
     },
-    "hookzof-socks5": {
-      "url": "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+    "geonode-socks5": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5",
       "alive": true,
-      "proxies": 380,
-      "time_s": 0.03
+      "proxies": 365,
+      "time_s": 3.71
     },
-    "hookzof-socks5-v2": {
-      "url": "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+    "proxifly-socks4": {
+      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks4/data.txt",
       "alive": true,
-      "proxies": 380,
+      "proxies": 343,
       "time_s": 0.01
     },
     "opsxcq-mixed": {
       "url": "https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt",
       "alive": true,
       "proxies": 343,
-      "time_s": 0.26
+      "time_s": 0.15
     },
-    "zaeem20-socks5": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks5.txt",
+    "rawproxys-socks4": {
+      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks4.txt",
       "alive": true,
       "proxies": 339,
+      "time_s": 0.02
+    },
+    "monosans-all": {
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt",
+      "alive": true,
+      "proxies": 334,
+      "time_s": 0.03
+    },
+    "proxyscrape-api-socks4": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=10000&country=all",
+      "alive": true,
+      "proxies": 331,
       "time_s": 0.24
+    },
+    "zaeem20-http": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/http.txt",
+      "alive": true,
+      "proxies": 291,
+      "time_s": 0.02
     },
     "proxifly-socks5": {
       "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks5/data.txt",
       "alive": true,
       "proxies": 258,
-      "time_s": 0.04
+      "time_s": 0.01
     },
-    "proxifly-socks4": {
-      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks4/data.txt",
+    "monosans-http": {
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
       "alive": true,
-      "proxies": 254,
-      "time_s": 0.05
-    },
-    "monosans-all": {
-      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt",
-      "alive": true,
-      "proxies": 251,
-      "time_s": 0.21
-    },
-    "zaeem20-http": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/http.txt",
-      "alive": true,
-      "proxies": 233,
+      "proxies": 209,
       "time_s": 0.01
     },
     "ab57-proxyold": {
       "url": "https://ab57.ru/downloads/proxyold.txt",
       "alive": true,
       "proxies": 204,
-      "time_s": 1.12
+      "time_s": 6.38
     },
     "proxylist-to-socks5": {
       "url": "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/socks5.txt",
       "alive": true,
       "proxies": 195,
-      "time_s": 0.31
+      "time_s": 0.08
+    },
+    "zaeem20-socks4": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks4.txt",
+      "alive": true,
+      "proxies": 161,
+      "time_s": 0.32
     },
     "roosterkid-socks4": {
       "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt",
       "alive": true,
       "proxies": 150,
-      "time_s": 0.01
-    },
-    "monosans-http": {
-      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
-      "alive": true,
-      "proxies": 146,
       "time_s": 0.02
     },
     "roosterkid-https": {
       "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt",
       "alive": true,
-      "proxies": 141,
+      "proxies": 150,
       "time_s": 0.02
-    },
-    "zaeem20-socks4": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks4.txt",
-      "alive": true,
-      "proxies": 135,
-      "time_s": 0.31
     },
     "ab57-proxylist": {
       "url": "https://ab57.ru/downloads/proxylist.txt",
       "alive": true,
       "proxies": 135,
-      "time_s": 1.14
+      "time_s": 6.61
     },
     "monosans-socks5": {
       "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt",
       "alive": true,
-      "proxies": 66,
-      "time_s": 0.02
+      "proxies": 68,
+      "time_s": 0.01
     },
     "prxchk-http": {
       "url": "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
       "alive": true,
       "proxies": 58,
-      "time_s": 0.03
-    },
-    "anon-https": {
-      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/https_proxies.txt",
-      "alive": true,
-      "proxies": 41,
       "time_s": 0.36
     },
     "monosans-socks4": {
       "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks4.txt",
       "alive": true,
-      "proxies": 39,
+      "proxies": 57,
       "time_s": 0.01
+    },
+    "anon-https": {
+      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/https_proxies.txt",
+      "alive": true,
+      "proxies": 35,
+      "time_s": 0.48
     },
     "roosterkid-socks5": {
       "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt",
       "alive": true,
-      "proxies": 13,
+      "proxies": 12,
       "time_s": 0.02
     },
     "prxchk-socks5": {
       "url": "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks5.txt",
       "alive": true,
       "proxies": 10,
-      "time_s": 0.11
+      "time_s": 0.09
     },
     "fatezero-http": {
       "url": "https://static.fatezero.org/tmp/proxy.txt",
       "alive": true,
       "proxies": 3,
-      "time_s": 0.45
+      "time_s": 0.29
     },
     "cybergw-http": {
       "url": "https://cyber-gateway.net/get-proxy/free-proxy/24-free-http-proxy",
       "alive": true,
       "proxies": 1,
-      "time_s": 1.24
+      "time_s": 1.3
     },
     "cybergw-socks5": {
       "url": "https://cyber-gateway.net/get-proxy/free-proxy/56-free-socks-proxy",
       "alive": true,
       "proxies": 1,
-      "time_s": 1.23
-    },
-    "prxylist-socks5": {
-      "url": "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.54,
-      "error": "empty"
-    },
-    "imkk-socks4": {
-      "url": "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.5,
-      "error": "empty"
-    },
-    "tiievii-socks4": {
-      "url": "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.6,
-      "error": "empty"
-    },
-    "tiievii-http": {
-      "url": "https://raw.githubusercontent.com/Tiievii/proxy-list/main/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.64,
-      "error": "empty"
-    },
-    "uzayatsiz-http": {
-      "url": "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.69,
-      "error": "empty"
-    },
-    "mksmg-socks5": {
-      "url": "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.71,
-      "error": "empty"
-    },
-    "tiievii-socks5": {
-      "url": "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.76,
-      "error": "empty"
-    },
-    "kalemulti-http": {
-      "url": "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.76,
-      "error": "empty"
-    },
-    "kalemulti-socks4": {
-      "url": "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.76,
-      "error": "empty"
-    },
-    "mertguvencli-socks5": {
-      "url": "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.77,
-      "error": "empty"
-    },
-    "bootstrap-socks5": {
-      "url": "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.77,
-      "error": "empty"
-    },
-    "imkk-socks5": {
-      "url": "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.83,
-      "error": "empty"
-    },
-    "bootstrap-socks4": {
-      "url": "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.82,
-      "error": "empty"
-    },
-    "shiftytrash-socks4": {
-      "url": "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.85,
-      "error": "empty"
+      "time_s": 1.26
     },
     "shiftytrash-socks5": {
       "url": "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.77,
-      "error": "empty"
-    },
-    "mksmg-http": {
-      "url": "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.86,
-      "error": "empty"
-    },
-    "prxylist-socks4": {
-      "url": "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.85,
+      "time_s": 4.75,
       "error": "empty"
     },
     "prxylist-http": {
       "url": "https://raw.githubusercontent.com/prxylist/ProxyLists/main/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.92,
-      "error": "empty"
-    },
-    "mertguvencli-http": {
-      "url": "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.92,
-      "error": "empty"
-    },
-    "kalemulti-socks5": {
-      "url": "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.89,
-      "error": "empty"
-    },
-    "bootstrap-http": {
-      "url": "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.92,
-      "error": "empty"
-    },
-    "mertguvencli-socks4": {
-      "url": "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.95,
+      "time_s": 4.76,
       "error": "empty"
     },
     "imkk-http": {
       "url": "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.87,
+      "time_s": 4.76,
       "error": "empty"
     },
-    "mksmg-socks4": {
-      "url": "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks4.txt",
+    "tiievii-socks4": {
+      "url": "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.97,
+      "time_s": 4.77,
+      "error": "empty"
+    },
+    "shiftytrash-socks4": {
+      "url": "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/socks4.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.78,
+      "error": "empty"
+    },
+    "kalemulti-http": {
+      "url": "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.76,
+      "error": "empty"
+    },
+    "mertguvencli-http": {
+      "url": "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.79,
+      "error": "empty"
+    },
+    "mertguvencli-socks5": {
+      "url": "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.78,
+      "error": "empty"
+    },
+    "mertguvencli-socks4": {
+      "url": "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks4.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.8,
+      "error": "empty"
+    },
+    "imkk-socks5": {
+      "url": "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.8,
+      "error": "empty"
+    },
+    "prxylist-socks5": {
+      "url": "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.81,
+      "error": "empty"
+    },
+    "bootstrap-socks5": {
+      "url": "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.77,
+      "error": "empty"
+    },
+    "uzayatsiz-http": {
+      "url": "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.77,
+      "error": "empty"
+    },
+    "kalemulti-socks4": {
+      "url": "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks4.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.8,
+      "error": "empty"
+    },
+    "bootstrap-socks4": {
+      "url": "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks4.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.8,
+      "error": "empty"
+    },
+    "kalemulti-socks5": {
+      "url": "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.8,
       "error": "empty"
     },
     "shiftytrash-http": {
       "url": "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.91,
+      "time_s": 4.86,
       "error": "empty"
     },
-    "uzayatsiz-socks5": {
-      "url": "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/socks5.txt",
+    "mksmg-socks4": {
+      "url": "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.77,
+      "time_s": 4.8,
       "error": "empty"
     },
-    "vvmd-http": {
-      "url": "https://raw.githubusercontent.com/vvmd/ProxyList/main/http.txt",
+    "mksmg-socks5": {
+      "url": "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.78,
+      "time_s": 4.8,
       "error": "empty"
     },
-    "vvmd-socks4": {
-      "url": "https://raw.githubusercontent.com/vvmd/ProxyList/main/socks4.txt",
+    "prxylist-socks4": {
+      "url": "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.83,
+      "time_s": 4.88,
+      "error": "empty"
+    },
+    "mksmg-http": {
+      "url": "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.82,
+      "error": "empty"
+    },
+    "tiievii-socks5": {
+      "url": "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.89,
+      "error": "empty"
+    },
+    "imkk-socks4": {
+      "url": "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks4.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.9,
+      "error": "empty"
+    },
+    "tiievii-http": {
+      "url": "https://raw.githubusercontent.com/Tiievii/proxy-list/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.91,
+      "error": "empty"
+    },
+    "bootstrap-http": {
+      "url": "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.87,
       "error": "empty"
     },
     "uzayatsiz-socks4": {
       "url": "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.92,
+      "time_s": 4.78,
       "error": "empty"
     },
-    "defacto2-http": {
-      "url": "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/http.txt",
+    "vvmd-http": {
+      "url": "https://raw.githubusercontent.com/vvmd/ProxyList/main/http.txt",
       "alive": false,
       "proxies": 0,
       "time_s": 4.77,
+      "error": "empty"
+    },
+    "uzayatsiz-socks5": {
+      "url": "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.78,
       "error": "empty"
     },
     "vvmd-socks5": {
       "url": "https://raw.githubusercontent.com/vvmd/ProxyList/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.81,
-      "error": "empty"
-    },
-    "defacto2-socks5": {
-      "url": "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.82,
+      "time_s": 4.78,
       "error": "empty"
     },
     "defacto2-socks4": {
       "url": "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.85,
+      "time_s": 4.79,
       "error": "empty"
     },
-    "anongrp-http": {
-      "url": "https://raw.githubusercontent.com/AnonGrp/Proxy-List/main/http.txt",
+    "defacto2-socks5": {
+      "url": "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.81,
+      "time_s": 4.79,
       "error": "empty"
     },
     "anongrp-socks4": {
       "url": "https://raw.githubusercontent.com/AnonGrp/Proxy-List/main/socks4.txt",
       "alive": false,
       "proxies": 0,
+      "time_s": 4.78,
+      "error": "empty"
+    },
+    "defacto2-http": {
+      "url": "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/http.txt",
+      "alive": false,
+      "proxies": 0,
       "time_s": 4.81,
+      "error": "empty"
+    },
+    "anongrp-http": {
+      "url": "https://raw.githubusercontent.com/AnonGrp/Proxy-List/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.82,
+      "error": "empty"
+    },
+    "databay-socks5": {
+      "url": "https://raw.githubusercontent.com/databayt/libproxy/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.8,
       "error": "empty"
     },
     "anongrp-socks5": {
@@ -563,43 +659,57 @@
       "time_s": 4.85,
       "error": "empty"
     },
-    "databay-socks4": {
-      "url": "https://raw.githubusercontent.com/databayt/libproxy/main/socks4.txt",
+    "vvmd-socks4": {
+      "url": "https://raw.githubusercontent.com/vvmd/ProxyList/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.89,
-      "error": "empty"
-    },
-    "gfpcom-http": {
-      "url": "https://raw.githubusercontent.com/gfpcom/Proxy-List/main/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.87,
-      "error": "empty"
-    },
-    "databay-http": {
-      "url": "https://raw.githubusercontent.com/databayt/libproxy/main/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.95,
+      "time_s": 4.9,
       "error": "empty"
     },
     "byteblitz-http": {
       "url": "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/main/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.0,
+      "time_s": 4.85,
+      "error": "empty"
+    },
+    "gfpcom-http": {
+      "url": "https://raw.githubusercontent.com/gfpcom/Proxy-List/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.84,
       "error": "empty"
     },
     "gfpcom-socks5": {
       "url": "https://raw.githubusercontent.com/gfpcom/Proxy-List/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.9,
+      "time_s": 4.83,
+      "error": "empty"
+    },
+    "byteblitz-socks5": {
+      "url": "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.91,
       "error": "empty"
     },
     "hawspider-http": {
       "url": "https://raw.githubusercontent.com/hawspider/Free-Proxy/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.95,
+      "error": "empty"
+    },
+    "databay-http": {
+      "url": "https://raw.githubusercontent.com/databayt/libproxy/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.99,
+      "error": "empty"
+    },
+    "clarketm-socks4": {
+      "url": "https://raw.githubusercontent.com/clarketm/proxy-list/master/socks4.txt",
       "alive": false,
       "proxies": 0,
       "time_s": 4.97,
@@ -609,101 +719,66 @@
       "url": "https://raw.githubusercontent.com/clarketm/proxy-list/master/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.94,
-      "error": "empty"
-    },
-    "clarketm-socks4": {
-      "url": "https://raw.githubusercontent.com/clarketm/proxy-list/master/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.98,
+      "time_s": 5.0,
       "error": "empty"
     },
     "byteblitz-socks4": {
       "url": "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.14,
+      "time_s": 5.1,
       "error": "empty"
     },
     "ermaozi-http": {
       "url": "https://raw.githubusercontent.com/ermaozi/get_proxy/main/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.02,
+      "time_s": 5.05,
       "error": "empty"
     },
-    "databay-socks5": {
-      "url": "https://raw.githubusercontent.com/databayt/libproxy/main/socks5.txt",
+    "databay-socks4": {
+      "url": "https://raw.githubusercontent.com/databayt/libproxy/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.14,
+      "time_s": 5.1,
       "error": "empty"
     },
     "vakhov-http": {
       "url": "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.01,
+      "time_s": 4.95,
       "error": "empty"
     },
     "vakhov-https": {
       "url": "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/https.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.07,
-      "error": "empty"
-    },
-    "byteblitz-socks5": {
-      "url": "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/main/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.62,
+      "time_s": 4.94,
       "error": "empty"
     },
     "geonode-http": {
       "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http%%2Chttps",
       "alive": false,
       "proxies": 0,
-      "time_s": 0.97
-    },
-    "vakhov-socks4": {
-      "url": "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.97,
-      "error": "empty"
+      "time_s": 0.79
     },
     "vakhov-socks5": {
       "url": "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.92,
-      "error": "empty"
-    },
-    "thordata-socks5": {
-      "url": "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.85,
+      "time_s": 4.89,
       "error": "empty"
     },
     "thordata-https": {
       "url": "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/https.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.98,
+      "time_s": 4.92,
       "error": "empty"
     },
     "thordata-socks4": {
       "url": "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.95,
-      "error": "empty"
-    },
-    "thordata-http": {
-      "url": "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/http.txt",
       "alive": false,
       "proxies": 0,
       "time_s": 5.02,
@@ -713,150 +788,157 @@
       "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/https.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.89,
+      "time_s": 4.99,
       "error": "empty"
     },
-    "ipdb-proxy": {
-      "url": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestProxy/proxy.txt",
+    "thordata-http": {
+      "url": "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 0.27
-    },
-    "ahahaabas-mixed": {
-      "url": "https://raw.githubusercontent.com/ahahaabas/mixed-proxy-list/main/proxies.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.94,
+      "time_s": 5.1,
       "error": "empty"
     },
-    "ahahaabas-http": {
-      "url": "https://raw.githubusercontent.com/ahahaabas/proxy-list-http/main/proxies.txt",
+    "vakhov-socks4": {
+      "url": "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.0,
+      "time_s": 5.12,
       "error": "empty"
     },
-    "ahahaabas-bulk": {
-      "url": "https://raw.githubusercontent.com/ahahaabas/proxies-st-bulk-list/main/proxies.txt",
+    "thordata-socks5": {
+      "url": "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.98,
-      "error": "empty"
-    },
-    "ahahaabas-plain": {
-      "url": "https://raw.githubusercontent.com/ahahaabas/plain-text-proxy-list/main/proxies.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.13,
-      "error": "empty"
-    },
-    "ahahaabas-st-socks": {
-      "url": "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/socks.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.05,
-      "error": "empty"
-    },
-    "adasd223-bulk": {
-      "url": "https://raw.githubusercontent.com/adasd223/proxies-st-bulk-list/main/proxies.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.95,
-      "error": "empty"
-    },
-    "adasd223-socks4": {
-      "url": "https://raw.githubusercontent.com/adasd223/socks4-proxy-feed/main/proxies.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.03,
-      "error": "empty"
-    },
-    "ahahaabas-verified": {
-      "url": "https://raw.githubusercontent.com/ahahaabas/verified-proxy-list/main/proxies.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.23,
+      "time_s": 5.06,
       "error": "empty"
     },
     "ahahaabas-socks5": {
       "url": "https://raw.githubusercontent.com/ahahaabas/socks5-proxies-free/main/proxies.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.3,
+      "time_s": 4.96,
+      "error": "empty"
+    },
+    "ahahaabas-verified": {
+      "url": "https://raw.githubusercontent.com/ahahaabas/verified-proxy-list/main/proxies.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.94,
+      "error": "empty"
+    },
+    "ahahaabas-plain": {
+      "url": "https://raw.githubusercontent.com/ahahaabas/plain-text-proxy-list/main/proxies.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.92,
+      "error": "empty"
+    },
+    "ahahaabas-mixed": {
+      "url": "https://raw.githubusercontent.com/ahahaabas/mixed-proxy-list/main/proxies.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.96,
+      "error": "empty"
+    },
+    "ahahaabas-st-socks": {
+      "url": "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/socks.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.86,
       "error": "empty"
     },
     "ahahaabas-free-socks5": {
       "url": "https://raw.githubusercontent.com/ahahaabas/free-socks5-proxy-list/main/proxies.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.13,
+      "time_s": 4.9,
+      "error": "empty"
+    },
+    "ipdb-proxy": {
+      "url": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestProxy/proxy.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 0.33
+    },
+    "adasd223-socks4": {
+      "url": "https://raw.githubusercontent.com/adasd223/socks4-proxy-feed/main/proxies.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.95,
+      "error": "empty"
+    },
+    "ahahaabas-bulk": {
+      "url": "https://raw.githubusercontent.com/ahahaabas/proxies-st-bulk-list/main/proxies.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 5.04,
+      "error": "empty"
+    },
+    "ahahaabas-http": {
+      "url": "https://raw.githubusercontent.com/ahahaabas/proxy-list-http/main/proxies.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 5.23,
       "error": "empty"
     },
     "pscrape-gh-socks4": {
       "url": "https://raw.githubusercontent.com/proxyscrape/free-proxy-list/main/proxies/raw/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.86,
+      "time_s": 4.96,
+      "error": "empty"
+    },
+    "adasd223-bulk": {
+      "url": "https://raw.githubusercontent.com/adasd223/proxies-st-bulk-list/main/proxies.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 5.12,
       "error": "empty"
     },
     "pscrape-gh-http": {
       "url": "https://raw.githubusercontent.com/proxyscrape/free-proxy-list/main/proxies/raw/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.04,
+      "time_s": 5.07,
       "error": "empty"
+    },
+    "proxymist-socks5": {
+      "url": "https://proxymist.com/protocols/socks5/",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 0.22
     },
     "pscrape-gh-socks5": {
       "url": "https://raw.githubusercontent.com/proxyscrape/free-proxy-list/main/proxies/raw/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.05,
+      "time_s": 4.93,
       "error": "empty"
     },
     "monosans-https": {
       "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/https.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.84,
+      "time_s": 4.85,
       "error": "empty"
-    },
-    "proxymist-socks4": {
-      "url": "https://proxymist.com/protocols/socks4/",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 0.66
     },
     "proxymist-http": {
       "url": "https://proxymist.com/protocols/http/",
       "alive": false,
       "proxies": 0,
-      "time_s": 0.72
+      "time_s": 0.67
+    },
+    "proxymist-socks4": {
+      "url": "https://proxymist.com/protocols/socks4/",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 0.67
     },
     "proxymist-elite": {
       "url": "https://proxymist.com/anonymity/elite/",
       "alive": false,
       "proxies": 0,
-      "time_s": 0.66
-    },
-    "proxymist-socks5": {
-      "url": "https://proxymist.com/protocols/socks5/",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 0.72
-    },
-    "proxy4parsing-socks5": {
-      "url": "https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.88,
-      "error": "empty"
-    },
-    "uptimer-https": {
-      "url": "https://raw.githubusercontent.com/UptimerBot/proxy-list/refs/heads/main/https.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.86,
-      "error": "empty"
+      "time_s": 0.69
     },
     "pubproxy-http": {
       "url": "http://pubproxy.com/api/proxy?limit=5&level=elite&last_check=10&speed=1&https=true&format=txt",
@@ -864,11 +946,25 @@
       "proxies": 0,
       "time_s": 0.66
     },
+    "uptimer-https": {
+      "url": "https://raw.githubusercontent.com/UptimerBot/proxy-list/refs/heads/main/https.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.92,
+      "error": "empty"
+    },
     "coderduck-http": {
       "url": "https://www.coderduck.com/free-proxy-list",
       "alive": false,
       "proxies": 0,
-      "time_s": 1.26
+      "time_s": 1.21
+    },
+    "proxy4parsing-socks5": {
+      "url": "https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 5.35,
+      "error": "empty"
     },
     "hideipme-http": {
       "url": "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/http.txt",
@@ -881,203 +977,212 @@
       "url": "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/https.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.92,
-      "error": "empty"
-    },
-    "kangproxy-raw": {
-      "url": "https://raw.githubusercontent.com/officialputuid/KangProxy/refs/heads/KangProxy/xResults/RAW.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.74,
-      "error": "empty"
-    },
-    "hideipme-socks4": {
-      "url": "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/socks4.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.96,
+      "time_s": 4.94,
       "error": "empty"
     },
     "fpu-http": {
       "url": "https://freeproxyupdate.com/files/txt/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.56,
+      "time_s": 4.61,
       "error": "empty"
     },
-    "fpu-https": {
-      "url": "https://freeproxyupdate.com/files/txt/https-ssl.txt",
+    "hideipme-socks4": {
+      "url": "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.56,
-      "error": "empty"
-    },
-    "hideipme-socks5": {
-      "url": "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.93,
+      "time_s": 4.98,
       "error": "empty"
     },
     "fpu-socks4": {
       "url": "https://freeproxyupdate.com/files/txt/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.55,
+      "time_s": 4.63,
+      "error": "empty"
+    },
+    "fpu-https": {
+      "url": "https://freeproxyupdate.com/files/txt/https-ssl.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.64,
+      "error": "empty"
+    },
+    "kangproxy-raw": {
+      "url": "https://raw.githubusercontent.com/officialputuid/KangProxy/refs/heads/KangProxy/xResults/RAW.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.81,
       "error": "empty"
     },
     "fpu-socks5": {
       "url": "https://freeproxyupdate.com/files/txt/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.56,
+      "time_s": 4.64,
       "error": "empty"
     },
     "fpu-elite": {
       "url": "https://freeproxyupdate.com/files/txt/elite.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.56,
+      "time_s": 4.62,
       "error": "empty"
     },
-    "proxydl-http": {
-      "url": "https://www.proxy-list.download/api/v2/get?l=en&t=http",
+    "hideipme-socks5": {
+      "url": "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.47,
-      "error": "empty"
-    },
-    "proxydl-socks5": {
-      "url": "https://www.proxy-list.download/api/v2/get?l=en&t=socks5",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 5.48,
+      "time_s": 4.99,
       "error": "empty"
     },
     "proxydl-socks4": {
       "url": "https://www.proxy-list.download/api/v2/get?l=en&t=socks4",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.54,
+      "time_s": 5.5,
+      "error": "empty"
+    },
+    "proxydl-http": {
+      "url": "https://www.proxy-list.download/api/v2/get?l=en&t=http",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 5.58,
       "error": "empty"
     },
     "proxydl-https": {
       "url": "https://www.proxy-list.download/api/v2/get?l=en&t=https",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.54,
+      "time_s": 5.58,
+      "error": "empty"
+    },
+    "proxydl-socks5": {
+      "url": "https://www.proxy-list.download/api/v2/get?l=en&t=socks5",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 5.59,
       "error": "empty"
     },
     "vpslab-socks4": {
       "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks4.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.79,
+      "time_s": 4.82,
       "error": "empty"
     },
     "vpslab-socks5": {
       "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.75,
+      "time_s": 4.78,
       "error": "empty"
     },
     "mikicodes-http": {
       "url": "https://raw.githubusercontent.com/mikicodes1/Free-Proxy-List/main/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.81,
-      "error": "empty"
-    },
-    "mgozalid-http": {
-      "url": "https://raw.githubusercontent.com/mgozalid/Proxy-List-Updated/main/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.76,
+      "time_s": 4.8,
       "error": "empty"
     },
     "mikicodes-socks5": {
       "url": "https://raw.githubusercontent.com/mikicodes1/Free-Proxy-List/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.81,
+      "time_s": 4.85,
+      "error": "empty"
+    },
+    "mgozalid-http": {
+      "url": "https://raw.githubusercontent.com/mgozalid/Proxy-List-Updated/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.77,
       "error": "empty"
     },
     "mgozalid-socks5": {
       "url": "https://raw.githubusercontent.com/mgozalid/Proxy-List-Updated/main/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.82,
+      "time_s": 4.83,
       "error": "empty"
     },
     "aress-mirror-http": {
       "url": "https://raw.githubusercontent.com/aress468/Free-Proxy-List/master/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.8,
+      "time_s": 4.82,
       "error": "empty"
     },
     "aress-mirror-socks5": {
       "url": "https://raw.githubusercontent.com/aress468/Free-Proxy-List/master/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.8,
+      "time_s": 4.81,
       "error": "empty"
     },
     "pabloqpasin-http": {
       "url": "https://raw.githubusercontent.com/pabloqpasin/proxy-list/main/proxies/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.76,
+      "time_s": 4.83,
       "error": "empty"
+    },
+    "disc-001": {
+      "url": "https://spys.me/socks.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 1.0
+    },
+    "disc-000": {
+      "url": "https://spys.me/proxy.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 1.23
+    },
+    "disc-011": {
+      "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 0.01
+    },
+    "disc-012": {
+      "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 0.02
+    },
+    "disc-013": {
+      "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 0.26
     },
     "pabloqpasin-socks5": {
       "url": "https://raw.githubusercontent.com/pabloqpasin/proxy-list/main/proxies/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.73,
-      "error": "empty"
-    },
-    "almroot-http": {
-      "url": "https://raw.githubusercontent.com/almroot/proxylist/master/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.85,
-      "error": "empty"
-    },
-    "lupinthegreat-http": {
-      "url": "https://raw.githubusercontent.com/lupinthegreat/proxy-list/master/http.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.73,
+      "time_s": 4.78,
       "error": "empty"
     },
     "almroot-socks5": {
       "url": "https://raw.githubusercontent.com/almroot/proxylist/master/socks5.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.81,
+      "time_s": 4.79,
       "error": "empty"
     },
-    "sunny9577-http": {
-      "url": "https://raw.githubusercontent.com/sunny9577/proxy-list/master/generated/http.json",
+    "lupinthegreat-http": {
+      "url": "https://raw.githubusercontent.com/lupinthegreat/proxy-list/master/http.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.82,
+      "time_s": 4.77,
       "error": "empty"
     },
     "sunny9577-socks5": {
       "url": "https://raw.githubusercontent.com/sunny9577/proxy-list/master/generated/socks5.json",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.81,
-      "error": "empty"
-    },
-    "lupinthegreat-socks5": {
-      "url": "https://raw.githubusercontent.com/lupinthegreat/proxy-list/master/socks5.txt",
-      "alive": false,
-      "proxies": 0,
-      "time_s": 4.78,
+      "time_s": 4.82,
       "error": "empty"
     },
     "databayt-all": {
@@ -1087,46 +1192,130 @@
       "time_s": 4.8,
       "error": "empty"
     },
+    "sunny9577-http": {
+      "url": "https://raw.githubusercontent.com/sunny9577/proxy-list/master/generated/http.json",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.85,
+      "error": "empty"
+    },
+    "almroot-http": {
+      "url": "https://raw.githubusercontent.com/almroot/proxylist/master/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.89,
+      "error": "empty"
+    },
+    "lupinthegreat-socks5": {
+      "url": "https://raw.githubusercontent.com/lupinthegreat/proxy-list/master/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.82,
+      "error": "empty"
+    },
     "shiftytrash-all": {
       "url": "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/all.txt",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.79,
+      "time_s": 4.84,
       "error": "empty"
     },
-    "freeproxy.world-http": {
-      "url": "https://freeproxy.world/proxylist/http/",
+    "proxy-list-download-http": {
+      "url": "https://www.proxy-list.download/api/v1/get?type=http",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.56,
+      "time_s": 4.95,
       "error": "empty"
     },
-    "freeproxy.world-socks5": {
-      "url": "https://freeproxy.world/proxylist/socks5/",
+    "proxy-list-download-https": {
+      "url": "https://www.proxy-list.download/api/v1/get?type=https",
       "alive": false,
       "proxies": 0,
-      "time_s": 4.56,
+      "time_s": 4.86,
+      "error": "empty"
+    },
+    "proxy-list-download-socks4": {
+      "url": "https://www.proxy-list.download/api/v1/get?type=socks4",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.88,
+      "error": "empty"
+    },
+    "proxy-list-download-socks5": {
+      "url": "https://www.proxy-list.download/api/v1/get?type=socks5",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.59,
       "error": "empty"
     },
     "proxy4free-api": {
       "url": "https://www.proxy4free.com/list/free-proxy-list.php",
       "alive": false,
       "proxies": 0,
-      "time_s": 5.66,
+      "time_s": 5.98,
+      "error": "empty"
+    },
+    "proxyspace-http": {
+      "url": "https://raw.githubusercontent.com/proxyspace/proxy-list/main/http.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.91,
+      "error": "empty"
+    },
+    "freeproxy.world-socks5": {
+      "url": "https://freeproxy.world/proxylist/socks5/",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 6.01,
+      "error": "empty"
+    },
+    "disc-002": {
+      "url": "https://freeproxyupdate.com/files/txt/anonymous.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.65,
+      "error": "empty"
+    },
+    "freeproxy.world-http": {
+      "url": "https://freeproxy.world/proxylist/http/",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 6.29,
+      "error": "empty"
+    },
+    "proxyspace-socks5": {
+      "url": "https://raw.githubusercontent.com/proxyspace/proxy-list/main/socks5.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 5.34,
+      "error": "empty"
+    },
+    "disc-003": {
+      "url": "https://freeproxyupdate.com/files/txt/transparent.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.6,
       "error": "empty"
     },
     "proxynova-api": {
       "url": "https://api.proxynova.com/get_all?http=true&https=true&limit=500",
       "alive": false,
       "proxies": 0,
-      "time_s": 6.97,
+      "time_s": 6.92,
+      "error": "empty"
+    },
+    "disc-010": {
+      "url": "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/connect.txt",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 4.96,
       "error": "empty"
     },
     "911proxy-api": {
       "url": "https://www.911proxy.com/detection/proxyList?limit=500&page=1&sort_by=lastChecked&sort_type=desc",
       "alive": false,
       "proxies": 0,
-      "time_s": 49.6,
+      "time_s": 49.59,
       "error": "empty"
     }
   }
