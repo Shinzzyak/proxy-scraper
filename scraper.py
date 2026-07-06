@@ -29,7 +29,6 @@ except ImportError:
 
 # ── Static Sources ─────────────────────────────────────────────────────
 PROXY_SOURCES = [
-    # ── BATCH 1: Original organic collection ──
     ("hookzof-socks5", "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "host:port"),
     ("clarketm-http", "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", "host:port"),
     ("roosterkid-socks5", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt", "host:port"),
@@ -45,7 +44,6 @@ PROXY_SOURCES = [
     ("jetkai-https", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-https.txt", "host:port"),
     ("jetkai-socks4", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks4.txt", "host:port"),
     ("jetkai-socks5", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks5.txt", "host:port"),
-    # ── BATCH 2 ──
     ("proxifly-http", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.txt", "host:port"),
     ("proxifly-https", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.txt", "host:port"),
     ("proxifly-socks4", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks4/data.txt", "host:port"),
@@ -63,7 +61,6 @@ PROXY_SOURCES = [
     ("opsxcq-mixed", "https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt", "host:port"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
     ("geonode-socks5", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5", "geonode"),
-    # ── BATCH 3: ProxyGather analysis ──
     ("openproxylist-http", "https://openproxylist.xyz/http.txt", "host:port"),
     ("openproxylist-socks4", "https://openproxylist.xyz/socks4.txt", "host:port"),
     ("openproxylist-socks5", "https://openproxylist.xyz/socks5.txt", "host:port"),
@@ -81,10 +78,7 @@ PROXY_SOURCES = [
     ("speedx-socks5-cdn", "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks5.txt", "host:port"),
     ("proxifly-all", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/all/data.txt", "host:port"),
     ("monosans-all", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt", "host:port"),
-    # ── BATCH 4: More repos found via topic search ──
     ("vpslab-http", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_all.txt", "host:port"),
-    ("hookzof-socks5-v2", "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "host:port"),
-    # ── BATCH 5: Extra public sources ──
     ("proxyscrape-api-http", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all", "host:port"),
     ("proxyscrape-api-socks4", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=10000&country=all", "host:port"),
     ("proxyscrape-api-socks5", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all", "host:port"),
@@ -92,40 +86,24 @@ PROXY_SOURCES = [
     ("rawproxys-socks4", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks4.txt", "host:port"),
     ("rawproxys-socks5", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks5.txt", "host:port"),
     ("sunny9577-raw-http", "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt", "host:port"),
-    ("mmpx12-http", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt", "host:port"),
-    ("mmpx12-socks5", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt", "host:port"),
-    # ── BATCH 6: Regional + high-quality sources ──
-    # Indonesia-focused
-    ('id-proxy1-http', 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt', 'host:port'),
-    ('id-proxy2-socks', 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt', 'host:port'),
-    # Japan-focused
-    ('jp-proxy1-http', 'https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/http.txt', 'host:port'),
-    ('jp-proxy2-https', 'https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/https.txt', 'host:port'),
-    ('jp-proxy3-socks', 'https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/socks5.txt', 'host:port'),
-    # EU-focused
-    ('eu-proxy1-http', 'https://raw.githubusercontent.com/officialputuid/KProxy/KProxy/http.txt', 'host:port'),
-    ('eu-proxy2-socks', 'https://raw.githubusercontent.com/officialputuid/KProxy/KProxy/socks5.txt', 'host:port'),
-    ('eu-proxy3-http', 'https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt', 'host:port'),
-    # Additional high-quality
-    ('hq-proxy1-http', 'https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt', 'host:port'),
-    ('hq-proxy2-http', 'https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt', 'host:port'),
-    ('hq-proxy3-http', 'https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/generated/http_proxies.txt', 'host:port'),
-    ('hq-proxy4-socks', 'https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/generated/socks5_proxies.txt', 'host:port'),
-    ('hq-proxy5-http', 'https://raw.githubusercontent.com/aslisk/proxy/master/proxy.txt', 'host:port'),
-    ('hq-proxy6-http', 'https://raw.githubusercontent.com/almroot/proxylist/master/proxy.txt', 'host:port'),
-    ('hq-proxy7-http', 'https://raw.githubusercontent.com/BlackFrostWorking/proxylist/master/proxies.txt', 'host:port'),
-    ('hq-proxy8-http', 'https://raw.githubusercontent.com/epsagon/proxy-list/master/proxies/http_proxies.txt', 'host:port'),
-    ('hq-proxy9-http', 'https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/http.txt', 'host:port'),
-    ('hq-proxy10-socks', 'https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/socks5.txt', 'host:port'),
-    ('hq-proxy11-http', 'https://raw.githubusercontent.com/aslisk/proxy/master/socks5.txt', 'host:port'),
-    ('hq-proxy12-http', 'https://raw.githubusercontent.com/monosans/proxy-list/main/socks4.txt', 'host:port'),
-    ]
-
-
-# ── Discovery: meta-sources that list proxy URLs ───────────────────────
-DISCOVERY_SOURCES = [
-    "https://raw.githubusercontent.com/Skillter/ProxyGather/refs/heads/master/sites-to-get-proxies-from.txt",
-    "https://raw.githubusercontent.com/monosans/proxy-list/main/README.md",
+    ("ercindedeoglu-http", "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt", "host:port"),
+    ("ercindedeoglu-socks4", "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks4.txt", "host:port"),
+    ("ercindedeoglu-socks5", "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt", "host:port"),
+    ("murongpig-socks4", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks4.txt", "host:port"),
+    ("zevtyardt-http", "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/http.txt", "host:port"),
+    ("zevtyardt-socks4", "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks4.txt", "host:port"),
+    ("zevtyardt-socks5", "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks5.txt", "host:port"),
+    ("prxchk-socks4", "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks4.txt", "host:port"),
+    ("proxylist-to-socks4", "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/socks4.txt", "host:port"),
+    ("sunny9577-http", "https://sunny9577.github.io/proxy-scraper/generated/http_proxies.txt", "host:port"),
+    ("proxyscrape-all-txt", "https://cdn.jsdelivr.net/gh/proxyscrape/free-proxy-list@main/proxies/all/data.txt", "protocolipport"),
+    ("vpslab-socks5", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5_all.txt", "host:port"),
+    ("hproxy-http", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/http.txt", "host:port"),
+    ("hproxy-socks5", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks5.txt", "host:port"),
+    ("socks-proxy-net", "https://www.socks-proxy.net/", "table"),
+    ("proxyscrape-api-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=all&timeout=5000", "protocolipport"),
+    ("proxyscrape-api-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000", "protocolipport"),
+    ("proxyscrape-api-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000", "protocolipport"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -133,38 +111,6 @@ CRED_SOURCES = [
     ("spys-cred", "https://spys.me/proxy.txt"),
 ]
 
-# ── New verified sources (batch 2026-07-06) ──────────────────────────
-NEW_SOURCES = [
-    # monosans — hourly checked, high quality
-    ("monosans-http", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", "host:port"),
-    ("monosans-socks5", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt", "host:port"),
-    # proxifly — 3781 proxies across all protocols
-    ("proxifly-http", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.txt", "host:port"),
-    ("proxifly-socks5", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks5/data.txt", "host:port"),
-    ("proxifly-socks4", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks4/data.txt", "host:port"),
-    # roosterkid — hourly checked via openproxylist.com
-    ("roosterkid-https", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt", "host:port"),
-    ("roosterkid-socks4", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt", "host:port"),
-    ("roosterkid-socks5", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt", "host:port"),
-    # vpslab — 15min refresh cycle
-    ("vpslab-http", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_all.txt", "host:port"),
-    ("vpslab-socks5", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5_all.txt", "host:port"),
-    # TheSpeedX — massive lists (3k+ proxies)
-    ("speedx-http", "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt", "host:port"),
-    ("speedx-socks5", "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt", "host:port"),
-    # hproxy — 2k+ proxies per protocol
-    ("hproxy-http", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/http.txt", "host:port"),
-    ("hproxy-socks5", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks5.txt", "host:port"),
-    # socks-proxy.net — table format
-    ("socks-proxy-net", "https://www.socks-proxy.net/", "table"),
-    # ProxyScrape API (direct, bypasses CDN cache)
-    ("proxyscrape-api-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=all&timeout=5000", "protocolipport"),
-    ("proxyscrape-api-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000", "protocolipport"),
-    ("proxyscrape-api-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000", "protocolipport"),
-]
-
-# Merge sources
-PROXY_SOURCES.extend(NEW_SOURCES)
 
 # ── Regex ──────────────────────────────────────────────────────────────
 PROXY_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})")
