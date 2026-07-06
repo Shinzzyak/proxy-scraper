@@ -1,0 +1,46 @@
+# Proxy Scraper Configuration
+# Edit this file instead of CLI flags
+
+# Scraping
+max_validate: 2000
+discover: true
+validate: true
+
+# Output
+output: proxies.txt
+cred_output: proxies-cred.txt
+json_output: true
+grouped_output: true
+health_output: true
+pool_update: true
+
+# Alert thresholds
+alert_low_proxies: 50
+alert_source_death_risk: 0.5  # alive rate below this = at risk
+
+# Export formats
+export_formats:
+  - txt
+  - json
+  - csv
+  - yaml
+  - env
+
+# Sources to skip (regex patterns)
+skip_sources:
+  - "dead-.*"
+  - "test-.*"
+
+# Max sources per batch
+max_sources_per_batch: 50
+
+# Relay (optional)
+relay_url: ""
+relay_token: ""
+relay_first: false
+
+# Telegram alerts (optional)
+telegram_bot_token: ""
+telegram_chat_id: ""
+telegram_alert_on_low: true
+telegram_alert_on_complete: false
