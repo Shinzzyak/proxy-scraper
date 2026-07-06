@@ -1,50 +1,47 @@
 {
-  "generated_at": "2026-07-06T09:49:30Z",
-  "total": 82,
+  "generated_at": "2026-07-06T09:51:15Z",
+  "total": 68,
   "by_country": {
     "AU": 1,
-    "BD": 3,
+    "BD": 5,
     "BF": 1,
-    "BR": 1,
-    "BW": 2,
     "CA": 2,
-    "CN": 12,
-    "DE": 3,
-    "EE": 1,
-    "EG": 1,
+    "CN": 13,
+    "CZ": 1,
+    "DE": 4,
     "ES": 1,
     "FI": 1,
-    "GB": 3,
-    "ID": 12,
-    "IN": 4,
+    "FR": 2,
+    "HK": 2,
+    "ID": 5,
+    "IN": 1,
     "JP": 1,
-    "KE": 1,
-    "KH": 1,
-    "KR": 6,
-    "MY": 1,
-    "NL": 2,
-    "PK": 3,
-    "RU": 1,
-    "SG": 2,
+    "KR": 4,
+    "NL": 1,
+    "NZ": 1,
+    "PG": 1,
+    "PH": 1,
+    "PK": 4,
+    "PL": 1,
+    "RU": 3,
+    "SG": 3,
     "TH": 4,
     "US": 4,
-    "VN": 6,
-    "ZA": 2
+    "VN": 1
   },
   "by_protocol": {
-    "http": 13,
-    "socks5": 13,
-    "unknown": 56
+    "http": 12,
+    "socks5": 8,
+    "unknown": 48
   },
   "by_anonymity": {
-    "unknown": 82
+    "unknown": 68
   },
   "score_distribution": {
-    "70-79": 23,
-    "60-69": 2,
-    "50-59": 36,
-    "40-49": 10,
-    "30-39": 11
+    "70-79": 20,
+    "50-59": 38,
+    "40-49": 2,
+    "30-39": 8
   },
-  "avg_response_time_ms": 636
+  "avg_response_time_ms": 460
 }
