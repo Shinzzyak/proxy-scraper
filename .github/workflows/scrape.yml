@@ -1,37 +1,25 @@
-name: Scrape Proxies
+name: Proxy Scraper CI
 
 on:
-  schedule:
-    - cron: '0 */3 * * *'
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - 'scraper.py'
-      - 'freshen_pool.py'
-      - 'export_formats.py'
-      - 'tg_scraper.py'
-      - 'geo_repair.py'
-      - 'proxy_pool.py'
-      - 'cli.py'
+      - '*.py'
+      - 'api/*.py'
       - 'requirements.txt'
-      - 'data/tg_channels.json'
       - '.github/workflows/scrape.yml'
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'docs/**'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  scrape:
+  check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    env:
-      # CI is a deterministic snapshot refresh, not the heavy VPS maintenance job.
-      PROXY_VALIDATION_WALL_TIMEOUT: '90'
-      PROXY_SOURCE_MAX_BYTES: '600000'
-      PROXY_MAX_PROXIES_PER_SOURCE: '3000'
-      PROXY_DB: data/proxies.db
+    timeout-minutes: 5
 
     steps:
       - name: Checkout
@@ -50,58 +38,15 @@ jobs:
       - name: Static syntax check
         run: python3 -m py_compile *.py api/*.py
 
-      - name: Refresh lightweight GitHub snapshot
+      - name: Smoke test committed snapshots
         run: |
-          python3 scraper.py \
-            --validate \
-            --pool \
-            --json \
-            --grouped \
-            --health \
-            --max-validate 300 \
-            -o proxies.txt
-
-      - name: Count proxies
-        run: |
-          COUNT=$(wc -l < proxies.txt)
-          echo "Proxies found: $COUNT"
-          if [ "$COUNT" -lt 50 ]; then
-            echo "⚠️ Low proxy count: $COUNT"
-          fi
-
-      - name: Commit results
-        run: |
-          git config user.name "proxy-scraper[bot]"
-          git config user.email "proxy-scraper[bot]@users.noreply.github.com"
-          git add proxies.txt proxies.json source-health.json proxies-by-country.json proxies-by-protocol.json proxies-stats.json data/tg_channels.json
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
-            COUNT=$(wc -l < proxies.txt)
-            git commit -m "🔄 update proxies: $COUNT alive [${TIMESTAMP}]"
-            git fetch origin main
-            git push --force-with-lease origin main
-          fi
-
-      - name: Summary
-        run: |
-          echo "## Proxy Scraper Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Total proxies:** $(wc -l < proxies.txt)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Timestamp:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -f proxies-stats.json ]; then
-            echo "### Stats" >> $GITHUB_STEP_SUMMARY
-            python3 -c 'import json; d=json.load(open("proxies-stats.json")); print("- **Avg response time:** {}ms".format(d.get("avg_response_time_ms", 0))); print("- **Avg score:** {}".format(d.get("avg_score", 0))); print("- **Countries:** {}".format(len(d.get("by_country", {})))); print("- **Protocols:** {}".format(d.get("by_protocol", {}))); print("- **Anonymity:** {}".format(d.get("by_anonymity", {})))' >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -f source-health.json ]; then
-            echo "### Source Health" >> $GITHUB_STEP_SUMMARY
-            python3 -c 'import json; d=json.load(open("source-health.json")); print("- **Sources:** {} total, {} alive, {} dead".format(d["total_sources"], d["alive_sources"], d["dead_sources"])); print("- **Raw proxies:** {}".format(d["total_proxies"])); alive=[(k,v) for k,v in d["sources"].items() if v.get("alive")]; print(); print("**Top 5 sources:**"); [print("  - {}: {} proxies".format(k, v["proxies"])) for k,v in alive[:5]]' >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Sample (first 20)" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          head -20 proxies.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          test -s proxies.txt
+          test -s proxies.json
+          python3 - <<'PY'
+          import json
+          stats=json.load(open('proxies-stats.json'))
+          proxies=json.load(open('proxies.json'))
+          assert len(proxies) >= 100, f"snapshot too small: {len(proxies)}"
+          assert stats.get('total', 0) >= 100, stats
+          print('snapshot ok:', len(proxies), 'proxies')
+          PY

@@ -91,5 +91,5 @@ python3 cli.py best --protocol http --min-score 50 --max-age-minutes 180 --json
 
 - GitHub contains snapshots and code, not the live SQLite DB.
 - `data/proxies.db` is local runtime state and intentionally gitignored.
-- GitHub Actions can refresh committed snapshots, but each external VPS should rebuild its own DB if it needs live freshness.
+- GitHub Actions only run CI/smoke checks and must not overwrite high-quality VPS/local snapshots.
 - `source-health.json` can show raw reach far above committed validated snapshot size. That is normal: source reach != alive validated pool.

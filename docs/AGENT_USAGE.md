@@ -103,17 +103,17 @@ Cron example:
 
 Systemd timer is also fine. Keep the lock file enabled; `freshen_pool.py` prevents overlapping runs.
 
-## Mode 4 — GitHub Actions Snapshot Refresh
+## Mode 4 — GitHub Actions CI
 
 This repo has `.github/workflows/scrape.yml`.
 
 Expected behavior:
-- scheduled refresh
-- lighter bounded validation than VPS cron (`max-validate 300`, 90s validation wall timeout)
-- Telegram public preview scraping
-- generated snapshots committed back to `main`
+- syntax check with Python 3.11
+- smoke-test committed snapshot files
+- no scraping
+- no generated snapshot commits
 
-If an external agent depends on GitHub snapshots, prefer reading files from `main` after the Action has run. If the agent needs stronger freshness/quality, rebuild a local DB with the 1500-sample VPS command instead.
+Why: GitHub runner network conditions produced much smaller pools than the VPS/local run. Do not let CI overwrite high-quality snapshots. If an external agent depends on GitHub snapshots, read the committed files from `main`. If the agent needs stronger freshness/quality, rebuild a local DB with the 1500-sample VPS command instead.
 
 ## Quality Rules
 
