@@ -33,6 +33,13 @@ ARTIFACT_FILES = [
     "heatmap.html",
 ]
 
+CORE_ARTIFACT_FILES = {
+    "proxies.txt",
+    "proxies.json",
+    "proxies-by-country.json",
+    "proxies-by-protocol.json",
+}
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -149,15 +156,22 @@ def should_publish(stats: dict[str, Any], args: argparse.Namespace, state: dict[
     if not changed_artifacts:
         return False, "no artifact changes"
 
+    prev_total = int(state.get("last_published_total") or 0)
+    current_total = int(stats.get("total") or 0)
+    change_pct = 100.0 * abs(current_total - prev_total) / max(prev_total, 1) if prev_total else 100.0
+    prev_countries = int(state.get("last_published_countries") or 0)
+    current_countries = len(stats.get("by_country") or {})
+    has_core_changes = any(path in CORE_ARTIFACT_FILES for path in changed_artifacts)
+
+    if prev_total and not has_core_changes and change_pct < args.min_change_pct and current_countries == prev_countries:
+        return False, "metadata-only change; proxy set unchanged and change {:.1f}% < {:.1f}%".format(
+            change_pct, args.min_change_pct
+        )
+
     now = time.time()
     last_epoch = float(state.get("last_published_epoch") or 0)
     min_interval_s = float(args.min_interval_hours) * 3600
     if last_epoch and now - last_epoch < min_interval_s:
-        prev_total = int(state.get("last_published_total") or 0)
-        current_total = int(stats.get("total") or 0)
-        change_pct = 100.0 * abs(current_total - prev_total) / max(prev_total, 1) if prev_total else 100.0
-        prev_countries = int(state.get("last_published_countries") or 0)
-        current_countries = len(stats.get("by_country") or {})
         if change_pct < args.min_change_pct and current_countries == prev_countries:
             remaining = round((min_interval_s - (now - last_epoch)) / 60, 1)
             return False, "throttled; {:.1f}m remaining and change {:.1f}% < {:.1f}%".format(
