@@ -21,6 +21,7 @@ try:
         upsert_proxy, log_usage, log_source_health, log_scrape_run,
         get_pool_stats, get_usage_leaderboard, export_pool_json,
         update_fingerprints, get_best_proxy, get_quality_metrics,
+    search_proxies, dedup_proxies, export_fresh_txt, export_rotate_txt,
     )
     POOL_AVAILABLE = True
 except ImportError:

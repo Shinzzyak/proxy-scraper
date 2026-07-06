@@ -398,6 +398,72 @@ def get_pool_stats() -> Dict:
         conn.close()
 
 
+def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 0,
+                    anonymity: str = "", max_results: int = 50) -> List[Dict]:
+    """Search proxies by criteria."""
+    conn = get_db()
+    try:
+        q = "SELECT * FROM proxies WHERE 1=1"
+        params = []
+        if protocol:
+            q += " AND protocol = ?"
+            params.append(protocol)
+        if country_code:
+            q += " AND country_code = ?"
+            params.append(country_code.upper())
+        if min_score > 0:
+            q += " AND score >= ?"
+            params.append(min_score)
+        if anonymity:
+            q += " AND anonymity = ?"
+            params.append(anonymity)
+        q += " ORDER BY score DESC, response_time_ms ASC LIMIT ?"
+        params.append(max_results)
+        rows = conn.execute(q, params).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def dedup_proxies(proxies: List[Dict]) -> List[Dict]:
+    """Remove duplicates by IP:port, keep highest score."""
+    seen = {}
+    for p in proxies:
+        key = f"{p['ip']}:{p['port']}"
+        if key not in seen or p.get("score", 0) > seen[key].get("score", 0):
+            seen[key] = p
+    return sorted(seen.values(), key=lambda x: x.get("score", 0), reverse=True)
+
+
+def export_fresh_txt(proxies: List[Dict], max_age_minutes: int = 30, output: str = "proxies-fresh.txt"):
+    """Export only proxies seen within max_age_minutes."""
+    import datetime
+    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=max_age_minutes)
+    cutoff_str = cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+    fresh = [p for p in proxies if p.get("last_seen", "") >= cutoff_str]
+    lines = sorted(set(f"{p['ip']}:{p['port']}" for p in fresh))
+    with open(output, "w") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"✅ Fresh proxies → {output} ({len(fresh)} proxies, <{max_age_minutes}min)")
+    return fresh
+
+
+def export_rotate_txt(proxies: List[Dict], output: str = "proxy-rotate.txt"):
+    """Export best proxy per protocol for auto-rotation."""
+    best = {}
+    for p in proxies:
+        proto = p.get("protocol", "http")
+        if proto not in best or p.get("score", 0) > best[proto].get("score", 0):
+            best[proto] = p
+    lines = []
+    for proto, p in sorted(best.items()):
+        lines.append(f"{p['ip']}:{p['port']}")
+    with open(output, "w") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"✅ Rotate proxies → {output} ({len(lines)} protocols)")
+    return best
+
+
 if __name__ == "__main__":
     # Quick test
     db = get_db()
