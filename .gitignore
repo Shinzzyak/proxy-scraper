@@ -7,6 +7,7 @@ data/proxies.db-shm
 data/proxies.db-wal
 data/freshen_pool.lock
 data/freshen_pool_state.json
+data/publish_snapshot_state.json
 data/tg_attachments.json
 data/tg_state.json
 data/tg_proxies.txt

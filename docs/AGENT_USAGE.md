@@ -103,6 +103,35 @@ Cron example:
 
 Systemd timer is also fine. Keep the lock file enabled; `freshen_pool.py` prevents overlapping runs.
 
+### Publish refreshed VPS snapshot to GitHub
+
+After a successful local/VPS refresh, publish only if quality gates and throttle pass:
+
+```bash
+python3 publish_snapshot.py --dry-run
+python3 publish_snapshot.py
+```
+
+Recommended combined scheduled command:
+
+```bash
+PROXY_DB=data/proxies.db \
+PROXY_VALIDATION_WALL_TIMEOUT=300 \
+PROXY_SOURCE_MAX_BYTES=2000000 \
+PROXY_MAX_PROXIES_PER_SOURCE=15000 \
+python3 freshen_pool.py --telegram --telegram-pages 3 --max-validate 1500 && \
+python3 publish_snapshot.py
+```
+
+Publisher defaults:
+- `--min-total 1000`
+- `--min-countries 50`
+- `--min-interval-hours 6`
+- `--min-change-pct 5`
+- `--max-drop-pct 20`
+
+It stages only generated artifacts, not source code. Use `--force` only for an intentional baseline/reset.
+
 ## Mode 4 — GitHub Actions CI
 
 This repo has `.github/workflows/scrape.yml`.

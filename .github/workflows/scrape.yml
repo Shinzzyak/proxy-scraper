@@ -42,11 +42,4 @@ jobs:
         run: |
           test -s proxies.txt
           test -s proxies.json
-          python3 - <<'PY'
-          import json
-          stats=json.load(open('proxies-stats.json'))
-          proxies=json.load(open('proxies.json'))
-          assert len(proxies) >= 100, f"snapshot too small: {len(proxies)}"
-          assert stats.get('total', 0) >= 100, stats
-          print('snapshot ok:', len(proxies), 'proxies')
-          PY
+          python3 -c 'import json; stats=json.load(open("proxies-stats.json")); proxies=json.load(open("proxies.json")); assert len(proxies) >= 100, "snapshot too small: {}".format(len(proxies)); assert stats.get("total", 0) >= 100, stats; print("snapshot ok: {} proxies".format(len(proxies)))'

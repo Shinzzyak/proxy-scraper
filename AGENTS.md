@@ -45,6 +45,22 @@ PROXY_MAX_PROXIES_PER_SOURCE=15000 \
 python3 freshen_pool.py --telegram --telegram-pages 3 --max-validate 1500
 ```
 
+### Publish high-quality snapshot from VPS/local
+
+Use this after a successful local/VPS refresh to update GitHub artifacts without
+letting GitHub Actions overwrite quality.
+
+```bash
+python3 publish_snapshot.py --dry-run
+python3 publish_snapshot.py
+```
+
+Publisher safeguards:
+- stages only generated artifacts (`proxies.*`, `source-health.json`, reports)
+- refuses low-quality snapshots (`min_total`, `min_countries`)
+- refuses large quality drops unless `--force`
+- throttles commits by default (`--min-interval-hours 6`, `--min-change-pct 5`)
+
 Then query:
 
 ```bash
@@ -65,6 +81,7 @@ Do:
 
 Don't:
 - Do not commit `data/proxies.db`, `data/proxies.db-wal`, `data/proxies.db-shm`, locks, or runtime Telegram state.
+- Do not let CI scrape/overwrite snapshots. Use VPS/local `publish_snapshot.py` for high-quality GitHub artifacts.
 - Do not use stale high-score proxies without checking `last_seen`.
 - Do not disable the low-port sanity filter; junk ports like `:1`, `:12`, `:41`, `:50` cause validator tail hangs.
 - Do not scrape Telegram via auth-required APIs from this repo unless credentials and privacy rules are explicitly provided.
