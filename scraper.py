@@ -724,6 +724,7 @@ def main():
 
     t0 = time.time()
     proxies = scrape_all(discover=args.discover)
+    raw = proxies  # keep raw count for logging
     if not proxies:
         print("\n✗ No proxies!", file=sys.stderr)
         sys.exit(1)
