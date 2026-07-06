@@ -1,17 +1,22 @@
 {
-  "generated_at": "2026-07-06T01:12:37Z",
-  "total": 3,
+  "generated_at": "2026-07-06T01:15:11Z",
+  "total": 840,
   "by_country": {
-    "XX": 3
+    "XX": 840
   },
   "by_protocol": {
-    "http": 3
+    "http": 706,
+    "socks5": 54,
+    "unknown": 80
   },
   "by_anonymity": {
-    "unknown": 3
+    "unknown": 840
   },
   "score_distribution": {
-    "70-79": 3
+    "70-79": 757,
+    "50-59": 67,
+    "40-49": 4,
+    "30-39": 12
   },
-  "avg_response_time_ms": 57
+  "avg_response_time_ms": 89
 }
