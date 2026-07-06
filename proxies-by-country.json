@@ -1,0 +1,95 @@
+{
+  "XX": [
+    {
+      "ip": "104.27.197.200",
+      "port": 80,
+      "protocol": "http",
+      "response_time_ms": 3,
+      "anonymity": "unknown",
+      "last_seen": "2026-07-05T21:23:34Z",
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "isp": "",
+      "score": 73
+    },
+    {
+      "ip": "185.193.29.177",
+      "port": 80,
+      "protocol": "http",
+      "response_time_ms": 3,
+      "anonymity": "unknown",
+      "last_seen": "2026-07-05T21:23:34Z",
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "isp": "",
+      "score": 73
+    },
+    {
+      "ip": "141.101.121.190",
+      "port": 80,
+      "protocol": "http",
+      "response_time_ms": 5,
+      "anonymity": "unknown",
+      "last_seen": "2026-07-05T21:23:34Z",
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "isp": "",
+      "score": 73
+    },
+    {
+      "ip": "62.72.166.220",
+      "port": 80,
+      "protocol": "http",
+      "response_time_ms": 5,
+      "anonymity": "unknown",
+      "last_seen": "2026-07-05T21:23:34Z",
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "isp": "",
+      "score": 73
+    },
+    {
+      "ip": "185.162.230.221",
+      "port": 80,
+      "protocol": "http",
+      "response_time_ms": 2,
+      "anonymity": "unknown",
+      "last_seen": "2026-07-05T21:23:34Z",
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "isp": "",
+      "score": 73
+    },
+    {
+      "ip": "23.227.60.5",
+      "port": 80,
+      "protocol": "http",
+      "response_time_ms": 4,
+      "anonymity": "unknown",
+      "last_seen": "2026-07-05T21:23:34Z",
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "isp": "",
+      "score": 73
+    },
+    {
+      "ip": "206.188.212.240",
+      "port": 8447,
+      "protocol": "unknown",
+      "response_time_ms": 217,
+      "anonymity": "unknown",
+      "last_seen": "2026-07-05T21:23:40Z",
+      "country": "",
+      "country_code": "",
+      "city": "",
+      "isp": "",
+      "score": 58
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-07-05T21:23:41Z",
+  "total": 7,
+  "by_country": {
+    "XX": 7
+  },
+  "by_protocol": {
+    "http": 6,
+    "unknown": 1
+  },
+  "by_anonymity": {
+    "unknown": 7
+  },
+  "score_distribution": {
+    "70-79": 6,
+    "50-59": 1
+  },
+  "avg_response_time_ms": 34
+}

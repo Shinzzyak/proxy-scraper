@@ -191,7 +191,24 @@ PROXY_SOURCES = [
     ("proxy4free-api", "https://www.proxy4free.com/list/free-proxy-list.php", "host:port"),
     ("freeproxy.world-http", "https://freeproxy.world/proxylist/http/", "host:port"),
     ("freeproxy.world-socks5", "https://freeproxy.world/proxylist/socks5/", "host:port"),
+    # ── BATCH 5: Extra public sources ──
+    ("proxy-list-download-http", "https://www.proxy-list.download/api/v1/get?type=http", "host:port"),
+    ("proxy-list-download-https", "https://www.proxy-list.download/api/v1/get?type=https", "host:port"),
+    ("proxy-list-download-socks4", "https://www.proxy-list.download/api/v1/get?type=socks4", "host:port"),
+    ("proxy-list-download-socks5", "https://www.proxy-list.download/api/v1/get?type=socks5", "host:port"),
+    ("proxyscrape-api-http", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all", "host:port"),
+    ("proxyscrape-api-socks4", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=10000&country=all", "host:port"),
+    ("proxyscrape-api-socks5", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all", "host:port"),
+    ("rawproxys-http", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/http.txt", "host:port"),
+    ("rawproxys-socks4", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks4.txt", "host:port"),
+    ("rawproxys-socks5", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks5.txt", "host:port"),
+    ("sunny9577-raw-http", "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt", "host:port"),
+    ("mmpx12-http", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt", "host:port"),
+    ("mmpx12-socks5", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt", "host:port"),
+    ("proxyspace-http", "https://raw.githubusercontent.com/proxyspace/proxy-list/main/http.txt", "host:port"),
+    ("proxyspace-socks5", "https://raw.githubusercontent.com/proxyspace/proxy-list/main/socks5.txt", "host:port"),
 ]
+
 
 # ── Discovery: meta-sources that list proxy URLs ───────────────────────
 DISCOVERY_SOURCES = [
@@ -511,9 +528,10 @@ def geo_batch_lookup(ips, batch_size=100, timeout=10):
     for i in range(0, len(ip_list), batch_size):
         batch = ip_list[i:i+batch_size]
         try:
+            payload = json.dumps([{"query": ip, "fields": "country,countryCode,city,isp"} for ip in batch]).encode()
             req = urllib.request.Request(
                 "http://ip-api.com/batch",
-                data=json.dumps([{"query": ip, "fields": "country,countryCode,city,isp"} for ip in batch]).encode(),
+                data=payload,
                 headers={"Content-Type": "application/json", "User-Agent": "ProxyScraper/5.0"},
                 method="POST",
             )
@@ -528,9 +546,8 @@ def geo_batch_lookup(ips, batch_size=100, timeout=10):
                         "isp": r.get("isp", ""),
                     }
         except Exception as e:
-            print(f"  ⚠ geo batch failed: {e}", file=sys.stderr)
-            continue
-        time.sleep(0.5)  # respect 45 req/min limit
+            print(f"  ⚠ geo batch {i//batch_size+1} failed: {e}", file=sys.stderr)
+        time.sleep(1.2)  # ip-api free tier: 45 req/min → ~1.3s per batch
     return geo
 
 
@@ -677,7 +694,7 @@ def main():
     ap.add_argument("--discover", action="store_true")
     ap.add_argument("--validate", action="store_true")
     ap.add_argument("--validate-full", action="store_true", help="Include anonymity detection (slower)")
-    ap.add_argument("--max-validate", type=int, default=500)
+    ap.add_argument("--max-validate", type=int, default=2000)
     ap.add_argument("--json", action="store_true", help="Output proxies.json with metadata")
     ap.add_argument("--grouped", action="store_true", help="Output by-country, by-protocol, stats JSON")
     ap.add_argument("--health", action="store_true", help="Output source-health.json")
