@@ -8,6 +8,7 @@ import json
 from typing import Dict, List
 
 COUNTRY_NAMES = {
+    "XX": "Unknown / Not Enriched",
     "US": "United States", "ID": "Indonesia", "JP": "Japan", "DE": "Germany",
     "GB": "United Kingdom", "FR": "France", "BR": "Brazil", "IN": "India",
     "RU": "Russia", "CN": "China", "KR": "South Korea", "NL": "Netherlands",
@@ -27,6 +28,8 @@ def generate_heatmap(proxies: List[Dict], output: str = "heatmap.html"):
 
     # Sort by count
     sorted_countries = sorted(by_country.items(), key=lambda x: x[1], reverse=True)
+    known_countries = [(cc, count) for cc, count in sorted_countries if cc != "XX"]
+    unknown_count = by_country.get("XX", 0)
     total = len(proxies)
     max_count = max(by_country.values()) if by_country else 1
 
@@ -72,8 +75,9 @@ h1{{font-size:1.5em;margin-bottom:16px;color:#00ff88}}
 <h1>🌍 Proxy Geo-Distribution</h1>
 <div class="stats">
     <div class="stat"><div class="num">{total}</div><div class="label">Total Proxies</div></div>
-    <div class="stat"><div class="num">{len(by_country)}</div><div class="label">Countries</div></div>
-    <div class="stat"><div class="num">{sorted_countries[0][0] if sorted_countries else 'N/A'}</div><div class="label">Top Country</div></div>
+    <div class="stat"><div class="num">{len(known_countries)}</div><div class="label">Known Countries</div></div>
+    <div class="stat"><div class="num">{unknown_count}</div><div class="label">Unknown Geo</div></div>
+    <div class="stat"><div class="num">{known_countries[0][0] if known_countries else 'N/A'}</div><div class="label">Top Known Country</div></div>
 </div>
 <h2>Distribution</h2>
 {bars_html}

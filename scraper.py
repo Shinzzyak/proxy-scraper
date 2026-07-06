@@ -30,56 +30,8 @@ except ImportError:
 # ── Static Sources ─────────────────────────────────────────────────────
 PROXY_SOURCES = [
     # ── BATCH 1: Original organic collection ──
-    ("tiievii-http", "https://raw.githubusercontent.com/Tiievii/proxy-list/main/http.txt", "host:port"),
-    ("tiievii-socks4", "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks4.txt", "host:port"),
-    ("tiievii-socks5", "https://raw.githubusercontent.com/Tiievii/proxy-list/main/socks5.txt", "host:port"),
-    ("prxylist-http", "https://raw.githubusercontent.com/prxylist/ProxyLists/main/http.txt", "host:port"),
-    ("prxylist-socks4", "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks4.txt", "host:port"),
-    ("prxylist-socks5", "https://raw.githubusercontent.com/prxylist/ProxyLists/main/socks5.txt", "host:port"),
-    ("shiftytrash-http", "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/http.txt", "host:port"),
-    ("shiftytrash-socks4", "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/socks4.txt", "host:port"),
-    ("shiftytrash-socks5", "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/socks5.txt", "host:port"),
-    ("imkk-http", "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/http.txt", "host:port"),
-    ("imkk-socks4", "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks4.txt", "host:port"),
-    ("imkk-socks5", "https://raw.githubusercontent.com/ImKK666/Free-Proxy-List/refs/heads/main/socks5.txt", "host:port"),
-    ("mertguvencli-http", "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/http.txt", "host:port"),
-    ("mertguvencli-socks4", "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks4.txt", "host:port"),
-    ("mertguvencli-socks5", "https://raw.githubusercontent.com/mertguvencli/free-proxy-list/refs/heads/main/proxies/socks5.txt", "host:port"),
-    ("kalemulti-http", "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/http.txt", "host:port"),
-    ("kalemulti-socks4", "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks4.txt", "host:port"),
-    ("kalemulti-socks5", "https://raw.githubusercontent.com/Kalemulti/Free-Proxy-List/main/proxies/socks5.txt", "host:port"),
-    ("bootstrap-http", "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/http.txt", "host:port"),
-    ("bootstrap-socks4", "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks4.txt", "host:port"),
-    ("bootstrap-socks5", "https://raw.githubusercontent.com/TheBootstrapTutorial/ProxyLists/refs/heads/main/lists/socks5.txt", "host:port"),
-    ("mksmg-http", "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/http.txt", "host:port"),
-    ("mksmg-socks4", "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks4.txt", "host:port"),
-    ("mksmg-socks5", "https://raw.githubusercontent.com/mksmg/Free-Proxy-List/main/socks5.txt", "host:port"),
-    ("uzayatsiz-http", "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/http.txt", "host:port"),
-    ("uzayatsiz-socks4", "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/socks4.txt", "host:port"),
-    ("uzayatsiz-socks5", "https://raw.githubusercontent.com/uzayatsiz/Free-Proxies/main/socks5.txt", "host:port"),
-    ("vvmd-http", "https://raw.githubusercontent.com/vvmd/ProxyList/main/http.txt", "host:port"),
-    ("vvmd-socks4", "https://raw.githubusercontent.com/vvmd/ProxyList/main/socks4.txt", "host:port"),
-    ("vvmd-socks5", "https://raw.githubusercontent.com/vvmd/ProxyList/main/socks5.txt", "host:port"),
-    ("defacto2-http", "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/http.txt", "host:port"),
-    ("defacto2-socks4", "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/socks4.txt", "host:port"),
-    ("defacto2-socks5", "https://raw.githubusercontent.com/Defacto2/Proxy-list/refs/heads/main/socks5.txt", "host:port"),
-    ("anongrp-http", "https://raw.githubusercontent.com/AnonGrp/Proxy-List/main/http.txt", "host:port"),
-    ("anongrp-socks4", "https://raw.githubusercontent.com/AnonGrp/Proxy-List/main/socks4.txt", "host:port"),
-    ("anongrp-socks5", "https://raw.githubusercontent.com/AnonGrp/Proxy-List/main/socks5.txt", "host:port"),
-    ("byteblitz-http", "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/main/http.txt", "host:port"),
-    ("byteblitz-socks4", "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/main/socks4.txt", "host:port"),
-    ("byteblitz-socks5", "https://raw.githubusercontent.com/ByteBlitz/Proxy-List/main/socks5.txt", "host:port"),
-    ("databay-http", "https://raw.githubusercontent.com/databayt/libproxy/main/http.txt", "host:port"),
-    ("databay-socks4", "https://raw.githubusercontent.com/databayt/libproxy/main/socks4.txt", "host:port"),
-    ("databay-socks5", "https://raw.githubusercontent.com/databayt/libproxy/main/socks5.txt", "host:port"),
-    ("gfpcom-http", "https://raw.githubusercontent.com/gfpcom/Proxy-List/main/http.txt", "host:port"),
-    ("gfpcom-socks5", "https://raw.githubusercontent.com/gfpcom/Proxy-List/main/socks5.txt", "host:port"),
-    ("hawspider-http", "https://raw.githubusercontent.com/hawspider/Free-Proxy/main/http.txt", "host:port"),
     ("hookzof-socks5", "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "host:port"),
-    ("ermaozi-http", "https://raw.githubusercontent.com/ermaozi/get_proxy/main/http.txt", "host:port"),
     ("clarketm-http", "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", "host:port"),
-    ("clarketm-socks4", "https://raw.githubusercontent.com/clarketm/proxy-list/master/socks4.txt", "host:port"),
-    ("clarketm-socks5", "https://raw.githubusercontent.com/clarketm/proxy-list/master/socks5.txt", "host:port"),
     ("roosterkid-socks5", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt", "host:port"),
     ("roosterkid-socks4", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt", "host:port"),
     ("roosterkid-https", "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt", "host:port"),
@@ -98,16 +50,7 @@ PROXY_SOURCES = [
     ("proxifly-https", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.txt", "host:port"),
     ("proxifly-socks4", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks4/data.txt", "host:port"),
     ("proxifly-socks5", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks5/data.txt", "host:port"),
-    ("vakhov-http", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/http.txt", "host:port"),
-    ("vakhov-https", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/https.txt", "host:port"),
-    ("vakhov-socks4", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/socks4.txt", "host:port"),
-    ("vakhov-socks5", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/socks5.txt", "host:port"),
-    ("thordata-http", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/http.txt", "host:port"),
-    ("thordata-https", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/https.txt", "host:port"),
-    ("thordata-socks4", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/socks4.txt", "host:port"),
-    ("thordata-socks5", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxy-list/socks5.txt", "host:port"),
     ("murongpig-http", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt", "host:port"),
-    ("murongpig-https", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/https.txt", "host:port"),
     ("murongpig-socks5", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt", "host:port"),
     ("prxchk-http", "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt", "host:port"),
     ("prxchk-socks5", "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks5.txt", "host:port"),
@@ -118,60 +61,21 @@ PROXY_SOURCES = [
     ("anon-https", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/https_proxies.txt", "host:port"),
     ("anon-socks5", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt", "host:port"),
     ("opsxcq-mixed", "https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt", "host:port"),
-    ("ahahaabas-socks5", "https://raw.githubusercontent.com/ahahaabas/socks5-proxies-free/main/proxies.txt", "host:port"),
-    ("ahahaabas-verified", "https://raw.githubusercontent.com/ahahaabas/verified-proxy-list/main/proxies.txt", "host:port"),
-    ("ahahaabas-mixed", "https://raw.githubusercontent.com/ahahaabas/mixed-proxy-list/main/proxies.txt", "host:port"),
-    ("ahahaabas-plain", "https://raw.githubusercontent.com/ahahaabas/plain-text-proxy-list/main/proxies.txt", "host:port"),
-    ("ahahaabas-http", "https://raw.githubusercontent.com/ahahaabas/proxy-list-http/main/proxies.txt", "host:port"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
-    ("ahahaabas-st-socks", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/socks.txt", "host:port"),
-    ("ahahaabas-free-socks5", "https://raw.githubusercontent.com/ahahaabas/free-socks5-proxy-list/main/proxies.txt", "host:port"),
-    ("ahahaabas-bulk", "https://raw.githubusercontent.com/ahahaabas/proxies-st-bulk-list/main/proxies.txt", "host:port"),
-    ("adasd223-socks4", "https://raw.githubusercontent.com/adasd223/socks4-proxy-feed/main/proxies.txt", "host:port"),
-    ("adasd223-bulk", "https://raw.githubusercontent.com/adasd223/proxies-st-bulk-list/main/proxies.txt", "host:port"),
-    ("pscrape-gh-http", "https://raw.githubusercontent.com/proxyscrape/free-proxy-list/main/proxies/raw/http.txt", "host:port"),
-    ("pscrape-gh-socks4", "https://raw.githubusercontent.com/proxyscrape/free-proxy-list/main/proxies/raw/socks4.txt", "host:port"),
-    ("pscrape-gh-socks5", "https://raw.githubusercontent.com/proxyscrape/free-proxy-list/main/proxies/raw/socks5.txt", "host:port"),
-    ("geonode-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http%%2Chttps", "geonode"),
     ("geonode-socks5", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5", "geonode"),
-    ("monosans-https", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/https.txt", "host:port"),
-    ("proxy4parsing-socks5", "https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/socks5.txt", "host:port"),
-    ("uptimer-https", "https://raw.githubusercontent.com/UptimerBot/proxy-list/refs/heads/main/https.txt", "host:port"),
     # ── BATCH 3: ProxyGather analysis ──
     ("openproxylist-http", "https://openproxylist.xyz/http.txt", "host:port"),
     ("openproxylist-socks4", "https://openproxylist.xyz/socks4.txt", "host:port"),
     ("openproxylist-socks5", "https://openproxylist.xyz/socks5.txt", "host:port"),
-    ("hideipme-http", "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/http.txt", "host:port"),
-    ("hideipme-https", "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/https.txt", "host:port"),
-    ("hideipme-socks4", "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/socks4.txt", "host:port"),
-    ("hideipme-socks5", "https://github.com/zloi-user/hideip.me/raw/refs/heads/master/socks5.txt", "host:port"),
-    ("ipdb-proxy", "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestProxy/proxy.txt", "host:port"),
     ("zaeem20-http", "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/http.txt", "host:port"),
     ("zaeem20-https", "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/https.txt", "host:port"),
     ("zaeem20-socks4", "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks4.txt", "host:port"),
     ("zaeem20-socks5", "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks5.txt", "host:port"),
-    ("kangproxy-raw", "https://raw.githubusercontent.com/officialputuid/KangProxy/refs/heads/KangProxy/xResults/RAW.txt", "host:port"),
     ("fatezero-http", "https://static.fatezero.org/tmp/proxy.txt", "host:port"),
-    ("fpu-http", "https://freeproxyupdate.com/files/txt/http.txt", "host:port"),
-    ("fpu-https", "https://freeproxyupdate.com/files/txt/https-ssl.txt", "host:port"),
-    ("fpu-socks4", "https://freeproxyupdate.com/files/txt/socks4.txt", "host:port"),
-    ("fpu-socks5", "https://freeproxyupdate.com/files/txt/socks5.txt", "host:port"),
-    ("fpu-elite", "https://freeproxyupdate.com/files/txt/elite.txt", "host:port"),
-    ("proxydl-http", "https://www.proxy-list.download/api/v2/get?l=en&t=http", "host:port"),
-    ("proxydl-https", "https://www.proxy-list.download/api/v2/get?l=en&t=https", "host:port"),
-    ("proxydl-socks4", "https://www.proxy-list.download/api/v2/get?l=en&t=socks4", "host:port"),
-    ("proxydl-socks5", "https://www.proxy-list.download/api/v2/get?l=en&t=socks5", "host:port"),
-    ("proxymist-http", "https://proxymist.com/protocols/http/", "host:port"),
-    ("proxymist-socks4", "https://proxymist.com/protocols/socks4/", "host:port"),
-    ("proxymist-socks5", "https://proxymist.com/protocols/socks5/", "host:port"),
-    ("proxymist-elite", "https://proxymist.com/anonymity/elite/", "host:port"),
     ("ab57-proxylist", "https://ab57.ru/downloads/proxylist.txt", "host:port"),
     ("ab57-proxyold", "https://ab57.ru/downloads/proxyold.txt", "host:port"),
-    ("coderduck-http", "https://www.coderduck.com/free-proxy-list", "host:port"),
     ("cybergw-http", "https://cyber-gateway.net/get-proxy/free-proxy/24-free-http-proxy", "host:port"),
     ("cybergw-socks5", "https://cyber-gateway.net/get-proxy/free-proxy/56-free-socks-proxy", "host:port"),
-    ("pubproxy-http", "http://pubproxy.com/api/proxy?limit=5&level=elite&last_check=10&speed=1&https=true&format=txt", "host:port"),
-    ("911proxy-api", "https://www.911proxy.com/detection/proxyList?limit=500&page=1&sort_by=lastChecked&sort_type=desc", "geonode"),
     ("speedx-http-cdn", "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/http.txt", "host:port"),
     ("speedx-socks4-cdn", "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks4.txt", "host:port"),
     ("speedx-socks5-cdn", "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks5.txt", "host:port"),
@@ -179,34 +83,8 @@ PROXY_SOURCES = [
     ("monosans-all", "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt", "host:port"),
     # ── BATCH 4: More repos found via topic search ──
     ("vpslab-http", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_all.txt", "host:port"),
-    ("vpslab-socks4", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks4.txt", "host:port"),
-    ("vpslab-socks5", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5.txt", "host:port"),
-    ("mikicodes-http", "https://raw.githubusercontent.com/mikicodes1/Free-Proxy-List/main/http.txt", "host:port"),
-    ("mikicodes-socks5", "https://raw.githubusercontent.com/mikicodes1/Free-Proxy-List/main/socks5.txt", "host:port"),
-    ("mgozalid-http", "https://raw.githubusercontent.com/mgozalid/Proxy-List-Updated/main/http.txt", "host:port"),
-    ("mgozalid-socks5", "https://raw.githubusercontent.com/mgozalid/Proxy-List-Updated/main/socks5.txt", "host:port"),
-    ("aress-mirror-http", "https://raw.githubusercontent.com/aress468/Free-Proxy-List/master/http.txt", "host:port"),
-    ("aress-mirror-socks5", "https://raw.githubusercontent.com/aress468/Free-Proxy-List/master/socks5.txt", "host:port"),
-    ("pabloqpasin-http", "https://raw.githubusercontent.com/pabloqpasin/proxy-list/main/proxies/http.txt", "host:port"),
-    ("pabloqpasin-socks5", "https://raw.githubusercontent.com/pabloqpasin/proxy-list/main/proxies/socks5.txt", "host:port"),
-    ("almroot-http", "https://raw.githubusercontent.com/almroot/proxylist/master/http.txt", "host:port"),
-    ("almroot-socks5", "https://raw.githubusercontent.com/almroot/proxylist/master/socks5.txt", "host:port"),
-    ("sunny9577-http", "https://raw.githubusercontent.com/sunny9577/proxy-list/master/generated/http.json", "geonode"),
-    ("sunny9577-socks5", "https://raw.githubusercontent.com/sunny9577/proxy-list/master/generated/socks5.json", "geonode"),
-    ("lupinthegreat-http", "https://raw.githubusercontent.com/lupinthegreat/proxy-list/master/http.txt", "host:port"),
-    ("lupinthegreat-socks5", "https://raw.githubusercontent.com/lupinthegreat/proxy-list/master/socks5.txt", "host:port"),
-    ("databayt-all", "https://raw.githubusercontent.com/databayt/libproxy/main/checked.txt", "host:port"),
     ("hookzof-socks5-v2", "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", "host:port"),
-    ("shiftytrash-all", "https://raw.githubusercontent.com/ShiftyTrash/free-proxy-list/master/all.txt", "host:port"),
-    ("proxynova-api", "https://api.proxynova.com/get_all?http=true&https=true&limit=500", "host:port"),
-    ("proxy4free-api", "https://www.proxy4free.com/list/free-proxy-list.php", "host:port"),
-    ("freeproxy.world-http", "https://freeproxy.world/proxylist/http/", "host:port"),
-    ("freeproxy.world-socks5", "https://freeproxy.world/proxylist/socks5/", "host:port"),
     # ── BATCH 5: Extra public sources ──
-    ("proxy-list-download-http", "https://www.proxy-list.download/api/v1/get?type=http", "host:port"),
-    ("proxy-list-download-https", "https://www.proxy-list.download/api/v1/get?type=https", "host:port"),
-    ("proxy-list-download-socks4", "https://www.proxy-list.download/api/v1/get?type=socks4", "host:port"),
-    ("proxy-list-download-socks5", "https://www.proxy-list.download/api/v1/get?type=socks5", "host:port"),
     ("proxyscrape-api-http", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all", "host:port"),
     ("proxyscrape-api-socks4", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=10000&country=all", "host:port"),
     ("proxyscrape-api-socks5", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all", "host:port"),
@@ -216,8 +94,6 @@ PROXY_SOURCES = [
     ("sunny9577-raw-http", "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt", "host:port"),
     ("mmpx12-http", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt", "host:port"),
     ("mmpx12-socks5", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt", "host:port"),
-    ("proxyspace-http", "https://raw.githubusercontent.com/proxyspace/proxy-list/main/http.txt", "host:port"),
-    ("proxyspace-socks5", "https://raw.githubusercontent.com/proxyspace/proxy-list/main/socks5.txt", "host:port"),
     # ── BATCH 6: Regional + high-quality sources ──
     # Indonesia-focused
     ('id-proxy1-http', 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt', 'host:port'),
@@ -424,19 +300,28 @@ def scrape_source(name, url, fmt):
 
 
 def scrape_all(discover=False):
+    """Scrape all sources. Returns (proxies_set, source_map).
+
+    source_map: {"ip:port": source_name} — tracks which source contributed each proxy.
+    """
     sources = list(PROXY_SOURCES)
     if discover:
         sources += discover_new_urls()
     all_proxies = set()
+    source_map = {}  # proxy_str -> source_name
     print(f"\nScraping {len(sources)} sources...\n")
     with ThreadPoolExecutor(max_workers=25) as pool:
         futs = {pool.submit(scrape_source, n, u, f): n for n, u, f in sources}
         for fut in as_completed(futs):
             try:
-                all_proxies.update(fut.result())
+                name = futs[fut]
+                proxies = fut.result()
+                all_proxies.update(proxies)
+                for p in proxies:
+                    source_map.setdefault(p, name)
             except Exception as e:
                 print(f"  ✗ {e}", file=sys.stderr)
-    return all_proxies
+    return all_proxies, source_map
 
 
 def scrape_creds():
@@ -558,13 +443,19 @@ def validate_single(proxy, do_anonymity=False):
 # ── Geolocation (batch) ───────────────────────────────────────────────
 
 def geo_batch_lookup(ips, batch_size=100, timeout=10):
-    """Batch geolocation via ip-api.com. Returns {ip: {country, countryCode, city, isp}}."""
+    """Batch geolocation via ip-api.com. Returns {ip: {country, country_code, city, isp}}.
+
+    ip-api only returns the fields explicitly requested. Keep ``status`` and ``query``
+    in the request because the parser needs them to map successful responses back to
+    proxy IPs. Without those fields every lookup is silently discarded.
+    """
     geo = {}
-    ip_list = list(set(ips))[:2000]  # cap at 2000
+    ip_list = sorted(set(ip for ip in ips if ip))[:2000]  # cap at 2000
+    fields = "status,message,query,country,countryCode,city,isp"
     for i in range(0, len(ip_list), batch_size):
         batch = ip_list[i:i+batch_size]
         try:
-            payload = json.dumps([{"query": ip, "fields": "country,countryCode,city,isp"} for ip in batch]).encode()
+            payload = json.dumps([{"query": ip, "fields": fields} for ip in batch]).encode()
             req = urllib.request.Request(
                 "http://ip-api.com/batch",
                 data=payload,
@@ -573,11 +464,14 @@ def geo_batch_lookup(ips, batch_size=100, timeout=10):
             )
             resp = urllib.request.urlopen(req, timeout=timeout)
             results = json.loads(resp.read().decode())
+            if isinstance(results, dict):
+                results = [results]
             for r in results:
-                if r.get("status") == "success":
-                    geo[r["query"]] = {
+                query = r.get("query")
+                if r.get("status") == "success" and query:
+                    geo[query] = {
                         "country": r.get("country", ""),
-                        "country_code": r.get("countryCode", ""),
+                        "country_code": (r.get("countryCode", "") or "").upper(),
                         "city": r.get("city", ""),
                         "isp": r.get("isp", ""),
                     }
@@ -615,8 +509,11 @@ def compute_score(proxy_dict):
     return score
 
 
-def filter_valid(proxies, max_validate=500, do_anonymity=False):
-    """Validate proxies in parallel, return list of valid proxy dicts."""
+def filter_valid(proxies, max_validate=500, do_anonymity=False, source_map=None):
+    """Validate proxies in parallel, return list of valid proxy dicts.
+
+    If source_map is provided, each valid proxy gets a 'source_name' field.
+    """
     to_test = list(proxies)[:max_validate]
     print(f"\n🔍 Validating {len(to_test)} proxies...\n")
     valid = []
@@ -639,6 +536,12 @@ def filter_valid(proxies, max_validate=500, do_anonymity=False):
         p["country_code"] = g.get("country_code", "")
         p["city"] = g.get("city", "")
         p["isp"] = g.get("isp", "")
+
+    # Attach source attribution
+    if source_map:
+        for p in valid:
+            key = f"{p['ip']}:{p['port']}"
+            p["source_name"] = source_map.get(key, "")
 
     # Scoring
     for p in valid:
@@ -748,19 +651,19 @@ def main():
         os.environ["PROXY_RELAY_FIRST"] = "1"
 
     t0 = time.time()
-    proxies = scrape_all(discover=args.discover)
+    proxies, source_map = scrape_all(discover=args.discover)
     raw = proxies  # keep raw count for logging
     if not proxies:
         print("\n✗ No proxies!", file=sys.stderr)
         sys.exit(1)
-    print(f"\n📊 {len(proxies)} unique proxies")
+    print(f"\n📊 {len(proxies)} unique proxies ({len(set(source_map.values()))} sources)")
 
     # Save health report
     if args.health:
         save_health_report()
 
     if args.validate:
-        valid = filter_valid(proxies, args.max_validate, do_anonymity=args.validate_full)
+        valid = filter_valid(proxies, args.max_validate, do_anonymity=args.validate_full, source_map=source_map)
         if args.json and valid:
             save_json_output(valid)
         if args.grouped and valid:
@@ -768,7 +671,7 @@ def main():
         if valid and POOL_AVAILABLE:
             print(f"\n📦 Updating proxy pool...")
             for p in valid:
-                upsert_proxy(p)
+                upsert_proxy(p, source=p.get("source_name", ""))
             update_fingerprints()
             print(f"✅ Pool updated with {len(valid)} proxies")
         if POOL_AVAILABLE:

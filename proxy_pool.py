@@ -14,7 +14,7 @@ import json
 import os
 import sqlite3
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Optional, List, Dict, Tuple
 
@@ -161,7 +161,7 @@ def get_source_uptime(source_name: str, hours: int = 72) -> Dict:
     """Get source uptime stats for last N hours."""
     conn = get_db()
     try:
-        cutoff = datetime.now(timezone.utc).replace(hour=datetime.now(timezone.utc).hour - hours).isoformat()
+        cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
         row = conn.execute("""
             SELECT
                 COUNT(*) as total_checks,
@@ -176,7 +176,7 @@ def get_source_uptime(source_name: str, hours: int = 72) -> Dict:
         conn.close()
 
 
-def predict_source_death(source_name: str) -> Optional[Dict]:
+def predict_source_death(source_name: str, window_hours: int = 72) -> Optional[Dict]:
     """Predict when source will die based on trend."""
     conn = get_db()
     try:
@@ -204,7 +204,7 @@ def predict_source_death(source_name: str) -> Optional[Dict]:
         estimated_hours_left = None
         if at_risk:
             # Simple: failures / total * 72h window
-            estimated_hours_left = round((1 - alive_rate) * hours, 1) if alive_rate > 0 else 0
+            estimated_hours_left = round((1 - alive_rate) * window_hours, 1) if alive_rate > 0 else 0
 
         return {
             "source": source_name,
@@ -219,17 +219,18 @@ def predict_source_death(source_name: str) -> Optional[Dict]:
 
 # ── Proxy Pool ──────────────────────────────────────────────────────────
 
-def upsert_proxy(proxy_dict: Dict):
-    """Insert or update proxy in pool."""
+def upsert_proxy(proxy_dict: Dict, source: str = ""):
+    """Insert or update proxy in pool. Optional source attribution."""
     conn = get_db()
     try:
         conn.execute("""
-            INSERT INTO proxies (ip, port, protocol, score, anonymity, country, country_code, city, isp, response_time_ms, last_seen, first_seen)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO proxies (ip, port, protocol, score, anonymity, country, country_code, city, isp, response_time_ms, last_seen, first_seen, source_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (ip, port) DO UPDATE SET
                 protocol=excluded.protocol, score=excluded.score, anonymity=excluded.anonymity,
                 country=excluded.country, country_code=excluded.country_code, city=excluded.city,
-                isp=excluded.isp, response_time_ms=excluded.response_time_ms, last_seen=excluded.last_seen
+                isp=excluded.isp, response_time_ms=excluded.response_time_ms, last_seen=excluded.last_seen,
+                source_name = CASE WHEN excluded.source_name != '' THEN excluded.source_name ELSE proxies.source_name END
         """, (
             proxy_dict["ip"], proxy_dict["port"],
             proxy_dict.get("protocol", "http"),
@@ -242,6 +243,7 @@ def upsert_proxy(proxy_dict: Dict):
             proxy_dict.get("response_time_ms", 0),
             proxy_dict.get("last_seen", ""),
             proxy_dict.get("last_seen", ""),
+            source or proxy_dict.get("source_name", ""),
         ))
         conn.commit()
     finally:
@@ -387,8 +389,11 @@ def get_pool_stats() -> Dict:
                 SUM(CASE WHEN protocol='socks5' THEN 1 ELSE 0 END) as socks5_count,
                 ROUND(AVG(score), 1) as avg_score,
                 ROUND(AVG(response_time_ms), 0) as avg_rt,
-                COUNT(DISTINCT country_code) as countries,
-                COUNT(DISTINCT isp) as isps,
+                COUNT(DISTINCT NULLIF(country_code, '')) as countries,
+                COUNT(DISTINCT NULLIF(isp, '')) as isps,
+                SUM(CASE WHEN COALESCE(country_code, '') = '' THEN 1 ELSE 0 END) as unknown_country_count,
+                SUM(CASE WHEN COALESCE(country_code, '') != '' THEN 1 ELSE 0 END) as known_geo_count,
+                ROUND(100.0 * SUM(CASE WHEN COALESCE(country_code, '') != '' THEN 1 ELSE 0 END) / MAX(COUNT(*), 1), 1) as geo_coverage_pct,
                 SUM(CASE WHEN is_datacenter=1 THEN 1 ELSE 0 END) as datacenter_count,
                 SUM(CASE WHEN is_datacenter=0 THEN 1 ELSE 0 END) as residential_count
             FROM proxies

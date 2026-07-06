@@ -11,6 +11,7 @@ Usage:
     python3 cli.py heatmap
     python3 cli.py benchmark --limit 20
     python3 cli.py report
+    python3 cli.py geo-repair
 """
 import argparse
 import json
@@ -108,6 +109,70 @@ def cmd_report(args):
         print(report)
 
 
+def cmd_geo_repair(args):
+    from geo_repair import repair_geo
+    result = repair_geo(
+        batch_size=args.batch_size,
+        limit=args.limit,
+        export=not args.no_export,
+        json_fallback=args.json_fallback,
+    )
+    if args.json:
+        print(json.dumps(result, indent=2))
+
+
+def cmd_sources(args):
+    from proxy_pool import get_db
+    conn = get_db()
+    try:
+        rows = conn.execute("""
+            SELECT source_name,
+                COUNT(*) as proxies,
+                SUM(CASE WHEN COALESCE(country_code,'') != '' THEN 1 ELSE 0 END) as geo_known,
+                ROUND(AVG(score),1) as avg_score,
+                ROUND(AVG(response_time_ms),0) as avg_rt
+            FROM proxies
+            WHERE source_name != ''
+            GROUP BY source_name
+            ORDER BY proxies DESC
+        """).fetchall()
+        if args.json:
+            print(json.dumps([dict(r) for r in rows], indent=2))
+        else:
+            print(f"{'Source':<30} {'Proxies':>8} {'Geo%':>6} {'Score':>6} {'RT':>6}")
+            print("-" * 60)
+            for r in rows:
+                geo_pct = round(100.0 * r['geo_known'] / max(r['proxies'], 1), 0)
+                print(f"{r['source_name']:<30} {r['proxies']:>8} {geo_pct:>5.0f}% {r['avg_score']:>5} {r['avg_rt']:>5}ms")
+    finally:
+        conn.close()
+
+
+def cmd_source_health(args):
+    from proxy_pool import get_db
+    conn = get_db()
+    try:
+        rows = conn.execute("""
+            SELECT source_name,
+                COUNT(*) as runs,
+                SUM(CASE WHEN alive=1 THEN 1 ELSE 0 END) as alive_runs,
+                MAX(timestamp) as last_seen
+            FROM source_history
+            GROUP BY source_name
+            ORDER BY last_seen DESC
+        """).fetchall()
+        if args.json:
+            print(json.dumps([dict(r) for r in rows], indent=2))
+        else:
+            print(f"{'Source':<30} {'Runs':>6} {'Alive':>6} {'Uptime':>7} {'Last Seen':>20}")
+            print("-" * 75)
+            for r in rows:
+                uptime = round(100.0 * r['alive_runs'] / max(r['runs'], 1), 1)
+                print(f"{r['source_name']:<30} {r['runs']:>6} {r['alive_runs']:>6} {uptime:>6.1f}% {r['last_seen'][:19] if r['last_seen'] else 'never':>20}")
+    finally:
+        conn.close()
+
+
 def main():
     ap = argparse.ArgumentParser(description="Proxy Pool CLI")
     sub = ap.add_subparsers(dest="command")
@@ -154,6 +219,22 @@ def main():
     rp = sub.add_parser("report")
     rp.add_argument("--output", "-o", default="")
 
+    # geo repair
+    gr = sub.add_parser("geo-repair")
+    gr.add_argument("--batch-size", type=int, default=100)
+    gr.add_argument("--limit", "-l", type=int, default=0, help="0 = all missing proxies")
+    gr.add_argument("--no-export", action="store_true")
+    gr.add_argument("--json-fallback", default="proxies.json")
+    gr.add_argument("--json", "-j", action="store_true")
+
+    # sources
+    sr = sub.add_parser("sources")
+    sr.add_argument("--json", "-j", action="store_true")
+
+    # source-health
+    sh = sub.add_parser("source-health")
+    sh.add_argument("--json", "-j", action="store_true")
+
     args = ap.parse_args()
     if not args.command:
         ap.print_help()
@@ -163,6 +244,8 @@ def main():
         "search": cmd_search, "best": cmd_best, "stats": cmd_stats,
         "top": cmd_top, "banned": cmd_banned, "heatmap": cmd_heatmap,
         "benchmark": cmd_benchmark, "report": cmd_report,
+        "geo-repair": cmd_geo_repair,
+        "sources": cmd_sources, "source-health": cmd_source_health,
     }
     cmds[args.command](args)
 
