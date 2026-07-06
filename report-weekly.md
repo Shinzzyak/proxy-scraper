@@ -3,19 +3,19 @@
 **Period:** 2026-06-29 → 2026-07-06
 
 ## Scrape Summary
-- **Total runs:** 4
-- **Avg alive per run:** 932
-- **Avg duration:** 112.8s
-- **Total raw proxies scraped:** 461,728
+- **Total runs:** 11
+- **Avg alive per run:** 729
+- **Avg duration:** 76.3s
+- **Total raw proxies scraped:** 917,997
 
 ## Current Pool
-- **Total proxies:** 3643
-- **HTTP:** 3077 | **SOCKS5:** 201
-- **Avg score:** 70.8/100
-- **Countries:** 78
+- **Total proxies:** 7247
+- **HTTP:** 5231 | **SOCKS5:** 630
+- **Avg score:** 68.5/100
+- **Countries:** 103
 
 ## Source Health
-- **Alive sources:** 77
+- **Alive sources:** 102
 - **Dead sources:** 146
 - **Banned sources:** 0
 
