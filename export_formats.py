@@ -68,7 +68,8 @@ def export_env(proxies: List[Dict], output: str):
         lines.append(f'export all_proxy="$ALL_PROXY"')
     lines.append("")
     lines.append("# All proxies (JSON)")
-    lines.append(f'export PROXY_POOL=\'{json.dumps([f"{p["ip"]}:{p["port"]}" for p in proxies[:20]])}\'')
+    proxy_pool = [f"{p['ip']}:{p['port']}" for p in proxies[:20]]
+    lines.append(f"export PROXY_POOL='{json.dumps(proxy_pool)}'")
     with open(output, "w") as f:
         f.write("\n".join(lines) + "\n")
     print(f"✅ ENV → {output}")

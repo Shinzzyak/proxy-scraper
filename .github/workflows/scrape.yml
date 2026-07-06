@@ -9,6 +9,7 @@ on:
     paths:
       - 'scraper.py'
       - 'freshen_pool.py'
+      - 'export_formats.py'
       - 'tg_scraper.py'
       - 'geo_repair.py'
       - 'proxy_pool.py'
