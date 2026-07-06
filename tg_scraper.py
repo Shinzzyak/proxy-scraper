@@ -34,6 +34,7 @@ except ImportError:
 # ── Config ──────────────────────────────────────────────────────────────
 
 CONFIG_FILE = Path(__file__).parent / "data" / "tg_channels.json"
+STATE_FILE = Path(__file__).parent / "data" / "tg_state.json"
 
 # Known channels that post proxy lists (verified working or worth trying)
 KNOWN_CHANNELS = {
@@ -52,6 +53,21 @@ KNOWN_CHANNELS = {
         "description": "Telegram unblock SOCKS5 proxy posts",
         "protocols": ["socks5"],
         "priority": "high",
+    },
+    "VipProxy24": {
+        "description": "VIP PROXY SERVER; public preview exposes HTTPS/SOCKS5 txt attachments",
+        "protocols": ["http", "https", "socks5"],
+        "priority": "high",
+    },
+    "HQPROX": {
+        "description": "HQ Proxies daily free proxy; working_http/socks5 txt attachments",
+        "protocols": ["http", "socks5"],
+        "priority": "high",
+    },
+    "freeproxyses": {
+        "description": "Free Proxy channel with txt proxy attachments",
+        "protocols": ["http", "socks4", "socks5"],
+        "priority": "medium",
     },
     # High-activity channels
     "free_proxy_list": {
@@ -151,9 +167,15 @@ KNOWN_CHANNELS = {
 IP_PORT_RE = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{2,5})')
 # Extended pattern: protocol://ip:port
 PROTO_RE = re.compile(r'(https?|socks[45])://(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{2,5})')
-# Port range filter (valid proxy ports)
+# Port filter: allow common low proxy ports, otherwise require >=1024.
+# Prevent junk like :1/:12/:41 from causing validation tail-hangs.
 MIN_PORT = 1024
 MAX_PORT = 65535
+COMMON_LOW_PROXY_PORTS = {80, 81, 82, 83, 84, 85, 88, 443, 444, 808, 888, 999, 1000}
+
+
+def is_valid_proxy_port(port: int) -> bool:
+    return port in COMMON_LOW_PROXY_PORTS or MIN_PORT <= port <= MAX_PORT
 
 
 def load_config() -> dict:
@@ -177,10 +199,20 @@ def load_config() -> dict:
 
 
 def save_config(config: dict):
-    """Save channel config."""
+    """Save channel config without volatile runtime fields."""
     CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    stable = dict(config)
+    stable.pop("last_run", None)
+    stable.pop("total_proxies", None)
     with open(CONFIG_FILE, "w") as f:
-        json.dump(config, f, indent=2)
+        json.dump(stable, f, indent=2)
+
+
+def save_state(**state):
+    """Save volatile Telegram scrape runtime state."""
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
 
 
 # ── Telegram Public Preview Scraper ─────────────────────────────────────
@@ -200,6 +232,26 @@ def fetch_tg_page(channel: str, before: int = None) -> str | None:
     except Exception as e:
         print(f"  ⚠ fetch failed for @{channel}: {e}", file=sys.stderr)
         return None
+
+
+def extract_message_ids(html: str, channel: str) -> list[int]:
+    """Extract message IDs for correct t.me/s pagination."""
+    if not BS4_AVAILABLE:
+        ids = re.findall(rf"/{re.escape(channel)}/(\d+)", html)
+        return sorted({int(x) for x in ids})
+    soup = BeautifulSoup(html, "html.parser")
+    ids = set()
+    for msg in soup.find_all(attrs={"data-post": True}):
+        post = msg.get("data-post", "")
+        if "/" in post:
+            _, msg_id = post.rsplit("/", 1)
+            if msg_id.isdigit():
+                ids.add(int(msg_id))
+    for a in soup.find_all("a", href=True):
+        m = re.search(rf"/{re.escape(channel)}/(\d+)", a["href"])
+        if m:
+            ids.add(int(m.group(1)))
+    return sorted(ids)
 
 
 def extract_attachments_from_html(html: str, channel: str) -> list:
@@ -231,7 +283,7 @@ def extract_proxies_from_html(html: str) -> set:
     if not BS4_AVAILABLE:
         # Fallback: regex only
         return set(f"{ip}:{port}" for ip, port in IP_PORT_RE.findall(html)
-                   if MIN_PORT <= int(port) <= MAX_PORT)
+                   if is_valid_proxy_port(int(port)))
 
     soup = BeautifulSoup(html, "html.parser")
     proxies = set()
@@ -241,25 +293,25 @@ def extract_proxies_from_html(html: str) -> set:
     for msg in messages:
         text = msg.get_text(separator="\n")
         for ip, port in IP_PORT_RE.findall(text):
-            if MIN_PORT <= int(port) <= MAX_PORT:
+            if is_valid_proxy_port(int(port)):
                 proxies.add(f"{ip}:{port}")
         # Also check for protocol://ip:port format
         for proto, ip, port in PROTO_RE.findall(text):
-            if MIN_PORT <= int(port) <= MAX_PORT:
+            if is_valid_proxy_port(int(port)):
                 proxies.add(f"{ip}:{port}")
 
     # Method 2: Code blocks (many channels use <code> for proxy lists)
     for code in soup.find_all("code"):
         text = code.get_text()
         for ip, port in IP_PORT_RE.findall(text):
-            if MIN_PORT <= int(port) <= MAX_PORT:
+            if is_valid_proxy_port(int(port)):
                 proxies.add(f"{ip}:{port}")
 
     # Method 3: Pre blocks
     for pre in soup.find_all("pre"):
         text = pre.get_text()
         for ip, port in IP_PORT_RE.findall(text):
-            if MIN_PORT <= int(port) <= MAX_PORT:
+            if is_valid_proxy_port(int(port)):
                 proxies.add(f"{ip}:{port}")
 
     return proxies
@@ -270,20 +322,25 @@ def scrape_channel(channel: str, pages: int = 3) -> tuple[set, list]:
     all_proxies = set()
     attachments = []
 
+    before = None
+    seen_before = set()
     for page in range(1, pages + 1):
-        before = page * 100 if page > 1 else None
         html = fetch_tg_page(channel, before)
         if not html:
             break
 
         proxies = extract_proxies_from_html(html)
-        new_proxies = proxies - all_proxies
-        all_proxies.update(new_proxies)
+        all_proxies.update(proxies)
         attachments.extend(extract_attachments_from_html(html, channel))
 
-        if not new_proxies and page > 1:
-            # Still fetched one historical page; enough for low-yield channels.
+        message_ids = extract_message_ids(html, channel)
+        if not message_ids:
             break
+        next_before = min(message_ids)
+        if next_before in seen_before or next_before == before:
+            break
+        seen_before.add(next_before)
+        before = next_before
 
         time.sleep(0.5)  # Rate limit
 
@@ -537,10 +594,12 @@ def main():
     if args.add_to_pool and all_proxies:
         add_to_pool(results)
 
-    # Update config last_run
-    config["last_run"] = datetime.now(timezone.utc).isoformat()
-    config["total_proxies"] = len(all_proxies)
-    save_config(config)
+    # Update volatile runtime state separately from tracked channel config.
+    save_state(
+        last_run=datetime.now(timezone.utc).isoformat(),
+        total_proxies=len(all_proxies),
+        channels=list(results.keys()),
+    )
 
 
 if __name__ == "__main__":

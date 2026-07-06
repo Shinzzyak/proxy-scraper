@@ -13,7 +13,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError
 from typing import List, Set, Tuple, Dict
 
 try:
@@ -98,12 +98,23 @@ PROXY_SOURCES = [
     ("sunny9577-http", "https://sunny9577.github.io/proxy-scraper/generated/http_proxies.txt", "host:port"),
     ("proxyscrape-all-txt", "https://cdn.jsdelivr.net/gh/proxyscrape/free-proxy-list@main/proxies/all/data.txt", "protocolipport"),
     ("vpslab-socks5", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5_all.txt", "host:port"),
+    ("vpslab-socks4", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks4_all.txt", "host:port"),
+    ("vpslab-all-elite", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/all_elite.txt", "host:port"),
+    ("vpslab-all-ssl", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/all_ssl.txt", "host:port"),
+    ("gfp-http", "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/http.txt", "host:port"),
+    ("gfp-https", "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/https.txt", "host:port"),
+    ("gfp-socks4", "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/socks4.txt", "host:port"),
+    ("gfp-socks5", "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/socks5.txt", "host:port"),
+    ("proxifly-http-raw", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt", "host:port"),
+    ("proxifly-https-raw", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/https/data.txt", "host:port"),
+    ("proxifly-socks4-raw", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks4/data.txt", "host:port"),
+    ("proxifly-socks5-raw", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks5/data.txt", "host:port"),
     ("hproxy-http", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/http.txt", "host:port"),
     ("hproxy-socks5", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks5.txt", "host:port"),
     ("socks-proxy-net", "https://www.socks-proxy.net/", "table"),
-    ("proxyscrape-api-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=all&timeout=5000", "protocolipport"),
-    ("proxyscrape-api-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000", "protocolipport"),
-    ("proxyscrape-api-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000", "protocolipport"),
+    ("proxyscrape-v4-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=all&timeout=5000", "protocolipport"),
+    ("proxyscrape-v4-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000", "protocolipport"),
+    ("proxyscrape-v4-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000", "protocolipport"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -116,6 +127,21 @@ CRED_SOURCES = [
 PROXY_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})")
 CRED_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})\s*[:\s]\s*(\S+)\s*[:\s]\s*(\S+)")
 URL_CREDS_RE = re.compile(r"https?://([^:]+):([^@]+)@(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})")
+
+# Bounds: some upstream lists publish 400k+ proxies. Keep cron safe on small VPS.
+MAX_FETCH_BYTES = int(os.getenv("PROXY_SOURCE_MAX_BYTES", "2000000"))
+MAX_PROXIES_PER_SOURCE = int(os.getenv("PROXY_MAX_PROXIES_PER_SOURCE", "15000"))
+COMMON_LOW_PROXY_PORTS = {80, 81, 82, 83, 84, 85, 88, 443, 444, 808, 888, 999, 1000}
+
+
+def is_valid_proxy_port(port: int) -> bool:
+    """Return True for plausible proxy ports.
+
+    Free lists often contain junk low ports like :1/:12/:41/:50. Those can pass a
+    bare TCP connect and then waste validator time in protocol probes. Keep common
+    low proxy ports and otherwise require >=1024.
+    """
+    return port in COMMON_LOW_PROXY_PORTS or 1024 <= port <= 65535
 
 # ── User-Agent rotation (Rate Limit Protection) ───────────────────────
 USER_AGENTS = [
@@ -136,12 +162,14 @@ def next_ua():
 # ── Helpers ────────────────────────────────────────────────────────────
 
 def fetch_direct(url, timeout=15):
-    """Direct URL fetch with UA rotation."""
+    """Direct URL fetch with UA rotation and bounded read."""
     req = urllib.request.Request(url, headers={
         "User-Agent": next_ua(),
         "Accept": "text/html,application/json,*/*",
     })
-    return urllib.request.urlopen(req, timeout=timeout).read().decode("utf-8", errors="ignore")
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        raw = resp.read(MAX_FETCH_BYTES + 1)
+    return raw[:MAX_FETCH_BYTES].decode("utf-8", errors="ignore")
 
 
 def fetch_via_relay(url, timeout=15):
@@ -164,8 +192,8 @@ def fetch_via_relay(url, timeout=15):
         raise RuntimeError(data.get("error", "relay fetch failed"))
     body = data.get("body", "")
     if data.get("encoding") == "base64":
-        return base64.b64decode(body).decode("utf-8", errors="ignore")
-    return body
+        body = base64.b64decode(body).decode("utf-8", errors="ignore")
+    return body[:MAX_FETCH_BYTES]
 
 
 def fetch(url, timeout=15, retries=3, backoff=1.5):
@@ -189,15 +217,18 @@ def fetch(url, timeout=15, retries=3, backoff=1.5):
     return ""
 
 
-def extract_proxies(text, fmt=""):
+def extract_proxies(text, fmt="", max_items=None):
     proxies = []
+    limit = max_items or MAX_PROXIES_PER_SOURCE
     if fmt == "geonode" and text.strip().startswith("{"):
         try:
             data = json.loads(text)
             for item in data.get("data", []):
                 ip, port = item.get("ip", ""), item.get("port", "")
-                if ip and port and int(port) <= 65535:
+                if ip and port and is_valid_proxy_port(int(port)):
                     proxies.append(f"{ip}:{port}")
+                    if limit and len(proxies) >= limit:
+                        break
         except Exception:
             pass
         return proxies
@@ -208,8 +239,10 @@ def extract_proxies(text, fmt=""):
         if CRED_RE.search(line):
             continue
         m = PROXY_RE.search(line)
-        if m and int(m.group(2)) <= 65535:
+        if m and is_valid_proxy_port(int(m.group(2))):
             proxies.append(f"{m.group(1)}:{m.group(2)}")
+            if limit and len(proxies) >= limit:
+                break
     return proxies
 
 
@@ -273,8 +306,17 @@ def scrape_source(name, url, fmt):
         print("(empty)")
         return []
     proxies = extract_proxies(text, fmt)
-    source_health[name] = {"url": url, "alive": len(proxies) > 0, "proxies": len(proxies), "time_s": round(elapsed, 2)}
-    print(f"{len(proxies)}")
+    capped = len(proxies) >= MAX_PROXIES_PER_SOURCE
+    source_health[name] = {
+        "url": url,
+        "alive": len(proxies) > 0,
+        "proxies": len(proxies),
+        "time_s": round(elapsed, 2),
+        "capped": capped,
+        "max_fetch_bytes": MAX_FETCH_BYTES,
+    }
+    suffix = " capped" if capped else ""
+    print(f"{len(proxies)}{suffix}")
     return proxies
 
 
@@ -320,7 +362,12 @@ def scrape_creds():
 
 # ── Validation Layer ───────────────────────────────────────────────────
 
-def validate_tcp(proxy, timeout=5):
+VALIDATE_TCP_TIMEOUT = float(os.getenv("PROXY_VALIDATE_TCP_TIMEOUT", "3"))
+VALIDATE_PROTOCOL_TIMEOUT = float(os.getenv("PROXY_VALIDATE_PROTOCOL_TIMEOUT", "2"))
+VALIDATION_WALL_TIMEOUT = float(os.getenv("PROXY_VALIDATION_WALL_TIMEOUT", "180"))
+
+
+def validate_tcp(proxy, timeout=VALIDATE_TCP_TIMEOUT):
     """Basic TCP connect test."""
     ip, port = proxy.split(":")
     try:
@@ -331,7 +378,7 @@ def validate_tcp(proxy, timeout=5):
         return False
 
 
-def validate_http_connect(proxy, timeout=5):
+def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
     """HTTP CONNECT test — check if proxy can relay HTTP traffic."""
     ip, port = proxy.split(":")
     try:
@@ -351,7 +398,7 @@ def validate_http_connect(proxy, timeout=5):
         return False
 
 
-def validate_socks5(proxy, timeout=5):
+def validate_socks5(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
     """SOCKS5 handshake test."""
     ip, port = proxy.split(":")
     try:
@@ -366,7 +413,7 @@ def validate_socks5(proxy, timeout=5):
         return False
 
 
-def detect_anonymity(proxy, timeout=5):
+def detect_anonymity(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
     """Detect proxy anonymity level via X-Forwarded-For detection."""
     ip, port = proxy.split(":")
     try:
@@ -391,6 +438,8 @@ def detect_anonymity(proxy, timeout=5):
 def validate_single(proxy, do_anonymity=False):
     """Full validation: TCP + protocol detection + response time + anonymity."""
     ip, port = proxy.split(":")
+    if not is_valid_proxy_port(int(port)):
+        return None
     t0 = time.time()
     if not validate_tcp(proxy):
         return None
@@ -488,21 +537,69 @@ def compute_score(proxy_dict):
     return score
 
 
+def choose_validation_sample(proxies, max_validate=500, source_map=None):
+    """Choose a deterministic, source-balanced validation sample.
+
+    A plain list(set(...)) biases validation randomly and can starve smaller sources once
+    huge feeds are added. Round-robin by source keeps health meaningful.
+    """
+    proxies = sorted(proxies)
+    if not source_map or max_validate >= len(proxies):
+        return proxies[:max_validate]
+
+    buckets = {}
+    for proxy in proxies:
+        buckets.setdefault(source_map.get(proxy, "unknown") or "unknown", []).append(proxy)
+
+    selected = []
+    seen = set()
+    source_names = sorted(buckets, key=lambda n: (-len(buckets[n]), n))
+    while len(selected) < max_validate and source_names:
+        next_sources = []
+        for name in source_names:
+            bucket = buckets[name]
+            if not bucket:
+                continue
+            proxy = bucket.pop(0)
+            if proxy not in seen:
+                selected.append(proxy)
+                seen.add(proxy)
+                if len(selected) >= max_validate:
+                    break
+            if bucket:
+                next_sources.append(name)
+        source_names = next_sources
+    return selected
+
+
 def filter_valid(proxies, max_validate=500, do_anonymity=False, source_map=None):
     """Validate proxies in parallel, return list of valid proxy dicts.
 
     If source_map is provided, each valid proxy gets a 'source_name' field.
     """
-    to_test = list(proxies)[:max_validate]
-    print(f"\n🔍 Validating {len(to_test)} proxies...\n")
+    to_test = choose_validation_sample(proxies, max_validate, source_map=source_map)
+    print(f"\n🔍 Validating {len(to_test)} proxies (source-balanced)...\n")
     valid = []
-    with ThreadPoolExecutor(max_workers=200) as pool:
-        futs = {pool.submit(validate_single, p, do_anonymity): p for p in to_test}
-        for fut in as_completed(futs):
+    timed_out = False
+    pool = ThreadPoolExecutor(max_workers=200)
+    futs = {pool.submit(validate_single, p, do_anonymity): p for p in to_test}
+    try:
+        for fut in as_completed(futs, timeout=VALIDATION_WALL_TIMEOUT):
             result = fut.result()
             if result:
                 valid.append(result)
                 print(f"  ✅ {result['ip']}:{result['port']} [{result['protocol']}] {result['response_time_ms']}ms {result['anonymity']}")
+    except TimeoutError:
+        timed_out = True
+        pending = sum(1 for fut in futs if not fut.done())
+        for fut in futs:
+            if not fut.done():
+                fut.cancel()
+        print(f"  ⚠ validation deadline hit after {VALIDATION_WALL_TIMEOUT:.0f}s; cancelled {pending} pending checks", file=sys.stderr)
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
+    if timed_out:
+        print(f"  ⚠ proceeding with {len(valid)} completed valid proxies", file=sys.stderr)
     print(f"\n📊 {len(valid)}/{len(to_test)} alive")
 
     # Geolocation

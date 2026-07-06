@@ -19,6 +19,7 @@ import argparse
 import json
 import sys
 import os
+import signal
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,6 +32,7 @@ def cmd_search(args):
         min_score=args.min_score or 0,
         anonymity=args.anonymity or "",
         max_results=args.limit,
+        max_age_minutes=args.max_age_minutes,
     )
     if args.json:
         print(json.dumps(results, indent=2))
@@ -42,7 +44,12 @@ def cmd_search(args):
 
 def cmd_best(args):
     from proxy_pool import get_best_proxy
-    proxy = get_best_proxy(args.protocol or "http", args.country or "")
+    proxy = get_best_proxy(
+        args.protocol or "http",
+        args.country or "",
+        min_score=args.min_score,
+        max_age_minutes=args.max_age_minutes,
+    )
     if proxy:
         if args.json:
             print(json.dumps(proxy, indent=2))
@@ -96,7 +103,7 @@ def cmd_heatmap(args):
 def cmd_benchmark(args):
     from proxy_pool import search_proxies
     from benchmark import benchmark_batch, save_benchmark
-    proxies = search_proxies(protocol=args.protocol or "http", max_results=args.limit)
+    proxies = search_proxies(protocol=args.protocol or "http", max_results=args.limit, min_score=50, max_age_minutes=180)
     if not proxies:
         print("No proxies to benchmark")
         return
@@ -221,6 +228,8 @@ def cmd_source_health(args):
 
 
 def main():
+    # Avoid noisy BrokenPipeError tracebacks when piping large JSON output to tools like `head`.
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)
     ap = argparse.ArgumentParser(description="Proxy Pool CLI")
     sub = ap.add_subparsers(dest="command")
 
@@ -231,12 +240,15 @@ def main():
     s.add_argument("--min-score", type=int, default=0)
     s.add_argument("--anonymity", "-a", default="")
     s.add_argument("--limit", "-l", type=int, default=20)
+    s.add_argument("--max-age-minutes", type=int, default=0, help="0 disables freshness filter")
     s.add_argument("--json", "-j", action="store_true")
 
     # best
     b = sub.add_parser("best")
     b.add_argument("--protocol", "-p", default="http")
     b.add_argument("--country", "-c", default="")
+    b.add_argument("--min-score", type=int, default=50)
+    b.add_argument("--max-age-minutes", type=int, default=180, help="0 disables freshness filter")
     b.add_argument("--json", "-j", action="store_true")
 
     # stats
@@ -316,4 +328,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BrokenPipeError:
+        try:
+            sys.stdout.close()
+        finally:
+            raise SystemExit(0)

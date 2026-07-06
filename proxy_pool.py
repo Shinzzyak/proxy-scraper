@@ -255,15 +255,24 @@ def upsert_proxy(proxy_dict: Dict, source: str = ""):
         conn.close()
 
 
-def get_best_proxy(protocol: str = "http", country_code: str = "") -> Optional[Dict]:
-    """Get best available proxy by criteria."""
+def get_best_proxy(protocol: str = "http", country_code: str = "", min_score: int = 50,
+                   max_age_minutes: int = 180) -> Optional[Dict]:
+    """Get best fresh proxy by criteria.
+
+    Defaults avoid returning stale seed/test rows or old high-score entries.
+    Set max_age_minutes=0 to disable freshness filtering.
+    """
     conn = get_db()
     try:
-        q = "SELECT * FROM proxies WHERE protocol = ?"
-        params = [protocol]
+        q = "SELECT * FROM proxies WHERE protocol = ? AND score >= ?"
+        params = [protocol, min_score]
         if country_code:
             q += " AND country_code = ?"
-            params.append(country_code)
+            params.append(country_code.upper())
+        if max_age_minutes and max_age_minutes > 0:
+            cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            q += " AND last_seen >= ?"
+            params.append(cutoff)
         q += " ORDER BY score DESC, response_time_ms ASC LIMIT 1"
         row = conn.execute(q, params).fetchone()
         return dict(row) if row else None
@@ -271,18 +280,23 @@ def get_best_proxy(protocol: str = "http", country_code: str = "") -> Optional[D
         conn.close()
 
 
-def get_sticky_group(isp: str = "", country_code: str = "") -> List[Dict]:
-    """Get proxies grouped by ISP/ASN for sticky sessions."""
+def get_sticky_group(isp: str = "", country_code: str = "", min_score: int = 50,
+                     max_age_minutes: int = 180) -> List[Dict]:
+    """Get fresh proxies grouped by ISP/ASN for sticky sessions."""
     conn = get_db()
     try:
-        q = "SELECT * FROM proxies WHERE isp != ''"
-        params = []
+        q = "SELECT * FROM proxies WHERE isp != '' AND score >= ?"
+        params = [min_score]
         if isp:
             q += " AND isp = ?"
             params.append(isp)
         if country_code:
             q += " AND country_code = ?"
-            params.append(country_code)
+            params.append(country_code.upper())
+        if max_age_minutes and max_age_minutes > 0:
+            cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            q += " AND last_seen >= ?"
+            params.append(cutoff)
         q += " ORDER BY score DESC LIMIT 20"
         rows = conn.execute(q, params).fetchall()
         return [dict(r) for r in rows]
@@ -409,8 +423,9 @@ def get_pool_stats() -> Dict:
 
 
 def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 0,
-                    anonymity: str = "", max_results: int = 50) -> List[Dict]:
-    """Search proxies by criteria."""
+                    anonymity: str = "", max_results: int = 50,
+                    max_age_minutes: int = 0) -> List[Dict]:
+    """Search proxies by criteria. max_age_minutes=0 disables freshness filter."""
     conn = get_db()
     try:
         q = "SELECT * FROM proxies WHERE 1=1"
@@ -427,6 +442,10 @@ def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 
         if anonymity:
             q += " AND anonymity = ?"
             params.append(anonymity)
+        if max_age_minutes and max_age_minutes > 0:
+            cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            q += " AND last_seen >= ?"
+            params.append(cutoff)
         q += " ORDER BY score DESC, response_time_ms ASC LIMIT ?"
         params.append(max_results)
         rows = conn.execute(q, params).fetchall()

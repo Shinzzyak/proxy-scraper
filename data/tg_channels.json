@@ -181,8 +181,35 @@
         "socks5"
       ],
       "description": "Telegram unblock SOCKS5 proxy posts"
+    },
+    "VipProxy24": {
+      "enabled": true,
+      "priority": "high",
+      "protocols": [
+        "http",
+        "https",
+        "socks5"
+      ],
+      "description": "VIP PROXY SERVER; public preview exposes HTTPS/SOCKS5 txt attachments"
+    },
+    "HQPROX": {
+      "enabled": true,
+      "priority": "high",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "HQ Proxies daily free proxy; working_http/socks5 txt attachments"
+    },
+    "freeproxyses": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks4",
+        "socks5"
+      ],
+      "description": "Free Proxy channel with txt proxy attachments"
     }
-  },
-  "last_run": null,
-  "total_proxies": 0
+  }
 }
