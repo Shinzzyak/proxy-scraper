@@ -218,7 +218,32 @@ PROXY_SOURCES = [
     ("mmpx12-socks5", "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt", "host:port"),
     ("proxyspace-http", "https://raw.githubusercontent.com/proxyspace/proxy-list/main/http.txt", "host:port"),
     ("proxyspace-socks5", "https://raw.githubusercontent.com/proxyspace/proxy-list/main/socks5.txt", "host:port"),
-]
+    # ── BATCH 6: Regional + high-quality sources ──
+    # Indonesia-focused
+    ('id-proxy1-http', 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt', 'host:port'),
+    ('id-proxy2-socks', 'https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt', 'host:port'),
+    # Japan-focused
+    ('jp-proxy1-http', 'https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/http.txt', 'host:port'),
+    ('jp-proxy2-https', 'https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/https.txt', 'host:port'),
+    ('jp-proxy3-socks', 'https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/socks5.txt', 'host:port'),
+    # EU-focused
+    ('eu-proxy1-http', 'https://raw.githubusercontent.com/officialputuid/KProxy/KProxy/http.txt', 'host:port'),
+    ('eu-proxy2-socks', 'https://raw.githubusercontent.com/officialputuid/KProxy/KProxy/socks5.txt', 'host:port'),
+    ('eu-proxy3-http', 'https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt', 'host:port'),
+    # Additional high-quality
+    ('hq-proxy1-http', 'https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt', 'host:port'),
+    ('hq-proxy2-http', 'https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt', 'host:port'),
+    ('hq-proxy3-http', 'https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/generated/http_proxies.txt', 'host:port'),
+    ('hq-proxy4-socks', 'https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/generated/socks5_proxies.txt', 'host:port'),
+    ('hq-proxy5-http', 'https://raw.githubusercontent.com/aslisk/proxy/master/proxy.txt', 'host:port'),
+    ('hq-proxy6-http', 'https://raw.githubusercontent.com/almroot/proxylist/master/proxy.txt', 'host:port'),
+    ('hq-proxy7-http', 'https://raw.githubusercontent.com/BlackFrostWorking/proxylist/master/proxies.txt', 'host:port'),
+    ('hq-proxy8-http', 'https://raw.githubusercontent.com/epsagon/proxy-list/master/proxies/http_proxies.txt', 'host:port'),
+    ('hq-proxy9-http', 'https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/http.txt', 'host:port'),
+    ('hq-proxy10-socks', 'https://raw.githubusercontent.com/vakhov/fresh-proxy-list/main/socks5.txt', 'host:port'),
+    ('hq-proxy11-http', 'https://raw.githubusercontent.com/aslisk/proxy/master/socks5.txt', 'host:port'),
+    ('hq-proxy12-http', 'https://raw.githubusercontent.com/monosans/proxy-list/main/socks4.txt', 'host:port'),
+    ]
 
 
 # ── Discovery: meta-sources that list proxy URLs ───────────────────────
