@@ -12,6 +12,8 @@ Usage:
     python3 cli.py benchmark --limit 20
     python3 cli.py report
     python3 cli.py geo-repair
+    python3 cli.py telegram --pages 3 --add-to-pool
+    python3 cli.py freshen --telegram --max-validate 3000
 """
 import argparse
 import json
@@ -148,6 +150,51 @@ def cmd_sources(args):
         conn.close()
 
 
+def cmd_telegram(args):
+    import tg_scraper
+    if args.list_channels:
+        config = tg_scraper.load_config()
+        print("\n📱 Telegram Proxy Channels:\n")
+        for name, info in sorted(config["channels"].items()):
+            status = "✅" if info.get("enabled") else "❌"
+            print(f"  {status} @{name} [{info.get('priority', '?')}] — {info.get('description', 'N/A')}")
+            print(f"     Protocols: {', '.join(info.get('protocols', []))}")
+        print(f"\nTotal: {len(config['channels'])} channels")
+        return
+    channels = [c.lstrip('@') for c in (args.channels or [])] or None
+    results = tg_scraper.scrape_all_channels(channels, pages=args.pages)
+    all_proxies = set()
+    for proxies in results.values():
+        all_proxies.update(proxies)
+    output = args.output or os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "tg_proxies.txt")
+    with open(output, "w") as f:
+        f.write("\n".join(sorted(all_proxies)) + "\n")
+    print(f"\n📄 Telegram proxies → {output} ({len(all_proxies)})")
+    if args.add_to_pool:
+        tg_scraper.add_to_pool(results)
+
+
+def cmd_freshen(args):
+    import freshen_pool
+    argv = ["freshen_pool.py"]
+    argv += ["--max-validate", str(args.max_validate)]
+    if args.telegram:
+        argv.append("--telegram")
+        argv += ["--telegram-pages", str(args.telegram_pages)]
+    if args.geo_only:
+        argv.append("--geo-only")
+    if args.scrape_only:
+        argv.append("--scrape-only")
+    if args.no_lock:
+        argv.append("--no-lock")
+    old_argv = sys.argv
+    try:
+        sys.argv = argv
+        freshen_pool.main()
+    finally:
+        sys.argv = old_argv
+
+
 def cmd_source_health(args):
     from proxy_pool import get_db
     conn = get_db()
@@ -235,6 +282,23 @@ def main():
     sh = sub.add_parser("source-health")
     sh.add_argument("--json", "-j", action="store_true")
 
+    # telegram
+    tg = sub.add_parser("telegram", help="Scrape proxy lists from Telegram public channels")
+    tg.add_argument("--channels", nargs="*", default=None)
+    tg.add_argument("--pages", type=int, default=3)
+    tg.add_argument("--add-to-pool", action="store_true")
+    tg.add_argument("--output", "-o", default="")
+    tg.add_argument("--list-channels", action="store_true")
+
+    # freshen
+    fr = sub.add_parser("freshen", help="Run scheduled scrape + geo repair + optional Telegram refresh")
+    fr.add_argument("--max-validate", type=int, default=3000)
+    fr.add_argument("--telegram", action="store_true")
+    fr.add_argument("--telegram-pages", type=int, default=3)
+    fr.add_argument("--geo-only", action="store_true")
+    fr.add_argument("--scrape-only", action="store_true")
+    fr.add_argument("--no-lock", action="store_true")
+
     args = ap.parse_args()
     if not args.command:
         ap.print_help()
@@ -246,6 +310,7 @@ def main():
         "benchmark": cmd_benchmark, "report": cmd_report,
         "geo-repair": cmd_geo_repair,
         "sources": cmd_sources, "source-health": cmd_source_health,
+        "telegram": cmd_telegram, "freshen": cmd_freshen,
     }
     cmds[args.command](args)
 

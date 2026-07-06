@@ -1,0 +1,188 @@
+{
+  "channels": {
+    "free_proxy_list": {
+      "enabled": true,
+      "priority": "high",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "Daily proxy list updates (HTTP/SOCKS5)"
+    },
+    "proxy_lists": {
+      "enabled": true,
+      "priority": "low",
+      "protocols": [
+        "http"
+      ],
+      "description": "Stats-based, low yield"
+    },
+    "socks5_proxy": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "socks5"
+      ],
+      "description": "SOCKS5-focused channel"
+    },
+    "free_proxy_socks5": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "socks5"
+      ],
+      "description": "Free SOCKS5 proxies"
+    },
+    "proxylist2024": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "Updated proxy lists"
+    },
+    "proxyspy": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "Proxy intelligence"
+    },
+    "free_proxy_http": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http"
+      ],
+      "description": "HTTP proxy focused"
+    },
+    "proxy_list_http": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http"
+      ],
+      "description": "HTTP proxy list"
+    },
+    "freshproxylist": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "Fresh proxy lists"
+    },
+    "proxylistfree": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "Free proxy lists"
+    },
+    "proxy_pool": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "Proxy pool updates"
+    },
+    "fast_proxies": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http"
+      ],
+      "description": "Fast proxy lists"
+    },
+    "socks_list": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "socks5",
+        "socks4"
+      ],
+      "description": "SOCKS proxy lists"
+    },
+    "proxylistdaily": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http"
+      ],
+      "description": "Daily proxy list"
+    },
+    "free_socks5_proxy": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "socks5"
+      ],
+      "description": "Free SOCKS5 proxies"
+    },
+    "free_proxy_socks": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "socks5",
+        "socks4"
+      ],
+      "description": "Free SOCKS proxies"
+    },
+    "proxy_list_2025": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "2025 proxy list"
+    },
+    "proxylistmix": {
+      "enabled": true,
+      "priority": "medium",
+      "protocols": [
+        "http",
+        "socks5"
+      ],
+      "description": "Mixed proxy lists"
+    },
+    "proxyscrape": {
+      "enabled": true,
+      "priority": "high",
+      "protocols": [
+        "http",
+        "socks4",
+        "socks5"
+      ],
+      "description": "ProxyScrape Telegram updates; links/files for HTTP/SOCKS proxies"
+    },
+    "whale_proxy": {
+      "enabled": true,
+      "priority": "high",
+      "protocols": [
+        "http",
+        "socks4",
+        "socks5"
+      ],
+      "description": "Whale Proxy; posts HTTP/HTTPS/SOCKS files"
+    },
+    "TGunblock": {
+      "enabled": true,
+      "priority": "high",
+      "protocols": [
+        "socks5"
+      ],
+      "description": "Telegram unblock SOCKS5 proxy posts"
+    }
+  },
+  "last_run": null,
+  "total_proxies": 0
+}

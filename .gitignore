@@ -3,3 +3,8 @@ __pycache__/
 .env
 proxies_alive.txt
 data/proxies.db
+data/freshen_pool.lock
+data/freshen_pool_state.json
+data/tg_attachments.json
+data/tg_proxies.txt
+logs/

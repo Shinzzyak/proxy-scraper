@@ -48,6 +48,7 @@ def _create_tables(conn: sqlite3.Connection):
             last_seen TEXT DEFAULT '',
             first_seen TEXT DEFAULT '',
             is_datacenter INTEGER DEFAULT -1,
+            source_name TEXT DEFAULT '',
             PRIMARY KEY (ip, port)
         );
 
@@ -83,6 +84,10 @@ def _create_tables(conn: sqlite3.Connection):
         CREATE INDEX IF NOT EXISTS idx_usage_ts ON usage_log(timestamp);
         CREATE INDEX IF NOT EXISTS idx_source_history_name ON source_history(source_name, timestamp);
     """)
+    # Lightweight migrations for existing DBs created by older versions.
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(proxies)").fetchall()}
+    if "source_name" not in cols:
+        conn.execute("ALTER TABLE proxies ADD COLUMN source_name TEXT DEFAULT ''")
     conn.commit()
 
 
