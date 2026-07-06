@@ -42,7 +42,7 @@ PROXY_DB=data/proxies.db \
 PROXY_VALIDATION_WALL_TIMEOUT=300 \
 PROXY_SOURCE_MAX_BYTES=2000000 \
 PROXY_MAX_PROXIES_PER_SOURCE=15000 \
-python3 freshen_pool.py --telegram --telegram-pages 3 --max-validate 1500
+python3 freshen_pool.py --telegram --telegram-pages 3 --telegram-timeout 900 --telegram-best-effort --max-validate 1500
 ```
 
 ### Publish high-quality snapshot from VPS/local
@@ -95,7 +95,7 @@ Recommended defaults for unattended jobs:
 PROXY_VALIDATION_WALL_TIMEOUT=300
 PROXY_SOURCE_MAX_BYTES=2000000
 PROXY_MAX_PROXIES_PER_SOURCE=15000
-python3 freshen_pool.py --telegram --telegram-pages 3 --max-validate 1500
+python3 freshen_pool.py --telegram --telegram-pages 3 --telegram-timeout 900 --telegram-best-effort --max-validate 1500
 ```
 
 Consumer freshness defaults:

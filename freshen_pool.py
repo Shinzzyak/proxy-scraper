@@ -16,6 +16,7 @@ Uses a lock file to prevent overlapping runs.
 import argparse
 import json
 import os
+import signal
 import subprocess
 import sys
 import time
@@ -76,8 +77,19 @@ def release_lock():
         pass
 
 
+def kill_process_group(proc: subprocess.Popen):
+    """Terminate a child process and its descendants best-effort."""
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except Exception:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+
+
 def run_cmd(cmd: list, timeout: int = 1800) -> tuple[int, str]:
-    """Run a command, stream output, return (code, combined_output)."""
+    """Run a command with a real wall timeout, return (code, combined_output)."""
     print(f"\n$ {' '.join(cmd)}")
     proc = subprocess.Popen(
         cmd,
@@ -85,25 +97,23 @@ def run_cmd(cmd: list, timeout: int = 1800) -> tuple[int, str]:
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
-        bufsize=1,
         env={**os.environ, "PROXY_DB": str(DATA_DIR / "proxies.db")},
+        start_new_session=True,
     )
-    output = []
-    started = time.time()
     try:
-        for line in proc.stdout:
-            print(line, end="")
-            output.append(line)
-            if time.time() - started > timeout:
-                proc.kill()
-                output.append("\n[TIMEOUT]\n")
-                return 124, "".join(output)
-        code = proc.wait(timeout=10)
-        return code, "".join(output)
+        output, _ = proc.communicate(timeout=timeout)
+        if output:
+            print(output, end="")
+        return proc.returncode, output or ""
     except subprocess.TimeoutExpired:
-        proc.kill()
-        output.append("\n[TIMEOUT]\n")
-        return 124, "".join(output)
+        kill_process_group(proc)
+        try:
+            output, _ = proc.communicate(timeout=5)
+        except Exception:
+            output = ""
+        output = (output or "") + "\n[TIMEOUT]\n"
+        print(output, end="")
+        return 124, output
 
 
 def get_pool_stats() -> dict:
@@ -184,6 +194,8 @@ def main():
     ap.add_argument("--max-validate", type=int, default=3000, help="Max proxies to validate per scrape")
     ap.add_argument("--telegram", action="store_true", help="Also scrape Telegram channels")
     ap.add_argument("--telegram-pages", type=int, default=3, help="Telegram pages per channel")
+    ap.add_argument("--telegram-timeout", type=int, default=1800, help="Wall timeout seconds for Telegram merge step")
+    ap.add_argument("--telegram-best-effort", action="store_true", help="Do not fail the whole refresh if Telegram merge times out/fails")
     ap.add_argument("--geo-only", action="store_true", help="Only repair missing geolocation")
     ap.add_argument("--scrape-only", action="store_true", help="Only run scraper, no Telegram")
     ap.add_argument("--export-max-age-minutes", type=int, default=1440, help="Freshness window for final DB snapshot export; 0 means no freshness filter; -1 disables export")
@@ -238,10 +250,14 @@ def main():
                     PYTHON, "tg_scraper.py",
                     "--pages", str(args.telegram_pages),
                     "--add-to-pool",
-                ], timeout=1800)
+                ], timeout=args.telegram_timeout)
                 if code != 0:
-                    status = "partial"
                     errors.append(f"tg_scraper exited {code}")
+                    if args.telegram_best_effort:
+                        if status == "success":
+                            status = "success_with_warnings"
+                    else:
+                        status = "partial"
 
             # 4) Export final snapshots from DB after all sources (including Telegram) merged.
             if args.export_max_age_minutes >= 0:
@@ -267,7 +283,7 @@ def main():
             print("\n⚠️ Errors:")
             for e in errors:
                 print(f"  - {e}")
-        sys.exit(0 if status == "success" else 1)
+        sys.exit(0 if status in {"success", "success_with_warnings"} else 1)
 
     finally:
         if not args.no_lock:
