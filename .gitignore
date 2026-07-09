@@ -13,3 +13,4 @@ data/tg_state.json
 data/tg_proxies.txt
 logs/
 alive_proxies.txt
+proxies-cred.txt
