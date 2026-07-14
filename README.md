@@ -108,6 +108,10 @@ python3 cli.py telegram --channels freeproxyses VipProxy24 HQPROX whale_proxy --
 # Pool stats
 python3 cli.py stats --json | python3 -m json.tool
 
+# HTTP session-quality check: the same proxy must keep one observed egress IP + country
+# NOTE: --session-id is a correlation tag only — it does NOT create sticky sessions.
+python3 session_quality.py --proxy 203.0.113.10:8080 --session-id smoke-001 --samples 3
+
 # Search local live DB
 python3 cli.py search --protocol http --country ID --min-score 50 --max-age-minutes 180 --limit 20 --json
 
