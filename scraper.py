@@ -113,6 +113,7 @@ PROXY_SOURCES = [
     ("hproxy-socks5", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks5.txt", "host:port"),
     ("socks-proxy-net", "https://www.socks-proxy.net/", "table"),
     ("proxyscrape-v4-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=all&timeout=5000", "protocolipport"),
+    ("proxyscrape-v4-https", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=https&country=all&timeout=5000", "protocolipport"),
     ("proxyscrape-v4-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000", "protocolipport"),
     ("proxyscrape-v4-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000", "protocolipport"),
 ]
@@ -365,6 +366,11 @@ def scrape_creds():
 VALIDATE_TCP_TIMEOUT = float(os.getenv("PROXY_VALIDATE_TCP_TIMEOUT", "3"))
 VALIDATE_PROTOCOL_TIMEOUT = float(os.getenv("PROXY_VALIDATE_PROTOCOL_TIMEOUT", "2"))
 VALIDATION_WALL_TIMEOUT = float(os.getenv("PROXY_VALIDATION_WALL_TIMEOUT", "180"))
+CONFIRMED_PROTOCOLS = {"http", "socks4", "socks5"}
+
+
+def is_confirmed_proxy(proxy_dict):
+    return proxy_dict.get("protocol") in CONFIRMED_PROTOCOLS
 
 
 def validate_tcp(proxy, timeout=VALIDATE_TCP_TIMEOUT):
@@ -395,6 +401,24 @@ def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
         # Check for 200 OK response
         return b"200 OK" in data or b"HTTP/1" in data
     except Exception:
+        return False
+
+
+def validate_socks4(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
+    """SOCKS4 CONNECT handshake test."""
+    ip, port = proxy.split(":")
+    try:
+        with socket.create_connection((ip, int(port)), timeout=timeout) as s:
+            s.settimeout(timeout)
+            s.sendall(b"\x04\x01\x00\x50\x01\x01\x01\x01\x00")
+            response = b""
+            while len(response) < 8:
+                chunk = s.recv(8 - len(response))
+                if not chunk:
+                    return False
+                response += chunk
+        return response[:2] == b"\x00\x5a"
+    except (OSError, ValueError):
         return False
 
 
@@ -449,6 +473,8 @@ def validate_single(proxy, do_anonymity=False):
     protocol = "http"  # default
     if validate_socks5(proxy):
         protocol = "socks5"
+    elif validate_socks4(proxy):
+        protocol = "socks4"
     elif validate_http_connect(proxy):
         protocol = "http"
     else:
@@ -586,7 +612,7 @@ def filter_valid(proxies, max_validate=500, do_anonymity=False, source_map=None)
     try:
         for fut in as_completed(futs, timeout=VALIDATION_WALL_TIMEOUT):
             result = fut.result()
-            if result:
+            if result and is_confirmed_proxy(result):
                 valid.append(result)
                 print(f"  ✅ {result['ip']}:{result['port']} [{result['protocol']}] {result['response_time_ms']}ms {result['anonymity']}")
     except TimeoutError:
@@ -740,6 +766,9 @@ def main():
 
     if args.validate:
         valid = filter_valid(proxies, args.max_validate, do_anonymity=args.validate_full, source_map=source_map)
+        if not valid:
+            print("\n✗ No confirmed proxies; preserving existing outputs.", file=sys.stderr)
+            sys.exit(1)
         if args.json and valid:
             save_json_output(valid)
         if args.grouped and valid:

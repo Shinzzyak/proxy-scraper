@@ -151,11 +151,12 @@ def export_pool_snapshots(max_age_minutes: int = 1440) -> int:
         max_results=200000,
         max_age_minutes=max_age_minutes,
     )
-    if not proxies and max_age_minutes:
-        proxies = search_proxies(min_score=0, max_results=200000, max_age_minutes=0)
+    proxies = [p for p in proxies if p.get("protocol") in {"http", "socks4", "socks5"}]
+    if not proxies:
+        print("⚠️ No fresh confirmed proxies; preserving the last published snapshot", file=sys.stderr)
+        return 0
 
-    proxies = sorted(
-        proxies,
+    proxies.sort(
         key=lambda p: (-int(p.get("score") or 0), int(p.get("response_time_ms") or 999999), p.get("ip", "")),
     )
 
