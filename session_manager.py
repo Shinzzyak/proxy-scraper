@@ -1,117 +1,57 @@
-#!/usr/bin/env python3
-"""
-session_manager.py — Sticky session with auto-rotation.
+"""In-memory session→proxy mapping with per-entry TTL.
 
-Tracks proxy assignments per client, auto-rotates after TTL.
+This provides the "sticky" layer for the local gateway:
+each session_id maps to one upstream proxy until TTL expires
+or the session is explicitly released.
 """
-import json
-import os
+import threading
 import time
-from typing import Dict, List, Optional
-from proxy_pool import get_db
-
-SESSION_TTL_MINUTES = int(os.environ.get("SESSION_TTL", "10"))
-MAX_SESSIONS = int(os.environ.get("MAX_SESSIONS", "100"))
 
 
-def get_sticky_proxy(client_id: str, protocol: str = "http",
-                     country_code: str = "", ttl_minutes: int = 0) -> Optional[Dict]:
-    """Get a sticky proxy for client. Rotates after TTL."""
-    if ttl_minutes <= 0:
-        ttl_minutes = SESSION_TTL_MINUTES
+class SessionManager:
+    """Thread-safe in-memory session store with TTL.
 
-    conn = get_db()
-    try:
-        # Check existing session
-        row = conn.execute("""
-            SELECT ip, port, assigned_at FROM sessions
-            WHERE client_id = ? AND protocol = ?
-            ORDER BY assigned_at DESC LIMIT 1
-        """, (client_id, protocol)).fetchone()
+    Each entry is (proxy, expiry_epoch).
+    provider_fn is called only when no live mapping exists.
+    """
 
-        if row:
-            assigned = time.mktime(time.strptime(row["assigned_at"], "%Y-%m-%dT%H:%M:%SZ"))
-            age_minutes = (time.time() - assigned) / 60
-            if age_minutes < ttl_minutes:
-                # Still valid — return same proxy
-                proxy = conn.execute(
-                    "SELECT * FROM proxies WHERE ip = ? AND port = ?",
-                    (row["ip"], row["port"])
-                ).fetchone()
-                if proxy:
-                    return dict(proxy)
+    def __init__(self, default_ttl=300):
+        self._default_ttl = default_ttl
+        self._lock = threading.Lock()
+        self._sessions = {}  # session_id -> (proxy_str, expiry_epoch)
 
-        # Get new proxy
-        q = "SELECT * FROM proxies WHERE protocol = ?"
-        params = [protocol]
-        if country_code:
-            q += " AND country_code = ?"
-            params.append(country_code)
-        q += " ORDER BY score DESC, response_time_ms ASC LIMIT 1"
-        proxy = conn.execute(q, params).fetchone()
-        if not proxy:
-            return None
+    def get_or_create(self, session_id, provider_fn, ttl=None):
+        """Return existing proxy for session_id, or create a new mapping.
 
-        # Record session
-        now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        conn.execute("""
-            INSERT INTO sessions (client_id, ip, port, protocol, assigned_at)
-            VALUES (?, ?, ?, ?, ?)
-        """, (client_id, proxy["ip"], proxy["port"], protocol, now))
-        conn.commit()
-        return dict(proxy)
-    finally:
-        conn.close()
+        provider_fn: callable returning proxy string (e.g. "1.2.3.4:8080").
+        ttl: seconds; defaults to self._default_ttl.
+        """
+        ttl = ttl if ttl is not None else self._default_ttl
+        now = time.time()
+        with self._lock:
+            entry = self._sessions.get(session_id)
+            if entry:
+                proxy, expiry = entry
+                if now < expiry:
+                    return proxy
+            proxy = provider_fn()
+            self._sessions[session_id] = (proxy, now + ttl)
+            return proxy
 
+    def release(self, session_id):
+        """Remove a session mapping (e.g. on explicit disconnect)."""
+        with self._lock:
+            self._sessions.pop(session_id, None)
 
-def cleanup_expired_sessions():
-    """Remove sessions older than 24h."""
-    conn = get_db()
-    try:
-        conn.execute("""
-            DELETE FROM sessions WHERE assigned_at < datetime('now', '-24 hours')
-        """)
-        conn.commit()
-    finally:
-        conn.close()
+    def cleanup(self):
+        """Remove expired entries. Returns count removed."""
+        now = time.time()
+        with self._lock:
+            expired = [sid for sid, (_, exp) in self._sessions.items() if now >= exp]
+            for sid in expired:
+                del self._sessions[sid]
+            return len(expired)
 
-
-def get_active_sessions() -> List[Dict]:
-    """List active sessions."""
-    conn = get_db()
-    try:
-        rows = conn.execute("""
-            SELECT client_id, ip, port, protocol, assigned_at FROM sessions
-            WHERE assigned_at > datetime('now', '-24 hours')
-            ORDER BY assigned_at DESC
-        """).fetchall()
-        return [dict(r) for r in rows]
-    finally:
-        conn.close()
-
-
-def init_sessions_table():
-    """Create sessions table if not exists."""
-    conn = get_db()
-    try:
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS sessions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                client_id TEXT NOT NULL,
-                ip TEXT NOT NULL,
-                port INTEGER NOT NULL,
-                protocol TEXT DEFAULT 'http',
-                assigned_at TEXT DEFAULT (datetime('now'))
-            )
-        """)
-        conn.commit()
-    finally:
-        conn.close()
-
-
-if __name__ == "__main__":
-    init_sessions_table()
-    p = get_sticky_proxy("test-client", "http")
-    print(f"Sticky proxy: {p}")
-    sessions = get_active_sessions()
-    print(f"Active sessions: {len(sessions)}")
+    def __len__(self):
+        with self._lock:
+            return len(self._sessions)
