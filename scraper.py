@@ -60,7 +60,14 @@ PROXY_SOURCES = [
     ("anon-socks5", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt", "host:port"),
     ("opsxcq-mixed", "https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt", "host:port"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
+    ("geonode-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
+    ("geonode-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
+    ("geonode-socks4", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks4", "geonode"),
     ("geonode-socks5", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5", "geonode"),
+    ("geonode-p2-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
+    ("geonode-p2-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
+    ("geonode-p2-socks4", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=socks4", "geonode"),
+    ("geonode-p2-socks5", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=socks5", "geonode"),
     ("openproxylist-http", "https://openproxylist.xyz/http.txt", "host:port"),
     ("openproxylist-socks4", "https://openproxylist.xyz/socks4.txt", "host:port"),
     ("openproxylist-socks5", "https://openproxylist.xyz/socks5.txt", "host:port"),
@@ -297,6 +304,16 @@ def discover_new_urls():
 
 source_health = {}
 
+
+def preferred_source_name(current, candidate):
+    """Prefer a protocol-specific source name; tie-break deterministically."""
+    if source_protocol_hint(candidate) and not source_protocol_hint(current):
+        return candidate
+    if source_protocol_hint(current) and not source_protocol_hint(candidate):
+        return current
+    return min(current, candidate)
+
+
 def scrape_source(name, url, fmt):
     print(f"  → {name}...", end=" ", flush=True)
     t0 = time.time()
@@ -340,7 +357,7 @@ def scrape_all(discover=False):
                 proxies = fut.result()
                 all_proxies.update(proxies)
                 for p in proxies:
-                    source_map.setdefault(p, name)
+                    source_map[p] = preferred_source_name(source_map[p], name) if p in source_map else name
             except Exception as e:
                 print(f"  ✗ {e}", file=sys.stderr)
     return all_proxies, source_map
@@ -459,7 +476,17 @@ def detect_anonymity(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
         return "unknown"
 
 
-def validate_single(proxy, do_anonymity=False):
+def source_protocol_hint(source_name):
+    """Return a protocol hint from curated source names, or None for mixed feeds."""
+    if source_name.endswith("-https"):
+        return "http"
+    for protocol in ("socks5", "socks4", "http"):
+        if source_name.endswith(f"-{protocol}"):
+            return protocol
+    return None
+
+
+def validate_single(proxy, do_anonymity=False, protocol_hint=None):
     """Full validation: TCP + protocol detection + response time + anonymity."""
     ip, port = proxy.split(":")
     if not is_valid_proxy_port(int(port)):
@@ -469,16 +496,15 @@ def validate_single(proxy, do_anonymity=False):
         return None
     response_time_ms = round((time.time() - t0) * 1000)
 
-    # Detect protocol
-    protocol = "http"  # default
-    if validate_socks5(proxy):
-        protocol = "socks5"
-    elif validate_socks4(proxy):
-        protocol = "socks4"
-    elif validate_http_connect(proxy):
-        protocol = "http"
-    else:
-        protocol = "unknown"
+    # Probe the source-declared protocol first, but still fall back to all protocols.
+    checks = {
+        "socks5": validate_socks5,
+        "socks4": validate_socks4,
+        "http": validate_http_connect,
+    }
+    order = [protocol_hint] if protocol_hint in checks else []
+    order += [name for name in checks if name not in order]
+    protocol = next((name for name in order if checks[name](proxy)), "unknown")
 
     anonymity = "unknown"
     if do_anonymity and protocol == "http":
@@ -608,7 +634,15 @@ def filter_valid(proxies, max_validate=500, do_anonymity=False, source_map=None)
     valid = []
     timed_out = False
     pool = ThreadPoolExecutor(max_workers=200)
-    futs = {pool.submit(validate_single, p, do_anonymity): p for p in to_test}
+    futs = {
+        pool.submit(
+            validate_single,
+            proxy,
+            do_anonymity,
+            source_protocol_hint((source_map or {}).get(proxy, "")),
+        ): proxy
+        for proxy in to_test
+    }
     try:
         for fut in as_completed(futs, timeout=VALIDATION_WALL_TIMEOUT):
             result = fut.result()
