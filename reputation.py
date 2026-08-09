@@ -14,6 +14,7 @@ from proxy_pool import get_db
 
 BAN_THRESHOLD = float(os.environ.get("REPUTATION_BAN_THRESHOLD", "0.30"))
 WARN_THRESHOLD = float(os.environ.get("REPUTATION_WARN_THRESHOLD", "0.50"))
+MIN_BAN_SAMPLE = int(os.environ.get("REPUTATION_MIN_BAN_SAMPLE", "20"))  # R4-10
 
 
 def init_reputation_table():
@@ -64,6 +65,7 @@ def update_reputation(source_name: str, submitted: int, valid: int):
             """, (total_sub, total_valid, invalid, new_rate, source_name))
             final_rate = new_rate
         else:
+            total_sub = submitted
             conn.execute("""
                 INSERT INTO source_reputation (source_name, total_submitted, valid_proxies, invalid_proxies, success_rate)
                 VALUES (?, ?, ?, ?, ?)
@@ -71,7 +73,8 @@ def update_reputation(source_name: str, submitted: int, valid: int):
             final_rate = success_rate
 
         # Check ban threshold; auto-unban when recovered (P1-8: bans were permanent)
-        if final_rate < BAN_THRESHOLD:
+        # R4-10: never ban on tiny samples — 3 submitted proxies is noise.
+        if final_rate < BAN_THRESHOLD and total_sub >= MIN_BAN_SAMPLE:
             conn.execute(
                 "UPDATE source_reputation SET is_banned = 1, ban_reason = ? WHERE source_name = ?",
                 (f"Success rate {final_rate:.1%} < {BAN_THRESHOLD:.0%}", source_name)

@@ -323,13 +323,24 @@ def extract_creds(text):
         line = line.strip()
         if not line or line.startswith(("#", "//")):
             continue
-        um = URL_CREDS_RE.search(line)
-        if um and int(um.group(4)) <= 65535:
-            creds.append(f"{um.group(3)}:{um.group(4)}:{um.group(1)}:{um.group(2)}")
-            continue
-        cm = CRED_RE.search(line)
-        if cm and int(cm.group(2)) <= 65535:
-            creds.append(f"{cm.group(1)}:{cm.group(2)}:{cm.group(3)}:{cm.group(4)}")
+        # R4-8: manual rsplit so passwords containing '@' parse correctly.
+        # Forms: host:port:user:pass  |  http://user:pass@host:port
+        for cand in line.split():
+            if "://" in cand:
+                cand = cand.split("://", 1)[1]
+            parts = cand.rsplit("@", 1)
+            if len(parts) == 2 and ":" in parts[1]:
+                userpass, host_port = parts[0], parts[1]
+                hp = host_port.rsplit(":", 1)
+                up = userpass.rsplit(":", 1)
+                if len(hp) == 2 and len(up) == 2 and hp[0].count(".") == 3 and hp[1].isdigit() and int(hp[1]) <= 65535:
+                    creds.append(f"{hp[0]}:{hp[1]}:{up[0]}:{up[1]}")
+                    break
+            # bare ip:port:user:pass
+            parts = line.split(":")
+            if len(parts) >= 4 and parts[0].count(".") == 3 and parts[1].isdigit() and int(parts[1]) <= 65535:
+                creds.append(f"{parts[0]}:{parts[1]}:{parts[2]}:{':'.join(parts[3:])}")
+                break
     return creds
 
 

@@ -54,11 +54,14 @@ class SessionManager:
         if proxy in self._blacklist and now < self._blacklist[proxy]:
             proxy = "DIRECT"  # all candidates blacklisted — fail open
         with self._lock:
-            # cap sessions — evict oldest if over limit (P1-5)
-            if len(self._sessions) >= self._max_sessions:
-                oldest = min(self._sessions, key=lambda sid: self._sessions[sid][1])
-                del self._sessions[oldest]
-            self._sessions[session_id] = (proxy, now + ttl)
+            # R4-9: never cache DIRECT — a session pinned to DIRECT stays
+            # direct for the full TTL even after the pool recovers.
+            if proxy != "DIRECT":
+                # cap sessions — evict oldest if over limit (P1-5)
+                if len(self._sessions) >= self._max_sessions:
+                    oldest = min(self._sessions, key=lambda sid: self._sessions[sid][1])
+                    del self._sessions[oldest]
+                self._sessions[session_id] = (proxy, now + ttl)
         return proxy
 
     def report_failure(self, proxy):
