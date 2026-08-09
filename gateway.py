@@ -274,7 +274,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     self.server.session_manager.report_failure(proxy)
                     bl = self.server.rotate_state.get("blacklist")
                     if bl is not None:
-                        bl.add(proxy)
+                        # T1-fix: dict API (set → AttributeError → silent skip)
+                        bl[proxy] = time.time() + _cooldown_for(error)
         except Exception:
             pass
 
