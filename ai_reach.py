@@ -122,9 +122,17 @@ def main():
     pool = ThreadPoolExecutor(max_workers=args.threads)
     futures = [pool.submit(work, p) for p in proxies]
     try:
-        for fut in as_completed(futures):
-            if time.time() - t0 > WALL_TIMEOUT:
+        while True:
+            remaining = WALL_TIMEOUT - (time.time() - t0)
+            if remaining <= 0:
                 timed_out = True
+                break
+            try:
+                fut = next(as_completed(futures, timeout=remaining))
+            except StopIteration:
+                break  # all futures done
+            except TimeoutError:
+                timed_out = True  # wall hit — R4-1: must cut even mid-request
                 break
             proxy, res = fut.result()
             results.append({"proxy": proxy, "reachable": res})

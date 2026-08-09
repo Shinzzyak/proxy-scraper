@@ -31,6 +31,9 @@ class SessionManager:
 
         provider_fn: callable returning proxy string (e.g. "1.2.3.4:8080").
         ttl: seconds; defaults to self._default_ttl.
+
+        R4-4: provider_fn runs OUTSIDE the lock — a slow SQLite pick must not
+        block every other session lookup.
         """
         ttl = ttl if ttl is not None else self._default_ttl
         now = time.time()
@@ -41,21 +44,22 @@ class SessionManager:
                 if now < expiry and proxy not in self._blacklist:
                     return proxy
                 # entry expired or proxy blacklisted -> fall through to re-pick
+        proxy = provider_fn()
+        # never hand out a blacklisted proxy; bound the retry loop so a
+        # provider returning the same dead proxy cannot hang forever (P0-1)
+        attempts = 0
+        while proxy in self._blacklist and now < self._blacklist[proxy] and attempts < 5:
             proxy = provider_fn()
-            # never hand out a blacklisted proxy; bound the retry loop so a
-            # provider returning the same dead proxy cannot hang forever (P0-1)
-            attempts = 0
-            while proxy in self._blacklist and now < self._blacklist[proxy] and attempts < 5:
-                proxy = provider_fn()
-                attempts += 1
-            if proxy in self._blacklist and now < self._blacklist[proxy]:
-                proxy = "DIRECT"  # all candidates blacklisted — fail open
+            attempts += 1
+        if proxy in self._blacklist and now < self._blacklist[proxy]:
+            proxy = "DIRECT"  # all candidates blacklisted — fail open
+        with self._lock:
             # cap sessions — evict oldest if over limit (P1-5)
             if len(self._sessions) >= self._max_sessions:
                 oldest = min(self._sessions, key=lambda sid: self._sessions[sid][1])
                 del self._sessions[oldest]
             self._sessions[session_id] = (proxy, now + ttl)
-            return proxy
+        return proxy
 
     def report_failure(self, proxy):
         """Blacklist a proxy briefly after a failed request."""

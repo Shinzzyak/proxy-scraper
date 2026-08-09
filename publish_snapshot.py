@@ -239,10 +239,14 @@ def main() -> int:
 
         # Sync before generating/staging artifacts. Freshen may have already
         # changed artifacts, so stash those briefly to keep pull/rebase clean.
+        # R4-6: stash must ALWAYS be dropped even when pull fails — otherwise
+        # artifacts stay stashed and the next run sees a clean tree and skips.
         artifact_stashed = stash_artifacts_if_needed(initial_dirty)
-        run(["git", "fetch", args.remote, args.branch], check=True)
-        run(["git", "pull", "--rebase", args.remote, args.branch], check=True)
-        drop_artifact_stash(artifact_stashed)
+        try:
+            run(["git", "fetch", args.remote, args.branch], check=True)
+            run(["git", "pull", "--rebase", args.remote, args.branch], check=True)
+        finally:
+            drop_artifact_stash(artifact_stashed)
 
         exported = export_snapshots(args.export_max_age_minutes)
         stats = load_stats()

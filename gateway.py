@@ -75,21 +75,31 @@ _dropped_usage = 0
 def _usage_writer():
     """Background thread: drains usage queue into usage_log in small batches."""
     batch = []
+    consecutive_failures = 0
     while not _usage_stop.is_set() or not _usage_queue.empty():
         try:
             item = _usage_queue.get(timeout=0.5)
             batch.append(item)
             if len(batch) >= 50:
                 if not _flush_usage(batch):
-                    # failure: re-queue items, don't drop them (P1-3)
+                    # failure: re-queue items, don't drop them (P1-3),
+                    # then back off so a dead DB doesn't spin CPU (R4-2)
                     for it in batch:
                         _usage_queue.put(it)
+                    consecutive_failures += 1
+                    time.sleep(min(consecutive_failures * 0.5, 5))
+                else:
+                    consecutive_failures = 0
                 batch = []
         except queue.Empty:
             if batch:
                 if not _flush_usage(batch):
                     for it in batch:
                         _usage_queue.put(it)
+                    consecutive_failures += 1
+                    time.sleep(min(consecutive_failures * 0.5, 5))
+                else:
+                    consecutive_failures = 0
                 batch = []
     if batch:
         if not _flush_usage(batch):
@@ -183,11 +193,15 @@ def _next_proxy_round_robin(pool_state, country=""):
             pool_state["refreshed"] = now
         if not pool_state.get("list"):
             return "DIRECT"
-        # skip blacklisted proxies (P0-2: rotate used to serve dead proxies)
+        # skip blacklisted proxies (P0-2: rotate used to serve dead proxies).
+        # TTL 300s — recovered proxies re-enter rotation (R4-3).
+        bl = pool_state.get("blacklist", {})
+        now = time.time()
         for _ in range(len(pool_state["list"])):
             proxy = pool_state["list"][pool_state["index"] % len(pool_state["list"])]
             pool_state["index"] += 1
-            if proxy not in pool_state.get("blacklist", ()):
+            unban_at = bl.get(proxy, 0)
+            if now >= unban_at:
                 return proxy
         return "DIRECT"
     except Exception:
@@ -270,7 +284,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
             self.server.session_manager.report_failure(proxy)
             bl = self.server.rotate_state.get("blacklist")
             if bl is not None:
-                bl.add(proxy)
+                bl[proxy] = time.time() + 300  # TTL 300s (R4-3)
         except Exception:
             pass
 
@@ -414,12 +428,23 @@ def _cleanup_loop(session_manager, interval=60):
         if removed:
             print(f"♻️ Purged {removed} expired sessions", file=sys.stderr)
         try:
-            from proxy_pool import auto_ban_bad_proxies
+            from proxy_pool import auto_ban_bad_proxies, get_db
             banned = auto_ban_bad_proxies()
             if banned:
                 print(f"🚫 Auto-banned {banned} bad proxies (usage success rate)", file=sys.stderr)
+            # usage_log retention — 30 days (R4-5)
+            conn = get_db()
+            try:
+                deleted = conn.execute(
+                    "DELETE FROM usage_log WHERE julianday(timestamp) < julianday('now', '-30 days')"
+                ).rowcount
+                if deleted:
+                    print(f"🧹 Pruned {deleted} usage_log rows (>30d)", file=sys.stderr)
+                conn.commit()
+            finally:
+                conn.close()
         except Exception:
-            pass  # auto-ban is best-effort
+            pass  # auto-ban + prune are best-effort
 
 
 def main():
