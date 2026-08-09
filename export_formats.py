@@ -28,9 +28,8 @@ def export_json(proxies: List[Dict], output: str):
 
 def export_csv(proxies: List[Dict], output: str):
     """Export as CSV."""
-    if not proxies:
-        return
     fields = ["ip", "port", "protocol", "score", "anonymity", "country_code", "city", "isp", "response_time_ms"]
+    # F8-13: empty proxies → still write header-only file (callers expect a file)
     with open(output, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
         writer.writeheader()
