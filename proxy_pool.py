@@ -13,22 +13,45 @@ Features:
 import json
 import os
 import sqlite3
+import threading
 import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from typing import Optional, List, Dict, Tuple
+from typing import Dict, List, Optional, Tuple
 
 DB_PATH = os.environ.get("PROXY_DB", str(Path(__file__).parent / "data" / "proxies.db"))
 
 
 def get_db() -> sqlite3.Connection:
-    """Get database connection, create tables if needed."""
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    """Get database connection. Schema created once per process (P2-9: was
+    running CREATE TABLE IF NOT EXISTS + PRAGMA on EVERY connection — 5-15ms
+    per call in the request path)."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    _create_tables(conn)
+    _init_db_once()
     return conn
+
+
+_init_lock = threading.Lock()
+_init_done = False
+
+
+def _init_db_once():
+    """Create tables + WAL once per process (thread-safe)."""
+    global _init_done
+    if _init_done:
+        return
+    with _init_lock:
+        if _init_done:
+            return
+        os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+        conn = sqlite3.connect(DB_PATH)
+        try:
+            conn.execute("PRAGMA journal_mode=WAL")
+            _create_tables(conn)
+        finally:
+            conn.close()
+        _init_done = True
 
 
 def _create_tables(conn: sqlite3.Connection):
