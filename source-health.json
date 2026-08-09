@@ -1,697 +1,1041 @@
 {
-  "generated_at": "2026-07-06T09:51:04Z",
-  "total_sources": 86,
-  "alive_sources": 86,
-  "dead_sources": 0,
-  "total_proxies": 114709,
+  "generated_at": "2026-08-09T18:11:46Z",
+  "total_sources": 129,
+  "alive_sources": 127,
+  "dead_sources": 2,
+  "total_proxies": 333286,
   "sources": {
-    "anon-http": {
-      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/http_proxies.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.24,
-      "capped": true,
-      "max_fetch_bytes": 600000
-    },
     "murongpig-http": {
       "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.56,
+      "proxies": 15000,
+      "time_s": 0.28,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "murongpig-socks5": {
       "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.57,
+      "proxies": 15000,
+      "time_s": 0.35,
       "capped": true,
-      "max_fetch_bytes": 600000
-    },
-    "openproxylist-socks5": {
-      "url": "https://openproxylist.xyz/socks5.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.33,
-      "capped": true,
-      "max_fetch_bytes": 600000
-    },
-    "openproxylist-socks4": {
-      "url": "https://openproxylist.xyz/socks4.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.29,
-      "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "goodproxy-raw": {
       "url": "https://raw.githubusercontent.com/yuceltoluyag/GoodProxy/main/raw.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.48,
+      "proxies": 15000,
+      "time_s": 0.4,
       "capped": true,
-      "max_fetch_bytes": 600000
-    },
-    "openproxylist-http": {
-      "url": "https://openproxylist.xyz/http.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.47,
-      "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "ercindedeoglu-socks4": {
       "url": "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks4.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.26,
+      "proxies": 15000,
+      "time_s": 0.1,
       "capped": true,
-      "max_fetch_bytes": 600000
-    },
-    "zevtyardt-socks4": {
-      "url": "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks4.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.21,
-      "capped": true,
-      "max_fetch_bytes": 600000
-    },
-    "zevtyardt-http": {
-      "url": "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/http.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.26,
-      "capped": true,
-      "max_fetch_bytes": 600000
-    },
-    "proxyscrape-all-txt": {
-      "url": "https://cdn.jsdelivr.net/gh/proxyscrape/free-proxy-list@main/proxies/all/data.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.2,
-      "capped": true,
-      "max_fetch_bytes": 600000
-    },
-    "zevtyardt-socks5": {
-      "url": "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks5.txt",
-      "alive": true,
-      "proxies": 3000,
-      "time_s": 0.32,
-      "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "ercindedeoglu-socks5": {
       "url": "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.42,
+      "proxies": 15000,
+      "time_s": 0.15,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "murongpig-socks4": {
-      "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks4.txt",
+    "zevtyardt-socks4": {
+      "url": "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks4.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.49,
+      "proxies": 15000,
+      "time_s": 0.18,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "ercindedeoglu-http": {
       "url": "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.54,
+      "proxies": 15000,
+      "time_s": 0.21,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "gfp-socks4": {
-      "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/socks4.txt",
+    "zevtyardt-socks5": {
+      "url": "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/socks5.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.42,
+      "proxies": 15000,
+      "time_s": 0.23,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "gfp-http": {
-      "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/http.txt",
+    "zevtyardt-http": {
+      "url": "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/http.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.47,
+      "proxies": 15000,
+      "time_s": 0.35,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "murongpig-socks4": {
+      "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks4.txt",
+      "alive": true,
+      "proxies": 15000,
+      "time_s": 0.72,
+      "capped": true,
+      "max_fetch_bytes": 2000000
     },
     "gfp-https": {
       "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/https.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.47,
+      "proxies": 15000,
+      "time_s": 0.37,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "gfp-http": {
+      "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/http.txt",
+      "alive": true,
+      "proxies": 15000,
+      "time_s": 0.62,
+      "capped": true,
+      "max_fetch_bytes": 2000000
     },
     "gfp-socks5": {
       "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/socks5.txt",
       "alive": true,
-      "proxies": 3000,
-      "time_s": 0.46,
+      "proxies": 15000,
+      "time_s": 0.58,
       "capped": true,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "gfp-socks4": {
+      "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/socks4.txt",
+      "alive": true,
+      "proxies": 15000,
+      "time_s": 0.56,
+      "capped": true,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-rix4uni-http": {
+      "url": "https://raw.githubusercontent.com/rix4uni/fresh-proxy-list/main/proxylist.txt",
+      "alive": true,
+      "proxies": 15000,
+      "time_s": 0.77,
+      "capped": true,
+      "max_fetch_bytes": 2000000
+    },
+    "openproxylist-http": {
+      "url": "https://openproxylist.xyz/http.txt",
+      "alive": true,
+      "proxies": 5497,
+      "time_s": 0.36,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-r00tee-https": {
+      "url": "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Https.txt",
+      "alive": true,
+      "proxies": 4133,
+      "time_s": 0.11,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "openproxylist-socks4": {
+      "url": "https://openproxylist.xyz/socks4.txt",
+      "alive": true,
+      "proxies": 3983,
+      "time_s": 0.82,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-dpangestuw-http": {
+      "url": "https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/http_proxies.txt",
+      "alive": true,
+      "proxies": 3801,
+      "time_s": 0.42,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-komutan234-http": {
+      "url": "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/http.txt",
+      "alive": true,
+      "proxies": 3194,
+      "time_s": 0.37,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "anon-http": {
+      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/http_proxies.txt",
+      "alive": true,
+      "proxies": 3142,
+      "time_s": 0.13,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-dpangestuw-socks4": {
+      "url": "https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/socks4_proxies.txt",
+      "alive": true,
+      "proxies": 2882,
+      "time_s": 0.43,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-r00tee-socks4": {
+      "url": "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks4.txt",
+      "alive": true,
+      "proxies": 2846,
+      "time_s": 0.58,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-cyberh4ck3r-http": {
+      "url": "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/http-proxies.txt",
+      "alive": true,
+      "proxies": 2737,
+      "time_s": 0.48,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "speedx-http-cdn": {
       "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/http.txt",
       "alive": true,
-      "proxies": 2993,
-      "time_s": 0.28,
+      "proxies": 2734,
+      "time_s": 0.13,
       "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "proxifly-all": {
-      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/all/data.txt",
-      "alive": true,
-      "proxies": 2651,
-      "time_s": 0.46,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "anon-socks5": {
-      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt",
-      "alive": true,
-      "proxies": 2551,
-      "time_s": 0.34,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "speedx-socks4-cdn": {
-      "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks4.txt",
-      "alive": true,
-      "proxies": 2551,
-      "time_s": 0.4,
-      "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "speedx-http": {
       "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
       "alive": true,
-      "proxies": 2328,
-      "time_s": 0.37,
+      "proxies": 2659,
+      "time_s": 0.17,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "speedx-socks5-cdn": {
-      "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks5.txt",
+    "gem-proxyscraper-http": {
+      "url": "https://raw.githubusercontent.com/ProxyScraper/ProxyScraper/main/http.txt",
       "alive": true,
-      "proxies": 2328,
+      "proxies": 2659,
+      "time_s": 0.17,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "speedx-socks4-cdn": {
+      "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks4.txt",
+      "alive": true,
+      "proxies": 2602,
+      "time_s": 0.27,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-cyberh4ck3r-socks4": {
+      "url": "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/socks4-proxies.txt",
+      "alive": true,
+      "proxies": 2536,
+      "time_s": 0.43,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-komutan234-socks4": {
+      "url": "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/socks4.txt",
+      "alive": true,
+      "proxies": 2523,
       "time_s": 0.19,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "hproxy-http": {
+      "url": "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/http.txt",
+      "alive": true,
+      "proxies": 2430,
+      "time_s": 0.13,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "speedx-socks4": {
+      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
+      "alive": true,
+      "proxies": 2355,
+      "time_s": 0.12,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "openproxylist-socks5": {
+      "url": "https://openproxylist.xyz/socks5.txt",
+      "alive": true,
+      "proxies": 2340,
+      "time_s": 0.54,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxifly-all": {
+      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/all/data.txt",
+      "alive": true,
+      "proxies": 2300,
+      "time_s": 0.15,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-dpangestuw-socks5": {
+      "url": "https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/socks5_proxies.txt",
+      "alive": true,
+      "proxies": 2298,
+      "time_s": 0.39,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-r00tee-socks5": {
+      "url": "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt",
+      "alive": true,
+      "proxies": 2274,
+      "time_s": 0.44,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "jetkai-https": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-https.txt",
       "alive": true,
       "proxies": 2154,
-      "time_s": 0.42,
+      "time_s": 0.12,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "gem-cyberh4ck3r-socks5": {
+      "url": "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/socks5-proxies.txt",
+      "alive": true,
+      "proxies": 2031,
+      "time_s": 0.36,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-komutan234-socks5": {
+      "url": "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/socks5.txt",
+      "alive": true,
+      "proxies": 2027,
+      "time_s": 0.26,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "sunny9577-raw-http": {
+      "url": "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
+      "alive": true,
+      "proxies": 1892,
+      "time_s": 0.07,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "sunny9577-http": {
+      "url": "https://sunny9577.github.io/proxy-scraper/generated/http_proxies.txt",
+      "alive": true,
+      "proxies": 1821,
+      "time_s": 0.34,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "speedx-socks5": {
       "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
       "alive": true,
-      "proxies": 2029,
-      "time_s": 0.51,
+      "proxies": 1809,
+      "time_s": 0.1,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "vpslab-all-ssl": {
-      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/all_ssl.txt",
+    "speedx-socks5-cdn": {
+      "url": "https://cdn.jsdelivr.net/gh/TheSpeedX/PROXY-List@master/socks5.txt",
       "alive": true,
-      "proxies": 1988,
-      "time_s": 0.23,
+      "proxies": 1809,
+      "time_s": 0.22,
       "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "vpslab-all-elite": {
-      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/all_elite.txt",
-      "alive": true,
-      "proxies": 1988,
-      "time_s": 0.29,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "speedx-socks4": {
-      "url": "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
-      "alive": true,
-      "proxies": 1981,
-      "time_s": 0.5,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "hproxy-http": {
-      "url": "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/http.txt",
-      "alive": true,
-      "proxies": 1808,
-      "time_s": 0.47,
-      "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "jetkai-http": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt",
       "alive": true,
       "proxies": 1795,
-      "time_s": 0.38,
+      "time_s": 0.1,
       "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "sunny9577-raw-http": {
-      "url": "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
-      "alive": true,
-      "proxies": 1755,
-      "time_s": 0.25,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "sunny9577-http": {
-      "url": "https://sunny9577.github.io/proxy-scraper/generated/http_proxies.txt",
-      "alive": true,
-      "proxies": 1755,
-      "time_s": 0.21,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "rawproxys-socks5": {
-      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks5.txt",
-      "alive": true,
-      "proxies": 1703,
-      "time_s": 0.24,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "proxyscrape-api-socks5": {
-      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all",
-      "alive": true,
-      "proxies": 1618,
-      "time_s": 0.38,
-      "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "jetkai-socks4": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks4.txt",
       "alive": true,
       "proxies": 1602,
-      "time_s": 0.45,
+      "time_s": 0.08,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "vpslab-socks5": {
-      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5_all.txt",
+    "proxyscrape-all-txt": {
+      "url": "https://cdn.jsdelivr.net/gh/proxyscrape/free-proxy-list@main/proxies/all/data.txt",
       "alive": true,
-      "proxies": 1516,
-      "time_s": 0.28,
+      "proxies": 1458,
+      "time_s": 0.35,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "proxifly-https": {
       "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.txt",
       "alive": true,
-      "proxies": 1121,
-      "time_s": 0.53,
+      "proxies": 1374,
+      "time_s": 0.2,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "gem-databay-http": {
+      "url": "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/http.txt",
+      "alive": true,
+      "proxies": 1338,
+      "time_s": 0.32,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "proxifly-https-raw": {
       "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/https/data.txt",
       "alive": true,
-      "proxies": 1121,
-      "time_s": 0.23,
+      "proxies": 1239,
+      "time_s": 0.16,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "proxyscrape-v4-socks5": {
-      "url": "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000",
+    "gem-vanndev-http": {
+      "url": "https://raw.githubusercontent.com/Vann-Dev/proxy-list/main/proxies/http.txt",
       "alive": true,
-      "proxies": 971,
-      "time_s": 0.19,
+      "proxies": 1028,
+      "time_s": 0.25,
       "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "zaeem20-https": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/https.txt",
-      "alive": true,
-      "proxies": 855,
-      "time_s": 0.23,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "rawproxys-http": {
-      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/http.txt",
-      "alive": true,
-      "proxies": 851,
-      "time_s": 0.32,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "vpslab-http": {
-      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_all.txt",
-      "alive": true,
-      "proxies": 850,
-      "time_s": 0.32,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "proxyscrape-api-http": {
-      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all",
-      "alive": true,
-      "proxies": 819,
-      "time_s": 0.48,
-      "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "hproxy-socks5": {
       "url": "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks5.txt",
       "alive": true,
-      "proxies": 785,
-      "time_s": 0.19,
+      "proxies": 797,
+      "time_s": 0.3,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "vpslab-all-elite": {
+      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/all_elite.txt",
+      "alive": true,
+      "proxies": 793,
+      "time_s": 0.52,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "proxylist-to-http": {
       "url": "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/http.txt",
       "alive": true,
       "proxies": 742,
-      "time_s": 0.35,
+      "time_s": 0.12,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "proxifly-http-raw": {
-      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt",
+    "proxyscrape-v4-https": {
+      "url": "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=https&country=all&timeout=5000",
       "alive": true,
-      "proxies": 685,
-      "time_s": 0.24,
+      "proxies": 729,
+      "time_s": 0.49,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "rawproxys-http": {
+      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/http.txt",
+      "alive": true,
+      "proxies": 694,
+      "time_s": 0.43,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "vpslab-all-ssl": {
+      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/all_ssl.txt",
+      "alive": true,
+      "proxies": 684,
+      "time_s": 0.5,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "vpslab-http": {
+      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_all.txt",
+      "alive": true,
+      "proxies": 661,
+      "time_s": 0.1,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxyscrape-api-http": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all",
+      "alive": true,
+      "proxies": 628,
+      "time_s": 0.13,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "proxifly-http": {
       "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.txt",
       "alive": true,
-      "proxies": 598,
-      "time_s": 0.27,
+      "proxies": 609,
+      "time_s": 0.18,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "proxifly-socks5": {
-      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks5/data.txt",
+    "proxifly-http-raw": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt",
       "alive": true,
-      "proxies": 557,
-      "time_s": 0.28,
+      "proxies": 590,
+      "time_s": 0.16,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "hookzof-socks5": {
-      "url": "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+    "monosans-all": {
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt",
       "alive": true,
-      "proxies": 548,
-      "time_s": 0.32,
+      "proxies": 532,
+      "time_s": 0.18,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "proxifly-socks5-raw": {
-      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks5/data.txt",
+    "gem-ch4120n-socks4": {
+      "url": "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/master/proxies/socks4.txt",
       "alive": true,
-      "proxies": 548,
-      "time_s": 0.17,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "proxyscrape-v4-http": {
-      "url": "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=all&timeout=5000",
-      "alive": true,
-      "proxies": 543,
+      "proxies": 515,
       "time_s": 0.37,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "geonode-http": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http",
+      "alive": true,
+      "proxies": 498,
+      "time_s": 7.08,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-iplocate-socks5": {
+      "url": "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/socks5.txt",
+      "alive": true,
+      "proxies": 495,
+      "time_s": 0.13,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "ahahaabas-st-http": {
       "url": "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt",
       "alive": true,
-      "proxies": 500,
-      "time_s": 0.23,
+      "proxies": 494,
+      "time_s": 0.51,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "proxifly-socks4-raw": {
-      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks4/data.txt",
+    "gem-ch4120n-http": {
+      "url": "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/master/proxies/http.txt",
       "alive": true,
-      "proxies": 422,
-      "time_s": 0.2,
+      "proxies": 474,
+      "time_s": 0.39,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "geonode-socks5": {
       "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5",
       "alive": true,
-      "proxies": 410,
-      "time_s": 3.87,
+      "proxies": 466,
+      "time_s": 7.57,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "gem-databay-socks4": {
+      "url": "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks4.txt",
+      "alive": true,
+      "proxies": 464,
+      "time_s": 0.45,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "geonode-https": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https",
+      "alive": true,
+      "proxies": 464,
+      "time_s": 7.27,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-iplocate-http": {
+      "url": "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/http.txt",
+      "alive": true,
+      "proxies": 438,
+      "time_s": 0.18,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "zaeem20-https": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/https.txt",
+      "alive": true,
+      "proxies": 426,
+      "time_s": 0.44,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "jetkai-socks5": {
       "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-socks5.txt",
       "alive": true,
       "proxies": 402,
-      "time_s": 0.31,
+      "time_s": 0.05,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "clarketm-http": {
       "url": "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt",
       "alive": true,
       "proxies": 399,
-      "time_s": 0.37,
+      "time_s": 0.06,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "proxyscrape-api-socks4": {
-      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=10000&country=all",
+    "geonode-p2-http": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=http",
       "alive": true,
-      "proxies": 388,
+      "proxies": 398,
+      "time_s": 6.76,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-ch4120n-socks5": {
+      "url": "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/master/proxies/socks5.txt",
+      "alive": true,
+      "proxies": 367,
+      "time_s": 0.31,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxyscrape-v4-http": {
+      "url": "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=all&timeout=5000",
+      "alive": true,
+      "proxies": 359,
       "time_s": 0.33,
       "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "zaeem20-socks5": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks5.txt",
-      "alive": true,
-      "proxies": 383,
-      "time_s": 0.33,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "proxifly-socks4": {
-      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks4/data.txt",
-      "alive": true,
-      "proxies": 361,
-      "time_s": 0.56,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "rawproxys-socks4": {
-      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks4.txt",
-      "alive": true,
-      "proxies": 358,
-      "time_s": 0.23,
-      "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "opsxcq-mixed": {
       "url": "https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt",
       "alive": true,
       "proxies": 342,
-      "time_s": 0.19,
+      "time_s": 0.09,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "vpslab-socks4": {
-      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks4_all.txt",
-      "alive": true,
-      "proxies": 336,
-      "time_s": 0.29,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "zaeem20-http": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/http.txt",
+    "rawproxys-socks5": {
+      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks5.txt",
       "alive": true,
       "proxies": 329,
-      "time_s": 0.17,
+      "time_s": 0.1,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "socks-proxy-net": {
       "url": "https://www.socks-proxy.net/",
       "alive": true,
-      "proxies": 297,
-      "time_s": 0.38,
+      "proxies": 298,
+      "time_s": 0.45,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "proxyscrape-v4-socks4": {
-      "url": "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000",
+    "proxifly-socks4": {
+      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks4/data.txt",
       "alive": true,
-      "proxies": 280,
-      "time_s": 0.17,
+      "proxies": 296,
+      "time_s": 0.11,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "proxyscrape-api-socks5": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all",
+      "alive": true,
+      "proxies": 294,
+      "time_s": 0.1,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "monosans-http": {
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
+      "alive": true,
+      "proxies": 292,
+      "time_s": 0.09,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "vpslab-socks5": {
+      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5_all.txt",
+      "alive": true,
+      "proxies": 292,
+      "time_s": 0.28,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-elliot-http": {
+      "url": "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/http/global/http_checked.txt",
+      "alive": true,
+      "proxies": 292,
+      "time_s": 0.37,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "geonode-socks4": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks4",
+      "alive": true,
+      "proxies": 288,
+      "time_s": 3.95,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-databay-socks5": {
+      "url": "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks5.txt",
+      "alive": true,
+      "proxies": 281,
+      "time_s": 0.33,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "anon-socks5": {
+      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt",
+      "alive": true,
+      "proxies": 279,
+      "time_s": 0.14,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-skillter-http": {
+      "url": "https://raw.githubusercontent.com/Skillter/ProxyGather/master/proxies/working-proxies-http.txt",
+      "alive": true,
+      "proxies": 276,
+      "time_s": 0.31,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-skillter-socks5": {
+      "url": "https://raw.githubusercontent.com/Skillter/ProxyGather/master/proxies/working-proxies-socks5.txt",
+      "alive": true,
+      "proxies": 273,
+      "time_s": 0.35,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxifly-socks4-raw": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks4/data.txt",
+      "alive": true,
+      "proxies": 267,
+      "time_s": 0.14,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "proxylist-to-socks4": {
       "url": "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/socks4.txt",
       "alive": true,
       "proxies": 255,
-      "time_s": 0.22,
+      "time_s": 0.37,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "monosans-all": {
-      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt",
+    "vpslab-socks4": {
+      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks4_all.txt",
       "alive": true,
-      "proxies": 222,
-      "time_s": 0.29,
+      "proxies": 243,
+      "time_s": 0.26,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "gem-proxmint-http": {
+      "url": "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/http.txt",
+      "alive": true,
+      "proxies": 236,
+      "time_s": 0.28,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxyscrape-api-socks4": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks4&timeout=10000&country=all",
+      "alive": true,
+      "proxies": 232,
+      "time_s": 0.15,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "rawproxys-socks4": {
+      "url": "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks4.txt",
+      "alive": true,
+      "proxies": 224,
+      "time_s": 0.43,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxyscrape-v4-socks5": {
+      "url": "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000",
+      "alive": true,
+      "proxies": 221,
+      "time_s": 0.66,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "ab57-proxyold": {
       "url": "https://ab57.ru/downloads/proxyold.txt",
       "alive": true,
       "proxies": 204,
-      "time_s": 0.94,
+      "time_s": 5.22,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "hookzof-socks5": {
+      "url": "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+      "alive": true,
+      "proxies": 202,
+      "time_s": 0.04,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-cyberh4ck3r-https": {
+      "url": "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/https-proxies.txt",
+      "alive": true,
+      "proxies": 200,
+      "time_s": 0.5,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "proxylist-to-socks5": {
       "url": "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/socks5.txt",
       "alive": true,
       "proxies": 191,
-      "time_s": 0.34,
+      "time_s": 0.21,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "zaeem20-socks4": {
-      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks4.txt",
+    "zaeem20-http": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/http.txt",
+      "alive": true,
+      "proxies": 182,
+      "time_s": 0.38,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxyscrape-v4-socks4": {
+      "url": "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000",
+      "alive": true,
+      "proxies": 180,
+      "time_s": 0.33,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-skillter-socks4": {
+      "url": "https://raw.githubusercontent.com/Skillter/ProxyGather/master/proxies/working-proxies-socks4.txt",
+      "alive": true,
+      "proxies": 162,
+      "time_s": 0.35,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "proxifly-socks5": {
+      "url": "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/socks5/data.txt",
       "alive": true,
       "proxies": 159,
-      "time_s": 0.26,
+      "time_s": 0.12,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "gem-proxmint-socks4": {
+      "url": "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks4.txt",
+      "alive": true,
+      "proxies": 159,
+      "time_s": 0.36,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-proxmint-socks5": {
+      "url": "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks5.txt",
+      "alive": true,
+      "proxies": 158,
+      "time_s": 0.28,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "roosterkid-socks4": {
       "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt",
       "alive": true,
       "proxies": 150,
-      "time_s": 0.36,
+      "time_s": 0.05,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "proxifly-socks5-raw": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks5/data.txt",
+      "alive": true,
+      "proxies": 150,
+      "time_s": 0.15,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "ab57-proxylist": {
       "url": "https://ab57.ru/downloads/proxylist.txt",
       "alive": true,
       "proxies": 134,
-      "time_s": 0.97,
+      "time_s": 3.39,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "monosans-http": {
-      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
+    "monosans-socks5": {
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt",
       "alive": true,
-      "proxies": 128,
-      "time_s": 0.34,
+      "proxies": 129,
+      "time_s": 0.09,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "zaeem20-socks5": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks5.txt",
+      "alive": true,
+      "proxies": 129,
+      "time_s": 0.41,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-elliot-socks5": {
+      "url": "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/socks5/global/socks5_checked.txt",
+      "alive": true,
+      "proxies": 129,
+      "time_s": 0.32,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "zaeem20-socks4": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks4.txt",
+      "alive": true,
+      "proxies": 118,
+      "time_s": 0.42,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "monosans-socks4": {
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks4.txt",
+      "alive": true,
+      "proxies": 111,
+      "time_s": 0.08,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-elliot-socks4": {
+      "url": "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/socks4/global/socks4_checked.txt",
+      "alive": true,
+      "proxies": 111,
+      "time_s": 0.32,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "gem-iplocate-socks4": {
+      "url": "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/socks4.txt",
+      "alive": true,
+      "proxies": 86,
+      "time_s": 0.11,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "anon-https": {
+      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/https_proxies.txt",
+      "alive": true,
+      "proxies": 78,
+      "time_s": 0.15,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "roosterkid-https": {
       "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt",
       "alive": true,
-      "proxies": 117,
-      "time_s": 0.35,
+      "proxies": 75,
+      "time_s": 0.07,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "prxchk-http": {
       "url": "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
       "alive": true,
       "proxies": 58,
-      "time_s": 0.32,
+      "time_s": 0.15,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
-    "monosans-socks5": {
-      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt",
+    "gem-zloiuser-http": {
+      "url": "https://raw.githubusercontent.com/zloi-user/hideip.me/main/http.txt",
       "alive": true,
-      "proxies": 53,
-      "time_s": 0.34,
+      "proxies": 44,
+      "time_s": 0.07,
       "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "monosans-socks4": {
-      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks4.txt",
-      "alive": true,
-      "proxies": 41,
-      "time_s": 0.34,
-      "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "anon-https": {
-      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/https_proxies.txt",
-      "alive": true,
-      "proxies": 40,
-      "time_s": 0.22,
-      "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "prxchk-socks4": {
       "url": "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks4.txt",
       "alive": true,
       "proxies": 32,
-      "time_s": 0.17,
+      "time_s": 0.08,
       "capped": false,
-      "max_fetch_bytes": 600000
-    },
-    "roosterkid-socks5": {
-      "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt",
-      "alive": true,
-      "proxies": 15,
-      "time_s": 0.34,
-      "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "prxchk-socks5": {
       "url": "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks5.txt",
       "alive": true,
       "proxies": 10,
-      "time_s": 0.29,
+      "time_s": 0.11,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "roosterkid-socks5": {
+      "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt",
+      "alive": true,
+      "proxies": 5,
+      "time_s": 0.06,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "geonode-p2-socks5": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=socks5",
+      "alive": true,
+      "proxies": 5,
+      "time_s": 1.62,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     },
     "fatezero-http": {
       "url": "https://static.fatezero.org/tmp/proxy.txt",
       "alive": true,
       "proxies": 3,
-      "time_s": 0.34,
+      "time_s": 0.35,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "cybergw-http": {
       "url": "https://cyber-gateway.net/get-proxy/free-proxy/24-free-http-proxy",
       "alive": true,
       "proxies": 1,
-      "time_s": 0.6,
+      "time_s": 1.31,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
     },
     "cybergw-socks5": {
       "url": "https://cyber-gateway.net/get-proxy/free-proxy/56-free-socks-proxy",
       "alive": true,
       "proxies": 1,
-      "time_s": 0.66,
+      "time_s": 1.4,
       "capped": false,
-      "max_fetch_bytes": 600000
+      "max_fetch_bytes": 2000000
+    },
+    "geonode-p2-https": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=https",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 1.39,
+      "capped": false,
+      "max_fetch_bytes": 2000000
+    },
+    "geonode-p2-socks4": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=socks4",
+      "alive": false,
+      "proxies": 0,
+      "time_s": 1.46,
+      "capped": false,
+      "max_fetch_bytes": 2000000
     }
   }
 }
