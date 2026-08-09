@@ -468,12 +468,30 @@ def dedup_proxies(proxies: List[Dict]) -> List[Dict]:
     return sorted(seen.values(), key=lambda x: x.get("score", 0), reverse=True)
 
 
+def _jd(ts: str) -> float:
+    """Parse a timestamp (ISO-T or 'YYYY-MM-DD HH:MM:SS') to julian day for comparison.
+
+    SQLite datetime('now') returns naive UTC ('YYYY-MM-DD HH:MM:SS');
+    ISO-T strings carry 'Z'. Treat naive as UTC to compare apples to apples.
+    """
+    import datetime
+    try:
+        dt = datetime.datetime.fromisoformat(ts.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=datetime.timezone.utc)
+        return dt.timestamp() / 86400.0 + 2440587.5
+    except Exception:
+        return 0.0
+
+
 def export_fresh_txt(proxies: List[Dict], max_age_minutes: int = 30, output: str = "proxies-fresh.txt"):
     """Export only proxies seen within max_age_minutes."""
     import datetime
     cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=max_age_minutes)
     cutoff_str = cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
-    fresh = [p for p in proxies if p.get("last_seen", "") >= cutoff_str]
+    # julianday comparison (N12 fix: string >= broke when timestamps mixed
+    # ISO-T and SQLite 'now' formats)
+    fresh = [p for p in proxies if p.get("last_seen", "") and _jd(p["last_seen"]) >= _jd(cutoff_str)]
     lines = sorted(set(f"{p['ip']}:{p['port']}" for p in fresh))
     with open(output, "w") as f:
         f.write("\n".join(lines) + "\n")

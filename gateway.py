@@ -10,6 +10,7 @@ by this gateway layer. Upstream proxies are public free proxies.
 """
 import argparse
 import json
+import queue
 import select
 import socket
 import sys
@@ -28,6 +29,61 @@ GATEWAY_TIMEOUT = 15
 UPSTREAM_PROXY_TIMEOUT = 10
 ROTATE_POOL_SIZE = 100  # round-robin pool size (fresh HTTP proxies)
 ROTATE_MIN_SCORE = 30   # tolerate lower score for rotation variety
+
+# Async usage-log writer: batches writes so request path never blocks on SQLite.
+_usage_queue = queue.Queue()
+_usage_stop = threading.Event()
+
+
+def _usage_writer():
+    """Background thread: drains usage queue into usage_log in small batches."""
+    batch = []
+    while not _usage_stop.is_set() or not _usage_queue.empty():
+        try:
+            item = _usage_queue.get(timeout=0.5)
+            batch.append(item)
+            if len(batch) >= 50:
+                _flush_usage(batch)
+                batch = []
+        except queue.Empty:
+            if batch:
+                _flush_usage(batch)
+                batch = []
+    if batch:
+        _flush_usage(batch)
+
+
+def _drain_usage():
+    """Synchronous drain (for tests): flush everything currently queued."""
+    batch = []
+    while not _usage_queue.empty():
+        try:
+            batch.append(_usage_queue.get_nowait())
+        except queue.Empty:
+            break
+    if batch:
+        _flush_usage(batch)
+    return len(batch)
+
+
+def _flush_usage(batch):
+    try:
+        from proxy_pool import get_db
+        conn = get_db()
+        try:
+            conn.executemany(
+                "INSERT INTO usage_log (ip, port, success, response_time_ms, error) VALUES (?, ?, ?, ?, ?)",
+                [(ip, port, int(ok), rt, err[:200]) for ip, port, ok, rt, err in batch],
+            )
+            conn.commit()
+        finally:
+            conn.close()
+    except Exception:
+        pass
+
+
+def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
+    _usage_queue.put((ip, int(port), bool(success), int(duration_ms), error))
 
 
 def _pick_proxy():
@@ -84,12 +140,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
         return self.server.session_manager.get_or_create(session_id, _pick_proxy)
 
     def _log_usage(self, proxy, success, error="", duration_ms=0):
-        """Log proxy usage event to usage_log (best-effort, non-blocking)."""
+        """Enqueue proxy usage event (async writer batches to usage_log)."""
         try:
             if proxy and proxy != "DIRECT":
-                from proxy_pool import log_usage
                 ip, _, port = proxy.rpartition(":")
-                log_usage(ip, int(port), success, response_time_ms=duration_ms, error=error[:200])
+                _enqueue_usage(ip, int(port), success, duration_ms, error)
                 if not success:
                     self.server.session_manager.report_failure(proxy)
         except Exception:
@@ -278,6 +333,8 @@ def main():
 
     cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), daemon=True)
     cleanup.start()
+    writer = threading.Thread(target=_usage_writer, daemon=True)
+    writer.start()
 
     print(f"🔀 Gateway listening on {args.bind}:{args.port} (session TTL {args.session_ttl}s, mode {args.mode})")
     try:

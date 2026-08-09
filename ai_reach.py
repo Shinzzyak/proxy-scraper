@@ -49,8 +49,14 @@ def check_proxy(proxy: str, target: str, timeout: int) -> bool:
         sock = socket.create_connection((phost, pport), timeout=timeout)
         sock.settimeout(timeout)
         sock.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n".encode())
-        resp = sock.recv(4096)
-        if b"200" not in resp:
+        # read until full header (CONNECT reply can arrive in multiple segments)
+        resp = b""
+        while b"\r\n\r\n" not in resp and len(resp) < 4096:
+            chunk = sock.recv(4096)
+            if not chunk:
+                break
+            resp += chunk
+        if b"200" not in resp.split(b"\r\n", 1)[0]:
             sock.close()
             return False
         return _tls_connect(host, port, timeout, sock=sock)
@@ -108,18 +114,24 @@ def main():
 
     t0 = time.time()
     results, checked = [], 0
+    timed_out = False
 
     def work(proxy):
         return proxy, {t: check_proxy(proxy, t, args.timeout) for t in targets}
 
-    with ThreadPoolExecutor(max_workers=args.threads) as pool:
-        futures = [pool.submit(work, p) for p in proxies]
+    pool = ThreadPoolExecutor(max_workers=args.threads)
+    futures = [pool.submit(work, p) for p in proxies]
+    try:
         for fut in as_completed(futures):
             if time.time() - t0 > WALL_TIMEOUT:
+                timed_out = True
                 break
             proxy, res = fut.result()
             results.append({"proxy": proxy, "reachable": res})
             checked += 1
+    finally:
+        # do NOT wait for in-flight futures — wall timeout must be real
+        pool.shutdown(wait=False, cancel_futures=True)
 
     summary = {t: sum(1 for r in results if r["reachable"].get(t)) for t in targets}
     out = {
@@ -136,6 +148,7 @@ def main():
         print(json.dumps({"summary": summary}, indent=2))
     else:
         print(text)
+    sys.exit(2 if timed_out else 0)
 
 
 if __name__ == "__main__":

@@ -126,7 +126,7 @@ PROXY_SOURCES = [
     # ── Hidden gems (verified 2026-08-10, from research) ──────────────
     # Convention: `gem-` prefix = new source in observation period; rename
     # (drop prefix) after 3-4 runs with alive rate > 50%.
-    ("gem-r00tee-http", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Https.txt", "host:port"),
+    ("gem-r00tee-https", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Https.txt", "host:port"),
     ("gem-r00tee-socks4", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks4.txt", "host:port"),
     ("gem-r00tee-socks5", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt", "host:port"),
     ("gem-rix4uni-http", "https://raw.githubusercontent.com/rix4uni/fresh-proxy-list/main/proxylist.txt", "host:port"),
@@ -161,7 +161,6 @@ PROXY_SOURCES = [
     ("gem-proxmint-socks4", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks4.txt", "host:port"),
     ("gem-proxmint-socks5", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks5.txt", "host:port"),
     ("gem-zloiuser-http", "https://raw.githubusercontent.com/zloi-user/hideip.me/main/http.txt", "host:port:extra"),
-    ("gem-watchttvv-http", "https://raw.githubusercontent.com/watchttvv/free-proxy-list/main/proxy.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -283,15 +282,17 @@ def extract_proxies(text, fmt="", max_items=None):
         line = line.strip()
         if not line or line.startswith(("#", "//")):
             continue
-        if CRED_RE.search(line):
-            continue
-        # fmt "host:port:extra" — e.g. ip:port:Country from zloi-user/hideip.me
+        # fmt "host:port:extra" — e.g. ip:port:Country from zloi-user/hideip.me.
+        # MUST run before CRED_RE: country names with 2 words (Hong Kong) would
+        # false-match CRED_RE (4 groups) and drop the line.
         if fmt == "host:port:extra":
             parts = line.split(":")
             if len(parts) >= 2 and parts[0].count(".") == 3 and parts[1].isdigit() and is_valid_proxy_port(int(parts[1])):
                 proxies.append(f"{parts[0]}:{parts[1]}")
                 if limit and len(proxies) >= limit:
                     break
+            continue
+        if CRED_RE.search(line):
             continue
         m = PROXY_RE.search(line)
         if m and is_valid_proxy_port(int(m.group(2))):
@@ -402,6 +403,20 @@ def scrape_all(discover=False):
     sources = list(PROXY_SOURCES)
     if discover:
         sources += discover_new_urls()
+    # Skip auto-banned sources (reputation feedback loop — BUG-B round 2).
+    try:
+        from proxy_pool import get_db
+        conn = get_db()
+        try:
+            banned = {r[0] for r in conn.execute("SELECT source_name FROM source_reputation WHERE is_banned = 1")}
+        finally:
+            conn.close()
+        if banned:
+            before = len(sources)
+            sources = [s for s in sources if s[0] not in banned]
+            print(f"⛔ Skipping {before - len(sources)} banned source(s): {', '.join(sorted(banned)[:5])}...")
+    except Exception:
+        pass  # no DB / no reputation table → scrape everything
     all_proxies = set()
     source_map = {}  # proxy_str -> source_name
     print(f"\nScraping {len(sources)} sources...\n")
@@ -746,14 +761,28 @@ def filter_valid(proxies, max_validate=500, do_anonymity=False, source_map=None)
             key = f"{p['ip']}:{p['port']}"
             p["source_name"] = source_map.get(key, "")
 
-    # Attach usage history (from usage_log — gateway feedback loop)
+    # Attach usage history (from usage_log — gateway feedback loop).
+    # Single batched query (N+1 fix: was one get_proxy_stats() per proxy ≈ +24s/run).
     if POOL_AVAILABLE and valid:
         try:
-            from proxy_pool import get_proxy_stats
+            from proxy_pool import get_db
+            conn = get_db()
+            try:
+                keys = [f"{p['ip']}:{p['port']}" for p in valid]
+                placeholders = ",".join("?" for _ in keys)
+                rows = conn.execute(
+                    f"SELECT ip, port, SUM(success) * 1.0 / COUNT(*) AS rate "
+                    f"FROM usage_log WHERE (ip || ':' || port) IN ({placeholders}) "
+                    f"GROUP BY ip, port",
+                    keys,
+                ).fetchall()
+                rate_by_key = {f"{r[0]}:{r[1]}": r[2] for r in rows}
+            finally:
+                conn.close()
             for p in valid:
-                stats = get_proxy_stats(p["ip"], p["port"])
-                if stats and stats.get("total_uses", 0) > 0:
-                    p["_usage_success_rate"] = (stats.get("successes") or 0) / max(stats["total_uses"], 1)
+                rate = rate_by_key.get(f"{p['ip']}:{p['port']}")
+                if rate is not None:
+                    p["_usage_success_rate"] = rate
         except Exception:
             pass  # usage history is best-effort
 

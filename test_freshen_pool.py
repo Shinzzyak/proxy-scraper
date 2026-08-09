@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,6 +9,16 @@ import freshen_pool
 
 
 class ExportSnapshotsTests(unittest.TestCase):
+    def setUp(self):
+        # Never touch the production DB from tests (N3 fix: tests used to
+        # upsert junk rows like 0.0.0.0:80 into data/proxies.db).
+        self._tmp = tempfile.TemporaryDirectory()
+        os.environ["PROXY_DB"] = str(Path(self._tmp.name) / "test.db")
+
+    def tearDown(self):
+        self._tmp.cleanup()
+        os.environ.pop("PROXY_DB", None)
+
     def test_does_not_replace_last_snapshot_with_stale_database_entries(self):
         stale = [{"ip": "1.2.3.4", "port": 1080, "protocol": "socks5", "score": 99}]
         with tempfile.TemporaryDirectory() as directory, patch.object(
