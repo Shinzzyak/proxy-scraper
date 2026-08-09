@@ -238,7 +238,7 @@ def _next_proxy_round_robin(pool_state, country=""):
             if pool_state.get("list") is None or pool_state.get("key") != key or now - pool_state.get("refreshed", 0) > 120:
                 rows = search_proxies(
                     protocol="http", country_code=country, min_score=ROTATE_MIN_SCORE,
-                    max_age_minutes=60, max_results=ROTATE_POOL_SIZE,
+                    max_age_minutes=180, max_results=ROTATE_POOL_SIZE,
                 )
                 pool_state["list"] = [f"{r['ip']}:{r['port']}" for r in rows] or None
                 pool_state["key"] = key
