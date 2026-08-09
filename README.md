@@ -50,6 +50,10 @@ proxy-scraper/
 ├── geo_repair.py          # ip-api.com geo repair for pool DB
 ├── proxy_pool.py          # SQLite pool manager + selection API
 ├── cli.py                 # Operator/consumer CLI
+├── gateway.py             # Sticky/rotate HTTP proxy gateway + async usage logging
+├── ai_reach.py            # AI-service TLS reachability checker (ChatGPT/Claude/Gemini/Grok/DeepSeek)
+├── config_loader.py       # config.yaml + env + CLI merge (stdlib-only YAML subset)
+├── session_manager.py     # Sticky sessions + dead-proxy blacklist
 ├── discovery.py           # GitHub source discovery helper
 ├── api/
 │   ├── server.py          # REST API server
@@ -98,6 +102,18 @@ python3 publish_snapshot.py
 
 # Main scraper only, validate and update report snapshots
 python3 scraper.py --validate --pool --json --grouped --health --max-validate 1500
+
+# Rotating proxy gateway (round-robin egress per request)
+python3 gateway.py --mode rotate --port 8080
+
+# Sticky gateway (same X-Session-ID → same proxy)
+python3 gateway.py --mode sticky --port 8080
+
+# Check pool proxies can reach AI services (standalone CLI, stdlib-only)
+head -50 proxies.txt | python3 ai_reach.py --targets deepseek,chatgpt --timeout 6
+
+# Best N proxies
+python3 cli.py best --protocol http --limit 10
 
 # Fast raw source scan, no validation
 python3 scraper.py --health -o /tmp/proxies_raw.txt
