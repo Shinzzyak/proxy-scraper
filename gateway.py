@@ -205,8 +205,13 @@ class GatewayHandler(BaseHTTPRequestHandler):
         session_id = self.headers.get("X-Session-ID", "")
         if not session_id:
             return _pick_proxy(country) or "DIRECT"
+        ttl = DEFAULT_SESSION_TTL
+        try:
+            ttl = min(int(self.headers.get("X-Session-TTL", "")), 3600)
+        except ValueError:
+            pass
         return self.server.session_manager.get_or_create(
-            session_id, lambda: _pick_proxy(country) or "DIRECT"
+            session_id, lambda: _pick_proxy(country) or "DIRECT", ttl=ttl
         )
 
     def _log_usage(self, proxy, success, error="", duration_ms=0):
