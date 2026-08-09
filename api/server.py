@@ -42,10 +42,11 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self._json_response({"error": "Not found"}, 404)
 
     def _handle_proxies(self, params):
-        protocol = params.get("protocol", ["http"])[0]
+        protocol = params.get("protocol", [""])[0]  # empty = all protocols
         country = params.get("country", [""])[0]
         try:
-            limit = max(1, min(int(params.get("limit", ["10"])[0]), 500))
+            # Evidence round 4: cap 500 menyesatkan limit=9999 — naikkan ke 5000
+            limit = max(1, min(int(params.get("limit", ["10"])[0]), 5000))
         except ValueError:
             self._json_response({"error": "limit must be an integer"}, 400)
             return
@@ -53,14 +54,20 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
         conn = get_db()
         try:
-            q = "SELECT * FROM proxies WHERE protocol = ?"
-            p = [protocol]
+            q = "SELECT * FROM proxies"
+            p = []
+            conds = []
+            if protocol:
+                conds.append("protocol = ?")
+                p.append(protocol)
             if country:
-                q += " AND country_code = ?"
+                conds.append("country_code = ?")
                 p.append(country.upper())
             if anonymity:
-                q += " AND anonymity = ?"
+                conds.append("anonymity = ?")
                 p.append(anonymity)
+            if conds:
+                q += " WHERE " + " AND ".join(conds)
             q += " ORDER BY score DESC, response_time_ms ASC LIMIT ?"
             p.append(limit)
             rows = conn.execute(q, p).fetchall()
