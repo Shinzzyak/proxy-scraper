@@ -155,7 +155,7 @@ def _drain_usage(max_retries=3):
             flushed += 1
         else:
             failed += 1
-            if failed <= max_retries:
+            if failed < max_retries:  # R6-2: off-by-one — cap at max_retries
                 _usage_queue.put(batch[0])  # bounded retries, then drop
     return flushed, failed
 
@@ -220,36 +220,43 @@ def _pick_proxy(country=""):
 def _next_proxy_round_robin(pool_state, country=""):
     """Round-robin over a fresh pool snapshot, refreshed periodically.
 
-    pool_state: dict with 'list' (list of host:port) and 'index'.
+    pool_state: dict with 'list' (list of host:port), 'index', 'lock'.
     country: optional ISO code filter (X-Country header).
     Returns next proxy or 'DIRECT' when pool empty.
+
+    R6-3: whole read-modify-write (refresh + index++ + blacklist scan) runs
+    under pool_state['lock'] — without it, concurrent requests lost index
+    updates (8 threads × 300 picks → 100% duplicates) and a mid-flight
+    refresh reset index to 0.
     """
     try:
         from proxy_pool import search_proxies
-        now = time.time()
-        key = f"c:{country or '*'}"
-        if pool_state.get("list") is None or pool_state.get("key") != key or now - pool_state.get("refreshed", 0) > 120:
-            rows = search_proxies(
-                protocol="http", country_code=country, min_score=ROTATE_MIN_SCORE,
-                max_age_minutes=60, max_results=ROTATE_POOL_SIZE,
-            )
-            pool_state["list"] = [f"{r['ip']}:{r['port']}" for r in rows] or None
-            pool_state["key"] = key
-            pool_state["index"] = 0
-            pool_state["refreshed"] = now
-        if not pool_state.get("list"):
+        lock = pool_state.setdefault("lock", threading.Lock())
+        with lock:
+            now = time.time()
+            key = f"c:{country or '*'}"
+            if pool_state.get("list") is None or pool_state.get("key") != key or now - pool_state.get("refreshed", 0) > 120:
+                rows = search_proxies(
+                    protocol="http", country_code=country, min_score=ROTATE_MIN_SCORE,
+                    max_age_minutes=60, max_results=ROTATE_POOL_SIZE,
+                )
+                pool_state["list"] = [f"{r['ip']}:{r['port']}" for r in rows] or None
+                pool_state["key"] = key
+                pool_state["index"] = 0
+                pool_state["refreshed"] = now
+            if not pool_state.get("list"):
+                return "DIRECT"
+            # skip blacklisted proxies (P0-2: rotate used to serve dead proxies).
+            # TTL 300s — recovered proxies re-enter rotation (R4-3).
+            bl = pool_state.get("blacklist", {})
+            now = time.time()
+            for _ in range(len(pool_state["list"])):
+                proxy = pool_state["list"][pool_state["index"] % len(pool_state["list"])]
+                pool_state["index"] += 1
+                unban_at = bl.get(proxy, 0)
+                if now >= unban_at:
+                    return proxy
             return "DIRECT"
-        # skip blacklisted proxies (P0-2: rotate used to serve dead proxies).
-        # TTL 300s — recovered proxies re-enter rotation (R4-3).
-        bl = pool_state.get("blacklist", {})
-        now = time.time()
-        for _ in range(len(pool_state["list"])):
-            proxy = pool_state["list"][pool_state["index"] % len(pool_state["list"])]
-            pool_state["index"] += 1
-            unban_at = bl.get(proxy, 0)
-            if now >= unban_at:
-                return proxy
-        return "DIRECT"
     except Exception:
         return "DIRECT"
 
