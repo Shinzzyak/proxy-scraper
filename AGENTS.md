@@ -90,7 +90,7 @@ Do:
 - Use `cli.py best` with freshness filtering for consumers.
 - Keep `PROXY_VALIDATION_WALL_TIMEOUT` set in automation.
 - Prefer source-balanced validation (`scraper.py` does this internally).
-- Keep Telegram scraping on public `t.me/s/<channel>` pages only unless explicitly adding authenticated Telegram support.
+- Telegram scraping is DISABLED in the cron path since 2026-08-10: `t.me/s/<channel>` preview pages return "Contact @" with zero attachments for all channels (Telegram-side change, R7-2). `tg_scraper.py --add-to-pool` still works for the file format but yields nothing. Re-enable only with an authenticated API/MTProto path.
 - Run `python3 -m py_compile *.py api/*.py` before pushing code changes.
 - Expect `ai_reach.py` to exit 2 when the wall timeout fires — that is the contract, not a crash.
 
