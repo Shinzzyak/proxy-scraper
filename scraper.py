@@ -525,7 +525,18 @@ def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
         if b"200 OK" not in data:
             return False
         # must be a JSON IP echo — rules out HTML error pages
-        return b'"origin"' in data or b'"ip"' in data
+        if b'"origin"' not in data and b'"ip"' not in data:
+            return False
+        # hidden-gems round 6: header leak detection — a transparent proxy
+        # that appends Via/X-Forwarded-For/Forwarded leaks client identity.
+        # These are flagged (not rejected): pool stays usable, but the proxy
+        # is marked low-anonymity downstream.
+        leaked = []
+        lower = data[:2048].lower()
+        for hdr in (b"via:", b"x-forwarded-for:", b"forwarded:"):
+            if hdr in lower:
+                leaked.append(hdr[:-1].decode())
+        return leaked  # [] = anonymous, non-empty = transparent/leaky
     except Exception:
         return False
 
@@ -606,10 +617,16 @@ def validate_single(proxy, do_anonymity=False, protocol_hint=None):
     response_time_ms = round((time.time() - t0) * 1000)
 
     # Probe the source-declared protocol first, but still fall back to all protocols.
+    # validate_http_connect returns [] (anonymous OK) or list of leaked headers
+    # (proxy adds Via/XFF — still usable, flagged); False = not a proxy.
+    def _http_ok(proxy):
+        res = validate_http_connect(proxy)
+        return isinstance(res, list)  # [] or leaked headers = working proxy
+
     checks = {
         "socks5": validate_socks5,
         "socks4": validate_socks4,
-        "http": validate_http_connect,
+        "http": _http_ok,
     }
     order = [protocol_hint] if protocol_hint in checks else []
     order += [name for name in checks if name not in order]
