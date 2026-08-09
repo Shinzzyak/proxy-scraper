@@ -67,6 +67,23 @@ Then query:
 python3 cli.py stats --json
 python3 cli.py best --protocol http --min-score 50 --max-age-minutes 180 --json
 python3 cli.py search --protocol http --min-score 50 --max-age-minutes 180 --limit 20 --json
+python3 cli.py best --protocol http --limit 10   # top-N
+```
+
+### Rotating / sticky gateway + AI reachability
+
+```bash
+# Rotating gateway (new egress per request)
+python3 gateway.py --mode rotate --port 8080
+
+# Sticky gateway (X-Session-ID → same proxy, TTL 300s)
+python3 gateway.py --mode sticky --port 8080
+
+# Check pool proxies can TLS-reach AI services (standalone)
+head -100 proxies.txt | python3 ai_reach.py --targets deepseek,chatgpt --timeout 6
+
+# Config merge: config.yaml < env < CLI
+python3 -c "from config_loader import merged_config; print(merged_config())"
 ```
 
 ## Do / Don't
@@ -78,6 +95,7 @@ Do:
 - Prefer source-balanced validation (`scraper.py` does this internally).
 - Keep Telegram scraping on public `t.me/s/<channel>` pages only unless explicitly adding authenticated Telegram support.
 - Run `python3 -m py_compile *.py api/*.py` before pushing code changes.
+- Expect `ai_reach.py` to exit 2 when the wall timeout fires — that is the contract, not a crash.
 
 Don't:
 - Do not commit `data/proxies.db`, `data/proxies.db-wal`, `data/proxies.db-shm`, locks, or runtime Telegram state.
