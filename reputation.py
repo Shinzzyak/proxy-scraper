@@ -70,14 +70,22 @@ def update_reputation(source_name: str, submitted: int, valid: int):
             """, (source_name, submitted, valid, invalid, success_rate))
             final_rate = success_rate
 
-        # Check ban threshold
+        # Check ban threshold; auto-unban when recovered (P1-8: bans were permanent)
         if final_rate < BAN_THRESHOLD:
             conn.execute(
                 "UPDATE source_reputation SET is_banned = 1, ban_reason = ? WHERE source_name = ?",
                 (f"Success rate {final_rate:.1%} < {BAN_THRESHOLD:.0%}", source_name)
             )
             print(f"🚫 BANNED: {source_name} (success rate: {final_rate:.1%})")
-        elif final_rate < WARN_THRESHOLD:
+        elif final_rate >= WARN_THRESHOLD:
+            # recovered — clear the ban so the source is scraped again
+            conn.execute(
+                "UPDATE source_reputation SET is_banned = 0, ban_reason = '' WHERE source_name = ? AND is_banned = 1",
+                (source_name,)
+            )
+            if conn.total_changes:
+                print(f"✅ UNBANNED: {source_name} (recovered, success rate: {final_rate:.1%})")
+        else:
             print(f"⚠️  WARNING: {source_name} (success rate: {final_rate:.1%})")
 
         conn.commit()

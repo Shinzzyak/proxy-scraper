@@ -171,7 +171,9 @@ CRED_SOURCES = [
 
 # ── Regex ──────────────────────────────────────────────────────────────
 PROXY_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})")
-CRED_RE = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*[:\s]\s*(\d{1,5})\s*[:\s]\s*(\S+)\s*[:\s]\s*(\S+)")
+# (P2-13) split from the right so passwords containing ':' parse correctly:
+#   ip:port:user:password  → user/pass = parts[2], ':'.join(parts[3:])
+CRED_RE = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5}):([^:]+):(.+)$")
 URL_CREDS_RE = re.compile(r"https?://([^:]+):([^@]+)@(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})")
 
 # Bounds: some upstream lists publish 400k+ proxies. Keep cron safe on small VPS.
@@ -603,7 +605,12 @@ def geo_batch_lookup(ips, batch_size=100, timeout=10):
     geo = {}
     ip_list = sorted(set(ip for ip in ips if ip))[:2000]  # cap at 2000
     fields = "status,message,query,country,countryCode,city,isp"
+    t0 = time.time()
+    WALL = 120  # hard wall clock — geo must never add minutes after validation (P1-7)
     for i in range(0, len(ip_list), batch_size):
+        if time.time() - t0 > WALL:
+            print(f"  ⚠ geo wall timeout ({WALL}s) — stopping at batch {i//batch_size+1}", file=sys.stderr)
+            break
         batch = ip_list[i:i+batch_size]
         try:
             payload = json.dumps([{"query": ip, "fields": fields} for ip in batch]).encode()

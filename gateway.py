@@ -31,8 +31,9 @@ ROTATE_POOL_SIZE = 100  # round-robin pool size (fresh HTTP proxies)
 ROTATE_MIN_SCORE = 30   # tolerate lower score for rotation variety
 
 # Async usage-log writer: batches writes so request path never blocks on SQLite.
-_usage_queue = queue.Queue()
+_usage_queue = queue.Queue(maxsize=10000)  # bounded — drop-counted under abuse (P2)
 _usage_stop = threading.Event()
+_dropped_usage = 0
 
 
 def _usage_writer():
@@ -43,30 +44,44 @@ def _usage_writer():
             item = _usage_queue.get(timeout=0.5)
             batch.append(item)
             if len(batch) >= 50:
-                _flush_usage(batch)
+                if not _flush_usage(batch):
+                    # failure: re-queue items, don't drop them (P1-3)
+                    for it in batch:
+                        _usage_queue.put(it)
                 batch = []
         except queue.Empty:
             if batch:
-                _flush_usage(batch)
+                if not _flush_usage(batch):
+                    for it in batch:
+                        _usage_queue.put(it)
                 batch = []
     if batch:
-        _flush_usage(batch)
+        if not _flush_usage(batch):
+            for it in batch:
+                _usage_queue.put(it)
 
 
 def _drain_usage():
-    """Synchronous drain (for tests): flush everything currently queued."""
-    batch = []
+    """Synchronous drain (for tests): flush everything currently queued.
+    Returns (flushed, failed) counts."""
+    flushed = failed = 0
     while not _usage_queue.empty():
+        batch = []
         try:
             batch.append(_usage_queue.get_nowait())
         except queue.Empty:
             break
-    if batch:
-        _flush_usage(batch)
-    return len(batch)
+        if _flush_usage(batch):
+            flushed += 1
+        else:
+            failed += 1
+            _usage_queue.put(batch[0])
+    return flushed, failed
 
 
 def _flush_usage(batch):
+    """Write batch to usage_log. Returns True on success — on failure items are
+    NOT lost: caller re-queues them (P1-3)."""
     try:
         from proxy_pool import get_db
         conn = get_db()
@@ -76,14 +91,19 @@ def _flush_usage(batch):
                 [(ip, port, int(ok), rt, err[:200]) for ip, port, ok, rt, err in batch],
             )
             conn.commit()
+            return True
         finally:
             conn.close()
     except Exception:
-        pass
+        return False
 
 
 def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
-    _usage_queue.put((ip, int(port), bool(success), int(duration_ms), error))
+    global _dropped_usage
+    try:
+        _usage_queue.put_nowait((ip, int(port), bool(success), int(duration_ms), error))
+    except queue.Full:
+        _dropped_usage += 1  # bounded queue — drop under burst, count it
 
 
 def _pick_proxy():
@@ -121,9 +141,13 @@ def _next_proxy_round_robin(pool_state):
             pool_state["refreshed"] = now
         if not pool_state.get("list"):
             return "DIRECT"
-        proxy = pool_state["list"][pool_state["index"] % len(pool_state["list"])]
-        pool_state["index"] += 1
-        return proxy
+        # skip blacklisted proxies (P0-2: rotate used to serve dead proxies)
+        for _ in range(len(pool_state["list"])):
+            proxy = pool_state["list"][pool_state["index"] % len(pool_state["list"])]
+            pool_state["index"] += 1
+            if proxy not in pool_state.get("blacklist", ()):
+                return proxy
+        return "DIRECT"
     except Exception:
         return "DIRECT"
 
@@ -147,6 +171,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 _enqueue_usage(ip, int(port), success, duration_ms, error)
                 if not success:
                     self.server.session_manager.report_failure(proxy)
+                    bl = self.server.rotate_state.get("blacklist")
+                    if bl is not None:
+                        bl.add(proxy)
         except Exception:
             pass
 
@@ -329,7 +356,7 @@ def main():
     server = ThreadingHTTPServer((args.bind, args.port), GatewayHandler)
     server.session_manager = sm
     server.mode = args.mode
-    server.rotate_state = {"list": None, "index": 0, "refreshed": 0}
+    server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": set()}
 
     cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), daemon=True)
     cleanup.start()
@@ -341,6 +368,9 @@ def main():
         server.serve_forever()
     except KeyboardInterrupt:
         print("\n🛑 Gateway stopped")
+        _usage_stop.set()
+        flushed, failed = _drain_usage()
+        print(f"💾 usage_log drained: {flushed} flushed, {failed} failed")
         server.server_close()
 
 

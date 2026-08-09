@@ -8,6 +8,9 @@ import threading
 import time
 
 
+MAX_SESSIONS = 10000  # hard cap — evict oldest when exceeded (P1-5)
+
+
 class SessionManager:
     """Thread-safe in-memory session store with TTL.
 
@@ -15,9 +18,10 @@ class SessionManager:
     provider_fn is called only when no live mapping exists.
     """
 
-    def __init__(self, default_ttl=300, failure_penalty_seconds=60):
+    def __init__(self, default_ttl=300, failure_penalty_seconds=60, max_sessions=MAX_SESSIONS):
         self._default_ttl = default_ttl
         self._failure_penalty_seconds = failure_penalty_seconds
+        self._max_sessions = max_sessions
         self._lock = threading.Lock()
         self._sessions = {}  # session_id -> (proxy_str, expiry_epoch)
         self._blacklist = {}  # proxy_str -> unban_epoch
@@ -38,9 +42,18 @@ class SessionManager:
                     return proxy
                 # entry expired or proxy blacklisted -> fall through to re-pick
             proxy = provider_fn()
-            # never hand out a blacklisted proxy
-            while proxy in self._blacklist and now < self._blacklist[proxy]:
+            # never hand out a blacklisted proxy; bound the retry loop so a
+            # provider returning the same dead proxy cannot hang forever (P0-1)
+            attempts = 0
+            while proxy in self._blacklist and now < self._blacklist[proxy] and attempts < 5:
                 proxy = provider_fn()
+                attempts += 1
+            if proxy in self._blacklist and now < self._blacklist[proxy]:
+                proxy = "DIRECT"  # all candidates blacklisted — fail open
+            # cap sessions — evict oldest if over limit (P1-5)
+            if len(self._sessions) >= self._max_sessions:
+                oldest = min(self._sessions, key=lambda sid: self._sessions[sid][1])
+                del self._sessions[oldest]
             self._sessions[session_id] = (proxy, now + ttl)
             return proxy
 
