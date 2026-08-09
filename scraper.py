@@ -725,7 +725,18 @@ def compute_score(proxy_dict):
     if usage is None:
         usage_score = 5  # neutral: no usage data yet
     else:
-        usage_score = round(10 * usage)  # 0.0 → 0, 1.0 → 10
+        # R9-11: penalize slow-but-successful proxies — usage rt from production
+        # log. success 100% but 8s latency should NOT outrank a 300ms proxy.
+        usage_rt = proxy_dict.get("_usage_avg_rt_ms")
+        speed_factor = 1.0
+        if usage_rt is not None and usage_rt > 0:
+            if usage_rt > 5000:
+                speed_factor = 0.3
+            elif usage_rt > 2000:
+                speed_factor = 0.6
+            elif usage_rt > 1000:
+                speed_factor = 0.85
+        usage_score = round(10 * usage * speed_factor)
 
     score = round(speed * 3.5 + anonymity * 2.5 + protocol * 2.5 + usage_score * 1.5)  # 0-100
     return score
@@ -831,18 +842,21 @@ def filter_valid(proxies, max_validate=500, do_anonymity=False, source_map=None)
                 keys = [f"{p['ip']}:{p['port']}" for p in valid]
                 placeholders = ",".join("?" for _ in keys)
                 rows = conn.execute(
-                    f"SELECT ip, port, SUM(success) * 1.0 / COUNT(*) AS rate "
+                    f"SELECT ip, port, SUM(success) * 1.0 / COUNT(*) AS rate, "
+                    f"AVG(response_time_ms) AS avg_rt "
                     f"FROM usage_log WHERE (ip || ':' || port) IN ({placeholders}) "
+                    f"AND response_time_ms > 0 "
                     f"GROUP BY ip, port",
                     keys,
                 ).fetchall()
-                rate_by_key = {f"{r[0]}:{r[1]}": r[2] for r in rows}
+                rate_by_key = {f"{r[0]}:{r[1]}": (r[2], r[3]) for r in rows}
             finally:
                 conn.close()
             for p in valid:
-                rate = rate_by_key.get(f"{p['ip']}:{p['port']}")
-                if rate is not None:
-                    p["_usage_success_rate"] = rate
+                hit = rate_by_key.get(f"{p['ip']}:{p['port']}")
+                if hit is not None:
+                    p["_usage_success_rate"] = hit[0]
+                    p["_usage_avg_rt_ms"] = hit[1]  # R9-11: production latency
         except Exception:
             pass  # usage history is best-effort
 
