@@ -122,13 +122,18 @@ def main():
     pool = ThreadPoolExecutor(max_workers=args.threads)
     futures = [pool.submit(work, p) for p in proxies]
     try:
+        # P1-B: as_completed must be created ONCE — calling it per-iteration
+        # replays already-finished futures → infinite duplicate loop.
+        # timeout=WALL_TIMEOUT: next() raises TimeoutError at the hard wall
+        # even if a proxy hangs; per-iteration remaining check handles early cut.
+        done_iter = as_completed(futures, timeout=WALL_TIMEOUT)
         while True:
             remaining = WALL_TIMEOUT - (time.time() - t0)
             if remaining <= 0:
                 timed_out = True
                 break
             try:
-                fut = next(as_completed(futures, timeout=remaining))
+                fut = next(done_iter)
             except StopIteration:
                 break  # all futures done
             except TimeoutError:
