@@ -302,7 +302,7 @@ def main() -> int:
         body = "countries={} sources={}/{} max_age_minutes={}".format(
             countries, alive_sources, total_sources, args.export_max_age_minutes
         )
-        run(["git", "commit", "-m", message, "-m", body], check=True, capture=False)
+        run(["git", "commit", "-m", message, "-m", body, "--author=Shinzzyak <shinzzyak@users.noreply.github.com>"], check=True, capture=False)
         run(["git", "push", args.remote, "HEAD:{}".format(args.branch)], check=True, capture=False)
 
         state.update({
