@@ -468,6 +468,72 @@ def dedup_proxies(proxies: List[Dict]) -> List[Dict]:
     return sorted(seen.values(), key=lambda x: x.get("score", 0), reverse=True)
 
 
+# ── Pool health (ProxyGate-inspired 4-level) ───────────────────────────
+POOL_HEALTH_LEVELS = [
+    ("HEALTHY", float(os.environ.get("POOL_HEALTH_HEALTHY", "0.30"))),
+    ("WARNING", float(os.environ.get("POOL_HEALTH_WARNING", "0.15"))),
+    ("CRITICAL", float(os.environ.get("POOL_HEALTH_CRITICAL", "0.05"))),
+    ("EMERGENCY", 0.0),
+]
+
+
+def get_pool_health() -> Dict:
+    """4-level pool health: HEALTHY/WARNING/CRITICAL/EMERGENCY.
+
+    ratio = 0.5×freshness (fresh-30m/total) + 0.3×1h success rate + 0.2×avg score.
+    """
+    s = get_pool_stats()
+    total = s.get("total", 0)
+    try:
+        conn = get_db()
+        try:
+            fresh = conn.execute(
+                "SELECT COUNT(*) FROM proxies WHERE julianday(last_seen) >= julianday('now', '-30 minutes')"
+            ).fetchone()[0]
+            succ = conn.execute(
+                "SELECT AVG(success) FROM usage_log WHERE julianday(timestamp) >= julianday('now', '-1 hour')"
+            ).fetchone()[0] or 0.0
+        finally:
+            conn.close()
+    except Exception:
+        fresh, succ = 0, 0.0
+    score = s.get("avg_score", 0) or 0
+    ratio = (fresh / max(total, 1)) * 0.5 + succ * 0.3 + (score / 100.0) * 0.2
+    for level, threshold in POOL_HEALTH_LEVELS:
+        if ratio >= threshold:
+            return {"level": level, "ratio": round(ratio, 2), "fresh_30m": fresh, "success_rate_1h": round(succ, 3), **s}
+    return {"level": "EMERGENCY", "ratio": round(ratio, 2), "fresh_30m": fresh, "success_rate_1h": round(succ, 3), **s}
+
+
+# ── Auto-ban bad proxies (proxy-rotator inspired) ──────────────────────
+BAN_RATE = float(os.environ.get("PROXY_BAN_RATE", "0.30"))
+BAN_MIN_USES = int(os.environ.get("PROXY_BAN_MIN_USES", "3"))
+
+
+def auto_ban_bad_proxies(limit: int = 200) -> int:
+    """Ban proxies with <30% success rate across >=3 uses (score=0; not deleted —
+    next validation can revive them)."""
+    try:
+        conn = get_db()
+        try:
+            rows = conn.execute(
+                "SELECT ip, port, COUNT(*) n, SUM(success) ok FROM usage_log "
+                "GROUP BY ip, port HAVING n >= ? AND 1.0*ok/n < ? ORDER BY n DESC LIMIT ?",
+                (BAN_MIN_USES, BAN_RATE, limit),
+            ).fetchall()
+            for r in rows:
+                conn.execute(
+                    "UPDATE proxies SET score = 0, last_seen = '' WHERE ip = ? AND port = ?",
+                    (r[0], r[1]),
+                )
+            conn.commit()
+            return len(rows)
+        finally:
+            conn.close()
+    except Exception:
+        return 0
+
+
 def _jd(ts: str) -> float:
     """Parse a timestamp (ISO-T or 'YYYY-MM-DD HH:MM:SS') to julian day for comparison.
 

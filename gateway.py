@@ -106,37 +106,43 @@ def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
         _dropped_usage += 1  # bounded queue — drop under burst, count it
 
 
-def _pick_proxy():
+def _pick_proxy(country=""):
     """Select a fresh HTTP proxy from the pool.
 
     Returns 'host:port' string. Falls back to direct connection
-    ('DIRECT') if the pool is empty.
+    ('DIRECT') if the pool is empty. If country requested but none
+    found, returns None (caller decides — do NOT silently fall back).
     """
     try:
         from proxy_pool import get_best_proxy
-        proxy = get_best_proxy(protocol="http", min_score=0, max_age_minutes=60)
+        proxy = get_best_proxy(protocol="http", country_code=country, min_score=0, max_age_minutes=60)
         if proxy:
             return f"{proxy['ip']}:{proxy['port']}"
+        if country:
+            return None  # requested country unavailable — no DIRECT leak
     except Exception:
         pass
     return "DIRECT"
 
 
-def _next_proxy_round_robin(pool_state):
+def _next_proxy_round_robin(pool_state, country=""):
     """Round-robin over a fresh pool snapshot, refreshed periodically.
 
     pool_state: dict with 'list' (list of host:port) and 'index'.
+    country: optional ISO code filter (X-Country header).
     Returns next proxy or 'DIRECT' when pool empty.
     """
     try:
         from proxy_pool import search_proxies
         now = time.time()
-        if pool_state.get("list") is None or now - pool_state.get("refreshed", 0) > 120:
+        key = f"c:{country or '*'}"
+        if pool_state.get("list") is None or pool_state.get("key") != key or now - pool_state.get("refreshed", 0) > 120:
             rows = search_proxies(
-                protocol="http", min_score=ROTATE_MIN_SCORE,
+                protocol="http", country_code=country, min_score=ROTATE_MIN_SCORE,
                 max_age_minutes=60, max_results=ROTATE_POOL_SIZE,
             )
             pool_state["list"] = [f"{r['ip']}:{r['port']}" for r in rows] or None
+            pool_state["key"] = key
             pool_state["index"] = 0
             pool_state["refreshed"] = now
         if not pool_state.get("list"):
@@ -156,12 +162,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
     """HTTP forward proxy that routes via session→proxy mapping."""
 
     def _get_session_proxy(self):
+        country = self.headers.get("X-Country", "").upper()
         if self.server.mode == "rotate":
-            return _next_proxy_round_robin(self.server.rotate_state)
+            return _next_proxy_round_robin(self.server.rotate_state, country)
         session_id = self.headers.get("X-Session-ID", "")
         if not session_id:
-            return _pick_proxy()
-        return self.server.session_manager.get_or_create(session_id, _pick_proxy)
+            return _pick_proxy(country) or "DIRECT"
+        return self.server.session_manager.get_or_create(
+            session_id, lambda: _pick_proxy(country) or "DIRECT"
+        )
 
     def _log_usage(self, proxy, success, error="", duration_ms=0):
         """Enqueue proxy usage event (async writer batches to usage_log)."""
@@ -335,12 +344,19 @@ class GatewayHandler(BaseHTTPRequestHandler):
 
 
 def _cleanup_loop(session_manager, interval=60):
-    """Background thread: purge expired sessions periodically."""
+    """Background thread: purge expired sessions + auto-ban bad proxies periodically."""
     while True:
         time.sleep(interval)
         removed = session_manager.cleanup()
         if removed:
             print(f"♻️ Purged {removed} expired sessions", file=sys.stderr)
+        try:
+            from proxy_pool import auto_ban_bad_proxies
+            banned = auto_ban_bad_proxies()
+            if banned:
+                print(f"🚫 Auto-banned {banned} bad proxies (usage success rate)", file=sys.stderr)
+        except Exception:
+            pass  # auto-ban is best-effort
 
 
 def main():
