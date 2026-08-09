@@ -44,7 +44,11 @@ class ProxyHandler(BaseHTTPRequestHandler):
     def _handle_proxies(self, params):
         protocol = params.get("protocol", ["http"])[0]
         country = params.get("country", [""])[0]
-        limit = int(params.get("limit", ["10"])[0])
+        try:
+            limit = max(1, min(int(params.get("limit", ["10"])[0]), 500))
+        except ValueError:
+            self._json_response({"error": "limit must be an integer"}, 400)
+            return
         anonymity = params.get("anonymity", [""])[0]
 
         conn = get_db()

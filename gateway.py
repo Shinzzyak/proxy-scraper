@@ -26,6 +26,8 @@ DEFAULT_BIND = "127.0.0.1"
 DEFAULT_PORT = 8080
 GATEWAY_TIMEOUT = 15
 UPSTREAM_PROXY_TIMEOUT = 10
+ROTATE_POOL_SIZE = 100  # round-robin pool size (fresh HTTP proxies)
+ROTATE_MIN_SCORE = 30   # tolerate lower score for rotation variety
 
 
 def _pick_proxy():
@@ -44,14 +46,52 @@ def _pick_proxy():
     return "DIRECT"
 
 
+def _next_proxy_round_robin(pool_state):
+    """Round-robin over a fresh pool snapshot, refreshed periodically.
+
+    pool_state: dict with 'list' (list of host:port) and 'index'.
+    Returns next proxy or 'DIRECT' when pool empty.
+    """
+    try:
+        from proxy_pool import search_proxies
+        now = time.time()
+        if pool_state.get("list") is None or now - pool_state.get("refreshed", 0) > 120:
+            rows = search_proxies(
+                protocol="http", min_score=ROTATE_MIN_SCORE,
+                max_age_minutes=60, max_results=ROTATE_POOL_SIZE,
+            )
+            pool_state["list"] = [f"{r['ip']}:{r['port']}" for r in rows] or None
+            pool_state["index"] = 0
+            pool_state["refreshed"] = now
+        if not pool_state.get("list"):
+            return "DIRECT"
+        proxy = pool_state["list"][pool_state["index"] % len(pool_state["list"])]
+        pool_state["index"] += 1
+        return proxy
+    except Exception:
+        return "DIRECT"
+
+
 class GatewayHandler(BaseHTTPRequestHandler):
     """HTTP forward proxy that routes via session→proxy mapping."""
 
     def _get_session_proxy(self):
+        if self.server.mode == "rotate":
+            return _next_proxy_round_robin(self.server.rotate_state)
         session_id = self.headers.get("X-Session-ID", "")
         if not session_id:
             return _pick_proxy()
         return self.server.session_manager.get_or_create(session_id, _pick_proxy)
+
+    def _log_usage(self, proxy, success, error=""):
+        """Log proxy usage event to usage_log (best-effort, non-blocking)."""
+        try:
+            if proxy and proxy != "DIRECT":
+                from proxy_pool import log_usage
+                ip, _, port = proxy.rpartition(":")
+                log_usage(ip, int(port), success, error=error[:200])
+        except Exception:
+            pass
 
     def do_CONNECT(self):
         """HTTPS tunneling: establish CONNECT through upstream proxy."""
@@ -69,12 +109,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
             resp = upstream.recv(4096)
             if b"200" not in resp:
                 upstream.close()
+                self._log_usage(session_proxy, False, "upstream CONNECT rejected")
                 self.send_error(502, "Upstream CONNECT failed")
                 return
             self.send_response(200, "Connection Established")
             self.end_headers()
+            self._log_usage(session_proxy, True)
             self._tunnel(self.connection, upstream)
         except Exception as e:
+            self._log_usage(session_proxy, False, str(e))
             self.send_error(502, f"Upstream error: {e}")
 
     def _connect_direct(self, host, port):
@@ -131,6 +174,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     req.add_header(key, val)
 
             resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
+            self._log_usage(session_proxy, True)
             self.send_response(resp.status)
             for key, val in resp.headers.items():
                 if key.lower() not in ("transfer-encoding", "connection"):
@@ -141,11 +185,13 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 self.wfile.write(chunk)
                 chunk = resp.read(65536)
         except urllib.error.HTTPError as e:
+            self._log_usage(session_proxy, False, f"HTTP {e.code}")
             self.send_response(e.code)
             self.end_headers()
             if e.readable():
                 self.wfile.write(e.read(65536))
         except Exception as e:
+            self._log_usage(session_proxy, False, str(e))
             self.send_error(502, f"Upstream error: {e}")
 
     def _forward_direct(self, method, url):
@@ -216,16 +262,20 @@ def main():
     parser.add_argument("--bind", default=DEFAULT_BIND)
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--session-ttl", type=int, default=DEFAULT_SESSION_TTL)
+    parser.add_argument("--mode", choices=["sticky", "rotate"], default="sticky",
+                        help="sticky: same session → same proxy (default); rotate: round-robin per request")
     args = parser.parse_args()
 
     sm = SessionManager(default_ttl=args.session_ttl)
     server = ThreadingHTTPServer((args.bind, args.port), GatewayHandler)
     server.session_manager = sm
+    server.mode = args.mode
+    server.rotate_state = {"list": None, "index": 0, "refreshed": 0}
 
     cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), daemon=True)
     cleanup.start()
 
-    print(f"🔀 Gateway listening on {args.bind}:{args.port} (session TTL {args.session_ttl}s)")
+    print(f"🔀 Gateway listening on {args.bind}:{args.port} (session TTL {args.session_ttl}s, mode {args.mode})")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

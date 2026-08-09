@@ -174,7 +174,7 @@ def get_source_uptime(source_name: str, hours: int = 72) -> Dict:
                 ROUND(100.0 * SUM(alive) / MAX(COUNT(*), 1), 1) as uptime_pct,
                 ROUND(AVG(proxy_count), 0) as avg_proxies
             FROM source_history
-            WHERE source_name = ? AND timestamp > ?
+            WHERE source_name = ? AND julianday(timestamp) >= julianday(?)
         """, (source_name, cutoff)).fetchone()
         return dict(row) if row else {}
     finally:
@@ -271,7 +271,7 @@ def get_best_proxy(protocol: str = "http", country_code: str = "", min_score: in
             params.append(country_code.upper())
         if max_age_minutes and max_age_minutes > 0:
             cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
-            q += " AND last_seen >= ?"
+            q += " AND julianday(last_seen) >= julianday(?)"
             params.append(cutoff)
         q += " ORDER BY score DESC, response_time_ms ASC LIMIT 1"
         row = conn.execute(q, params).fetchone()
@@ -295,7 +295,7 @@ def get_sticky_group(isp: str = "", country_code: str = "", min_score: int = 50,
             params.append(country_code.upper())
         if max_age_minutes and max_age_minutes > 0:
             cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
-            q += " AND last_seen >= ?"
+            q += " AND julianday(last_seen) >= julianday(?)"
             params.append(cutoff)
         q += " ORDER BY score DESC LIMIT 20"
         rows = conn.execute(q, params).fetchall()
@@ -444,7 +444,7 @@ def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 
             params.append(anonymity)
         if max_age_minutes and max_age_minutes > 0:
             cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
-            q += " AND last_seen >= ?"
+            q += " AND julianday(last_seen) >= julianday(?)"
             params.append(cutoff)
         q += " ORDER BY score DESC, response_time_ms ASC LIMIT ?"
         params.append(max_results)

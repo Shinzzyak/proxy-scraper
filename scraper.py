@@ -123,6 +123,43 @@ PROXY_SOURCES = [
     ("proxyscrape-v4-https", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=https&country=all&timeout=5000", "protocolipport"),
     ("proxyscrape-v4-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=all&timeout=5000", "protocolipport"),
     ("proxyscrape-v4-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=all&timeout=5000", "protocolipport"),
+    # ── Hidden gems (verified 2026-08-10, from research) ──────────────
+    # Convention: `gem-` prefix = new source in observation period; rename
+    # (drop prefix) after 3-4 runs with alive rate > 50%.
+    ("gem-r00tee-http", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Https.txt", "host:port"),
+    ("gem-r00tee-socks4", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks4.txt", "host:port"),
+    ("gem-r00tee-socks5", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt", "host:port"),
+    ("gem-rix4uni-http", "https://raw.githubusercontent.com/rix4uni/fresh-proxy-list/main/proxylist.txt", "host:port"),
+    ("gem-skillter-http", "https://raw.githubusercontent.com/Skillter/ProxyGather/master/proxies/working-proxies-http.txt", "host:port"),
+    ("gem-skillter-socks4", "https://raw.githubusercontent.com/Skillter/ProxyGather/master/proxies/working-proxies-socks4.txt", "host:port"),
+    ("gem-skillter-socks5", "https://raw.githubusercontent.com/Skillter/ProxyGather/master/proxies/working-proxies-socks5.txt", "host:port"),
+    ("gem-dpangestuw-http", "https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/http_proxies.txt", "protocolipport"),
+    ("gem-dpangestuw-socks4", "https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/socks4_proxies.txt", "protocolipport"),
+    ("gem-dpangestuw-socks5", "https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/socks5_proxies.txt", "protocolipport"),
+    ("gem-komutan234-http", "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/http.txt", "host:port"),
+    ("gem-komutan234-socks4", "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/socks4.txt", "host:port"),
+    ("gem-komutan234-socks5", "https://raw.githubusercontent.com/komutan234/Proxy-List-Free/main/proxies/socks5.txt", "host:port"),
+    ("gem-cyberh4ck3r-http", "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/http-proxies.txt", "host:port"),
+    ("gem-cyberh4ck3r-https", "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/https-proxies.txt", "host:port"),
+    ("gem-cyberh4ck3r-socks4", "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/socks4-proxies.txt", "host:port"),
+    ("gem-cyberh4ck3r-socks5", "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/socks5-proxies.txt", "host:port"),
+    ("gem-databay-http", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/http.txt", "host:port"),
+    ("gem-databay-socks4", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks4.txt", "host:port"),
+    ("gem-databay-socks5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks5.txt", "host:port"),
+    ("gem-vanndev-http", "https://raw.githubusercontent.com/Vann-Dev/proxy-list/main/proxies/http.txt", "host:port"),
+    ("gem-proxyscraper-http", "https://raw.githubusercontent.com/ProxyScraper/ProxyScraper/main/http.txt", "host:port"),
+    ("gem-iplocate-http", "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/http.txt", "host:port"),
+    ("gem-iplocate-socks4", "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/socks4.txt", "host:port"),
+    ("gem-iplocate-socks5", "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/socks5.txt", "host:port"),
+    ("gem-elliot-http", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/http/global/http_checked.txt", "host:port"),
+    ("gem-elliot-socks4", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/socks4/global/socks4_checked.txt", "host:port"),
+    ("gem-elliot-socks5", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/socks5/global/socks5_checked.txt", "host:port"),
+    ("gem-ch4120n-http", "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/master/proxies/http.txt", "host:port"),
+    ("gem-ch4120n-socks4", "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/master/proxies/socks4.txt", "host:port"),
+    ("gem-ch4120n-socks5", "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/master/proxies/socks5.txt", "host:port"),
+    ("gem-proxmint-http", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/http.txt", "host:port"),
+    ("gem-proxmint-socks4", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks4.txt", "host:port"),
+    ("gem-proxmint-socks5", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks5.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -271,6 +308,15 @@ def extract_creds(text):
 
 
 # ── Source Discovery ───────────────────────────────────────────────────
+
+# Meta-sources: known aggregator repos whose READMEs list many proxy-source URLs.
+# Used by discover_new_urls() to find new candidate sources.
+DISCOVERY_SOURCES = [
+    "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/README.md",
+    "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/README.md",
+    "https://raw.githubusercontent.com/monosans/proxy-list/main/README.md",
+    "https://raw.githubusercontent.com/clarketm/proxy-list/master/README.md",
+]
 
 def discover_new_urls():
     existing = {url for _, url, _ in PROXY_SOURCES}
@@ -803,6 +849,22 @@ def main():
         if not valid:
             print("\n✗ No confirmed proxies; preserving existing outputs.", file=sys.stderr)
             sys.exit(1)
+        # Feed source reputation (BUG-B fix: update_reputation was never called)
+        if POOL_AVAILABLE and source_map:
+            try:
+                from reputation import update_reputation
+                valid_keys = {f"{v['ip']}:{v['port']}" for v in valid}
+                per_source: Dict[str, List[int]] = {}
+                for proxy_key, src in source_map.items():
+                    per_source.setdefault(src, [0, 0])  # [submitted, valid]
+                    per_source[src][0] += 1
+                    if proxy_key in valid_keys:
+                        per_source[src][1] += 1
+                for src, (submitted, valid_count) in per_source.items():
+                    update_reputation(src, submitted, valid_count)
+                print(f"✅ Reputation updated for {len(per_source)} sources")
+            except Exception as e:
+                print(f"  ⚠ Reputation update skipped: {e}")
         if args.json and valid:
             save_json_output(valid)
         if args.grouped and valid:

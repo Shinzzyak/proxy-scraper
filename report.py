@@ -21,13 +21,13 @@ def generate_weekly_report(output: str = "report-weekly.md") -> str:
 
     # Scrape runs this week
     runs = conn.execute(
-        "SELECT * FROM scrape_runs WHERE timestamp > ? ORDER BY timestamp",
+        "SELECT * FROM scrape_runs WHERE julianday(timestamp) >= julianday(?) ORDER BY timestamp",
         (week_ago,)
     ).fetchall()
 
     # Source history this week
     sources = conn.execute(
-        "SELECT source_name, alive, proxy_count, timestamp FROM source_history WHERE timestamp > ? ORDER BY timestamp",
+        "SELECT source_name, alive, proxy_count, timestamp FROM source_history WHERE julianday(timestamp) >= julianday(?) ORDER BY timestamp",
         (week_ago,)
     ).fetchall()
 
@@ -46,7 +46,7 @@ def generate_weekly_report(output: str = "report-weekly.md") -> str:
         SELECT COUNT(*) as total_uses,
             SUM(success) as successes,
             ROUND(AVG(response_time_ms), 0) as avg_ms
-        FROM usage_log WHERE timestamp > ?
+        FROM usage_log WHERE julianday(timestamp) >= julianday(?)
     """, (week_ago,)).fetchone()
 
     # Reputation
