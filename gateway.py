@@ -10,6 +10,7 @@ by this gateway layer. Upstream proxies are public free proxies.
 """
 import argparse
 import json
+import os
 import queue
 import select
 import socket
@@ -29,6 +30,41 @@ GATEWAY_TIMEOUT = 15
 UPSTREAM_PROXY_TIMEOUT = 10
 ROTATE_POOL_SIZE = 100  # round-robin pool size (fresh HTTP proxies)
 ROTATE_MIN_SCORE = 30   # tolerate lower score for rotation variety
+MAX_FAILOVER = 3        # ProxyGate parity: try up to 3 proxies per request (B3)
+AUTH_WINDOW = 300       # HMAC auth timestamp window (seconds) — replay-safe (B4)
+
+
+def _check_auth(secret: str, client_id: str, ts: str, sig: str, window: int = AUTH_WINDOW) -> bool:
+    """HMAC-SHA256 auth: sig = HMAC(secret, f'{client_id}{ts}'). Replay-safe."""
+    import hashlib
+    import hmac as hmac_mod
+    if not secret:
+        return True  # auth disabled
+    try:
+        if abs(int(time.time()) - int(ts)) > window:
+            return False  # stale/replay
+    except ValueError:
+        return False
+    expected = hmac_mod.new(secret.encode(), f"{client_id}{ts}".encode(), hashlib.sha256).hexdigest()
+    return hmac_mod.compare_digest(expected, sig)
+
+
+def _auth_ok(handler, secret: str) -> bool:
+    """Check Proxy-Authorization: Basic <client_id:ts:sig>. 407 on failure."""
+    if not secret:
+        return True
+    import base64
+    try:
+        header = handler.headers.get("Proxy-Authorization", "")
+        if not header.startswith("Basic "):
+            return False
+        decoded = base64.b64decode(header[6:]).decode()
+        client_id, ts, sig = decoded.split(":")
+        if not _check_auth(secret, client_id, ts, sig):
+            return False
+        return True
+    except Exception:
+        return False
 
 # Async usage-log writer: batches writes so request path never blocks on SQLite.
 _usage_queue = queue.Queue(maxsize=10000)  # bounded — drop-counted under abuse (P2)
@@ -161,8 +197,9 @@ def _next_proxy_round_robin(pool_state, country=""):
 class GatewayHandler(BaseHTTPRequestHandler):
     """HTTP forward proxy that routes via session→proxy mapping."""
 
-    def _get_session_proxy(self):
-        country = self.headers.get("X-Country", "").upper()
+    def _get_session_proxy(self, country=""):
+        if not country:
+            country = self.headers.get("X-Country", "").upper()
         if self.server.mode == "rotate":
             return _next_proxy_round_robin(self.server.rotate_state, country)
         session_id = self.headers.get("X-Session-ID", "")
@@ -187,32 +224,50 @@ class GatewayHandler(BaseHTTPRequestHandler):
             pass
 
     def do_CONNECT(self):
-        """HTTPS tunneling: establish CONNECT through upstream proxy."""
-        session_proxy = self._get_session_proxy()
+        """HTTPS tunneling: establish CONNECT through upstream proxy, with failover."""
+        if not _auth_ok(self, self.server.auth_secret):
+            self.send_error(407, "Proxy Authentication Required")
+            return
         host, _, port = self.path.partition(":")
         port = int(port) if port else 443
-
-        if session_proxy == "DIRECT":
-            self._connect_direct(host, port)
-            return
-
-        t0 = time.monotonic()
-        try:
-            upstream = socket.create_connection(session_proxy.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
-            upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n".encode())
-            resp = upstream.recv(4096)
-            if b"200" not in resp:
-                upstream.close()
-                self._log_usage(session_proxy, False, "upstream CONNECT rejected", int((time.monotonic() - t0) * 1000))
-                self.send_error(502, "Upstream CONNECT failed")
+        country = self.headers.get("X-Country", "").upper()
+        last_err = None
+        for _ in range(MAX_FAILOVER):
+            session_proxy = self._get_session_proxy(country=country)
+            if session_proxy == "DIRECT":
+                self._connect_direct(host, port)
                 return
-            self.send_response(200, "Connection Established")
-            self.end_headers()
-            self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
-            self._tunnel(self.connection, upstream)
-        except Exception as e:
-            self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
-            self.send_error(502, f"Upstream error: {e}")
+            t0 = time.monotonic()
+            try:
+                upstream = socket.create_connection(session_proxy.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
+                upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n".encode())
+                resp = upstream.recv(4096)
+                if b"200" not in resp:
+                    upstream.close()
+                    self._log_usage(session_proxy, False, "upstream CONNECT rejected", int((time.monotonic() - t0) * 1000))
+                    self._blacklist_proxy(session_proxy)
+                    last_err = "upstream CONNECT rejected"
+                    continue
+                self.send_response(200, "Connection Established")
+                self.end_headers()
+                self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
+                self._tunnel(self.connection, upstream)
+                return
+            except Exception as e:
+                self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
+                self._blacklist_proxy(session_proxy)
+                last_err = str(e)
+        self.send_error(502, f"Upstream error: {last_err}")
+
+    def _blacklist_proxy(self, proxy):
+        """Blacklist a failing proxy in both session manager and rotate pool."""
+        try:
+            self.server.session_manager.report_failure(proxy)
+            bl = self.server.rotate_state.get("blacklist")
+            if bl is not None:
+                bl.add(proxy)
+        except Exception:
+            pass
 
     def _connect_direct(self, host, port):
         """CONNECT without upstream proxy (direct)."""
@@ -244,6 +299,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
 
     def _forward_via_proxy(self, method):
         """Forward HTTP request through the session-assigned upstream proxy."""
+        if not _auth_ok(self, self.server.auth_secret):
+            self.send_error(407, "Proxy Authentication Required")
+            return
         session_proxy = self._get_session_proxy()
         url = self.path
 
@@ -366,6 +424,8 @@ def main():
     parser.add_argument("--session-ttl", type=int, default=DEFAULT_SESSION_TTL)
     parser.add_argument("--mode", choices=["sticky", "rotate"], default="sticky",
                         help="sticky: same session → same proxy (default); rotate: round-robin per request")
+    parser.add_argument("--auth-secret", default=os.environ.get("GATEWAY_AUTH_SECRET", ""),
+                        help="HMAC-SHA256 auth secret (empty = auth off)")
     args = parser.parse_args()
 
     sm = SessionManager(default_ttl=args.session_ttl)
@@ -373,6 +433,7 @@ def main():
     server.session_manager = sm
     server.mode = args.mode
     server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": set()}
+    server.auth_secret = args.auth_secret
 
     cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), daemon=True)
     cleanup.start()
