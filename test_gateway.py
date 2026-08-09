@@ -66,7 +66,8 @@ class GatewayEgressTests(unittest.TestCase):
         try:
             sock = socket.create_connection(("127.0.0.1", port), timeout=5)
             sock.sendall(b"CONNECT icanhazip.com:443 HTTP/1.1\r\nHost: icanhazip.com:443\r\nX-Session-ID: test-001\r\n\r\n")
-            # read until full header (stub response can arrive in 2+ segments — P1-6)
+            # read until full header — stub response can arrive in 2+ segments (P1-6).
+            # Keep overflow: header+body may arrive in ONE recv (race).
             resp = b""
             while b"\r\n\r\n" not in resp and len(resp) < 8192:
                 chunk = sock.recv(4096)
@@ -74,7 +75,13 @@ class GatewayEgressTests(unittest.TestCase):
                     break
                 resp += chunk
             self.assertIn(b"200", resp)
-            data = sock.recv(4096)
+            header, _, rest = resp.partition(b"\r\n\r\n")
+            data = rest  # body may already be in the overflow buffer
+            while b'"proxy": "stub"' not in data and len(data) < 8192:
+                chunk = sock.recv(4096)
+                if not chunk:
+                    break
+                data += chunk
             self.assertIn(b'"proxy": "stub"', data)
             sock.close()
         finally:
