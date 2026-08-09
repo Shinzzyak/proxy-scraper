@@ -132,6 +132,20 @@ def main():
     finally:
         # do NOT wait for in-flight futures — wall timeout must be real
         pool.shutdown(wait=False, cancel_futures=True)
+        if timed_out:
+            # emit partial results, then hard-exit: interpreter exit waits for
+            # non-daemon worker threads blocked in socket.connect
+            summary = {t: sum(1 for r in results if r["reachable"].get(t)) for t in targets}
+            out = {
+                "checked": checked,
+                "wall_timeout_s": WALL_TIMEOUT,
+                "timed_out": True,
+                "summary": summary,
+                "results": results,
+            }
+            print(json.dumps(out, indent=2))
+            sys.stdout.flush()
+            os._exit(2)
 
     summary = {t: sum(1 for r in results if r["reachable"].get(t)) for t in targets}
     out = {
