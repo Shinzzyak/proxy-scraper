@@ -104,9 +104,13 @@ python3 publish_snapshot.py
 python3 scraper.py --validate --pool --json --grouped --health --max-validate 1500
 
 # Rotating proxy gateway (round-robin egress per request)
+#   X-Country=ID → pin to Indonesian egress (country routing)
+#   --auth-secret=... → require HMAC-SHA256 Proxy-Authorization header
+#   failover: up to 3 upstream proxies tried per request
+#   per-status cooldown: timeout/refused 60s, 429 300s, 403 900s, 407 300s
 python3 gateway.py --mode rotate --port 8080
 
-# Sticky gateway (same X-Session-ID → same proxy)
+# Sticky gateway (same X-Session-ID → same proxy; X-Session-TTL=300 overrides TTL)
 python3 gateway.py --mode sticky --port 8080
 
 # Check pool proxies can reach AI services (standalone CLI, stdlib-only)
