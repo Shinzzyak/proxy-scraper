@@ -196,7 +196,8 @@ def _pick_proxy(country=""):
     """
     try:
         from proxy_pool import get_best_proxy
-        proxy = get_best_proxy(protocol="http", country_code=country, min_score=0, max_age_minutes=60)
+        # min_score=1: score 0 = auto-banned (R5-nit) — jangan pernah pilih
+        proxy = get_best_proxy(protocol="http", country_code=country, min_score=1, max_age_minutes=60)
         if proxy:
             return f"{proxy['ip']}:{proxy['port']}"
         if country:
