@@ -81,6 +81,11 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 p.append(anonymity)
             if conds:
                 q += " WHERE " + " AND ".join(conds)
+            # F8-8 (incomplete fix): API raw query must also exclude banned zombies
+            if conds:
+                q += " AND last_seen != ''"
+            else:
+                q += " WHERE last_seen != ''"
             q += " ORDER BY score DESC, response_time_ms ASC LIMIT ?"
             p.append(limit)
             rows = conn.execute(q, p).fetchall()

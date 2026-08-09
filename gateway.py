@@ -301,8 +301,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
         if not _auth_ok(self, self.server.auth_secret):
             self.send_error(407, "Proxy Authentication Required")
             return
-        host, _, port = self.path.partition(":")
+        # R9-1: IPv6 target "[2606:4700::1111]:443" — rpartition on ":" keeps host intact
+        host, _, port = self.path.rpartition(":")
+        host = host.strip("[]")
         port = int(port) if port else 443
+        # R9-2: open-relay guard — only allow standard TLS ports through CONNECT.
+        # Arbitrary ports (22/25/3389/...) turn the gateway into a scanning relay.
+        if port not in (80, 443, 8443):
+            self.send_error(403, "CONNECT to non-standard port forbidden")
+            return
         country = self.headers.get("X-Country", "").upper()
         last_err = None
         for _ in range(MAX_FAILOVER):
@@ -314,7 +321,13 @@ class GatewayHandler(BaseHTTPRequestHandler):
             try:
                 upstream = socket.create_connection(session_proxy.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
                 upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n".encode())
-                resp = upstream.recv(4096)
+                # R9-3: response can arrive in 2+ segments — loop until header end
+                resp = b""
+                while b"\r\n\r\n" not in resp and len(resp) < 8192:
+                    chunk = upstream.recv(4096)
+                    if not chunk:
+                        break
+                    resp += chunk
                 if b"200" not in resp:
                     upstream.close()
                     self._log_usage(session_proxy, False, "upstream CONNECT rejected", int((time.monotonic() - t0) * 1000))

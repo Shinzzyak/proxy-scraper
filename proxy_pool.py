@@ -475,7 +475,7 @@ def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 
             cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
             q += " AND julianday(last_seen) >= julianday(?)"
             params.append(cutoff)
-        q += " ORDER BY score DESC, response_time_ms ASC LIMIT ?"
+        q += " ORDER BY score DESC, last_seen DESC, response_time_ms ASC LIMIT ?"
         params.append(max_results)
         rows = conn.execute(q, params).fetchall()
         return [dict(r) for r in rows]
