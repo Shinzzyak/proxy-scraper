@@ -108,7 +108,8 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8080)
-    ap.add_argument("--host", default="0.0.0.0")
+    ap.add_argument("--host", default="127.0.0.1",
+                    help="Bind address (default 127.0.0.1 — use 0.0.0.0 only behind auth/reverse proxy)")
     args = ap.parse_args()
 
     server = HTTPServer((args.host, args.port), ProxyHandler)

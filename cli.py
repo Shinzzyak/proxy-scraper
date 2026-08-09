@@ -43,18 +43,28 @@ def cmd_search(args):
 
 
 def cmd_best(args):
-    from proxy_pool import get_best_proxy
-    proxy = get_best_proxy(
-        args.protocol or "http",
-        args.country or "",
-        min_score=args.min_score,
-        max_age_minutes=args.max_age_minutes,
-    )
-    if proxy:
+    from proxy_pool import get_best_proxy, search_proxies
+    if getattr(args, "limit", 0) and args.limit > 1:
+        rows = search_proxies(
+            protocol=args.protocol or "http", country_code=args.country or "",
+            min_score=args.min_score, max_age_minutes=args.max_age_minutes,
+            max_results=args.limit,
+        )
+        results = rows
+    else:
+        proxy = get_best_proxy(
+            args.protocol or "http",
+            args.country or "",
+            min_score=args.min_score,
+            max_age_minutes=args.max_age_minutes,
+        )
+        results = [proxy] if proxy else []
+    if results:
         if args.json:
-            print(json.dumps(proxy, indent=2))
+            print(json.dumps(results if len(results) > 1 else results[0], indent=2))
         else:
-            print(f"{proxy['ip']}:{proxy['port']} [{proxy['protocol']}] score={proxy['score']} {proxy.get('country_code','')} {proxy.get('anonymity','')}")
+            for proxy in results:
+                print(f"{proxy['ip']}:{proxy['port']} [{proxy['protocol']}] score={proxy['score']} {proxy.get('country_code','')} {proxy.get('anonymity','')}")
     else:
         print("No proxy available")
 
@@ -249,6 +259,7 @@ def main():
     b.add_argument("--country", "-c", default="")
     b.add_argument("--min-score", type=int, default=50)
     b.add_argument("--max-age-minutes", type=int, default=180, help="0 disables freshness filter")
+    b.add_argument("--limit", type=int, default=0, help="Return up to N best proxies (0 = single best)")
     b.add_argument("--json", "-j", action="store_true")
 
     # stats

@@ -266,6 +266,8 @@ def get_best_proxy(protocol: str = "http", country_code: str = "", min_score: in
     try:
         q = "SELECT * FROM proxies WHERE protocol = ? AND score >= ?"
         params = [protocol, min_score]
+        # never return invalid placeholder IPs (e.g. 0.0.0.0) — they pollute pools
+        q += " AND ip NOT IN ('0.0.0.0', '127.0.0.1', '255.255.255.255')"
         if country_code:
             q += " AND country_code = ?"
             params.append(country_code.upper())
@@ -430,6 +432,8 @@ def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 
     try:
         q = "SELECT * FROM proxies WHERE 1=1"
         params = []
+        # never return invalid placeholder IPs (e.g. 0.0.0.0) — they pollute pools
+        q += " AND ip NOT IN ('0.0.0.0', '127.0.0.1', '255.255.255.255')"
         if protocol:
             q += " AND protocol = ?"
             params.append(protocol)

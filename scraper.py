@@ -160,6 +160,8 @@ PROXY_SOURCES = [
     ("gem-proxmint-http", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/http.txt", "host:port"),
     ("gem-proxmint-socks4", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks4.txt", "host:port"),
     ("gem-proxmint-socks5", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks5.txt", "host:port"),
+    ("gem-zloiuser-http", "https://raw.githubusercontent.com/zloi-user/hideip.me/main/http.txt", "host:port:extra"),
+    ("gem-watchttvv-http", "https://raw.githubusercontent.com/watchttvv/free-proxy-list/main/proxy.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -282,6 +284,14 @@ def extract_proxies(text, fmt="", max_items=None):
         if not line or line.startswith(("#", "//")):
             continue
         if CRED_RE.search(line):
+            continue
+        # fmt "host:port:extra" — e.g. ip:port:Country from zloi-user/hideip.me
+        if fmt == "host:port:extra":
+            parts = line.split(":")
+            if len(parts) >= 2 and parts[0].count(".") == 3 and parts[1].isdigit() and is_valid_proxy_port(int(parts[1])):
+                proxies.append(f"{parts[0]}:{parts[1]}")
+                if limit and len(proxies) >= limit:
+                    break
             continue
         m = PROXY_RE.search(line)
         if m and is_valid_proxy_port(int(m.group(2))):
@@ -610,8 +620,12 @@ def geo_batch_lookup(ips, batch_size=100, timeout=10):
 # ── Proxy Scoring ─────────────────────────────────────────────────────
 
 def compute_score(proxy_dict):
-    """Composite score 0-100 based on response time, anonymity, protocol."""
-    # Speed score (40% weight)
+    """Composite score 0-100 based on response time, anonymity, protocol, usage history.
+
+    Usage history (from usage_log via gateway log_usage) adds a proven-success
+    boost / failure penalty — proxies that actually worked in production rank higher.
+    """
+    # Speed score (35% weight)
     rt = proxy_dict.get("response_time_ms", 9999)
     if rt < 500: speed = 10
     elif rt < 1000: speed = 8
@@ -619,19 +633,26 @@ def compute_score(proxy_dict):
     elif rt < 5000: speed = 4
     else: speed = 2
 
-    # Anonymity score (30% weight)
+    # Anonymity score (25% weight)
     anon = proxy_dict.get("anonymity", "unknown")
     if anon == "elite": anonymity = 10
     elif anon == "transparent": anonymity = 4
     else: anonymity = 3
 
-    # Protocol score (30% weight)
+    # Protocol score (25% weight)
     proto = proxy_dict.get("protocol", "unknown")
     if proto == "socks5": protocol = 10
     elif proto == "http": protocol = 8
     else: protocol = 3
 
-    score = round(speed * 4 + anonymity * 3 + protocol * 3)  # 0-100
+    # Usage history score (15% weight) — from usage_log (gateway feedback)
+    usage = proxy_dict.get("_usage_success_rate")
+    if usage is None:
+        usage_score = 5  # neutral: no usage data yet
+    else:
+        usage_score = round(10 * usage)  # 0.0 → 0, 1.0 → 10
+
+    score = round(speed * 3.5 + anonymity * 2.5 + protocol * 2.5 + usage_score * 1.5)  # 0-100
     return score
 
 
@@ -724,6 +745,17 @@ def filter_valid(proxies, max_validate=500, do_anonymity=False, source_map=None)
         for p in valid:
             key = f"{p['ip']}:{p['port']}"
             p["source_name"] = source_map.get(key, "")
+
+    # Attach usage history (from usage_log — gateway feedback loop)
+    if POOL_AVAILABLE and valid:
+        try:
+            from proxy_pool import get_proxy_stats
+            for p in valid:
+                stats = get_proxy_stats(p["ip"], p["port"])
+                if stats and stats.get("total_uses", 0) > 0:
+                    p["_usage_success_rate"] = (stats.get("successes") or 0) / max(stats["total_uses"], 1)
+        except Exception:
+            pass  # usage history is best-effort
 
     # Scoring
     for p in valid:

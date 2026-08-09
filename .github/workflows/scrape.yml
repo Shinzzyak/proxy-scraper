@@ -38,6 +38,13 @@ jobs:
       - name: Static syntax check
         run: python3 -m py_compile *.py api/*.py
 
+      - name: Run unit tests
+        run: |
+          for t in test_*.py; do
+            echo "=== $t ==="
+            python3 "$t" || exit 1
+          done
+
       - name: Smoke test committed snapshots
         run: |
           test -s proxies.txt

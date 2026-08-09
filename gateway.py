@@ -83,13 +83,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
             return _pick_proxy()
         return self.server.session_manager.get_or_create(session_id, _pick_proxy)
 
-    def _log_usage(self, proxy, success, error=""):
+    def _log_usage(self, proxy, success, error="", duration_ms=0):
         """Log proxy usage event to usage_log (best-effort, non-blocking)."""
         try:
             if proxy and proxy != "DIRECT":
                 from proxy_pool import log_usage
                 ip, _, port = proxy.rpartition(":")
-                log_usage(ip, int(port), success, error=error[:200])
+                log_usage(ip, int(port), success, response_time_ms=duration_ms, error=error[:200])
+                if not success:
+                    self.server.session_manager.report_failure(proxy)
         except Exception:
             pass
 
@@ -103,21 +105,22 @@ class GatewayHandler(BaseHTTPRequestHandler):
             self._connect_direct(host, port)
             return
 
+        t0 = time.monotonic()
         try:
             upstream = socket.create_connection(session_proxy.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
             upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n".encode())
             resp = upstream.recv(4096)
             if b"200" not in resp:
                 upstream.close()
-                self._log_usage(session_proxy, False, "upstream CONNECT rejected")
+                self._log_usage(session_proxy, False, "upstream CONNECT rejected", int((time.monotonic() - t0) * 1000))
                 self.send_error(502, "Upstream CONNECT failed")
                 return
             self.send_response(200, "Connection Established")
             self.end_headers()
-            self._log_usage(session_proxy, True)
+            self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
             self._tunnel(self.connection, upstream)
         except Exception as e:
-            self._log_usage(session_proxy, False, str(e))
+            self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
             self.send_error(502, f"Upstream error: {e}")
 
     def _connect_direct(self, host, port):
@@ -157,6 +160,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
             self._forward_direct(method, url)
             return
 
+        t0 = time.monotonic()
         try:
             handler = urllib.request.ProxyHandler({
                 "http": f"http://{session_proxy}",
@@ -174,7 +178,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     req.add_header(key, val)
 
             resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
-            self._log_usage(session_proxy, True)
+            self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
             self.send_response(resp.status)
             for key, val in resp.headers.items():
                 if key.lower() not in ("transfer-encoding", "connection"):
@@ -185,13 +189,13 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 self.wfile.write(chunk)
                 chunk = resp.read(65536)
         except urllib.error.HTTPError as e:
-            self._log_usage(session_proxy, False, f"HTTP {e.code}")
+            self._log_usage(session_proxy, False, f"HTTP {e.code}", int((time.monotonic() - t0) * 1000))
             self.send_response(e.code)
             self.end_headers()
             if e.readable():
                 self.wfile.write(e.read(65536))
         except Exception as e:
-            self._log_usage(session_proxy, False, str(e))
+            self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
             self.send_error(502, f"Upstream error: {e}")
 
     def _forward_direct(self, method, url):
