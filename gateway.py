@@ -396,7 +396,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
 
             req = urllib.request.Request(url, data=body, method=method)
             for key, val in self.headers.items():
-                if key.lower() not in ("proxy-connection", "host", "x-session-id"):
+                # R7-1: NEVER forward Proxy-Authorization (HMAC client creds)
+                # to a public upstream — replay within AUTH_WINDOW.
+                if key.lower() not in ("proxy-connection", "host", "x-session-id", "proxy-authorization"):
                     req.add_header(key, val)
 
             resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
@@ -429,7 +431,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 body = self.rfile.read(content_length)
             req = urllib.request.Request(url, data=body, method=method)
             for key, val in self.headers.items():
-                if key.lower() not in ("proxy-connection", "x-session-id"):
+                # R7-1: never forward Proxy-Authorization to origin either
+                if key.lower() not in ("proxy-connection", "x-session-id", "proxy-authorization"):
                     req.add_header(key, val)
             resp = urllib.request.urlopen(req, timeout=GATEWAY_TIMEOUT)
             self.send_response(resp.status)
