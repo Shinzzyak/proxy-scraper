@@ -81,9 +81,6 @@ python3 gateway.py --mode sticky --port 8080
 
 # Check pool proxies can TLS-reach AI services (standalone)
 head -100 proxies.txt | python3 ai_reach.py --targets deepseek,chatgpt --timeout 6
-
-# Config merge: config.yaml < env < CLI
-python3 -c "from config_loader import merged_config; print(merged_config())"
 ```
 
 ## Do / Don't
