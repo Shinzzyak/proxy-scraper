@@ -125,3 +125,4 @@ python3 cli.py best --protocol http --min-score 50 --max-age-minutes 180 --json
 - `data/proxies.db` is local runtime state and intentionally gitignored.
 - GitHub Actions only run CI/smoke checks and must not overwrite high-quality VPS/local snapshots.
 - `source-health.json` can show raw reach far above committed validated snapshot size. That is normal: source reach != alive validated pool.
+- Anonymity classification: header leak detection (Via/X-Forwarded-For/Forwarded) runs during validation, but the `anonymity` column is only populated with `--validate-full` (not used in the cron path). Snapshot consumers see `anonymity: unknown` unless they run full validation. Known limitation (R7-4).
