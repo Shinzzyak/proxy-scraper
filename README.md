@@ -52,7 +52,6 @@ proxy-scraper/
 ├── cli.py                 # Operator/consumer CLI
 ├── gateway.py             # Sticky/rotate HTTP proxy gateway + async usage logging
 ├── ai_reach.py            # AI-service TLS reachability checker (ChatGPT/Claude/Gemini/Grok/DeepSeek)
-├── config_loader.py       # config.yaml + env + CLI merge (stdlib-only YAML subset)
 ├── session_manager.py     # Sticky sessions + dead-proxy blacklist
 ├── discovery.py           # GitHub source discovery helper
 ├── api/

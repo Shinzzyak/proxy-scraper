@@ -41,6 +41,19 @@ class ProxyHandler(BaseHTTPRequestHandler):
         else:
             self._json_response({"error": "Not found"}, 404)
 
+    def do_OPTIONS(self):
+        # F8-6: CORS preflight — browser cross-origin fetch sends OPTIONS first
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Session-ID")
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.end_headers()
+
+    def do_HEAD(self):
+        # F8-6: HEAD delegates to GET without body
+        self.do_GET()
+
     def _handle_proxies(self, params):
         protocol = params.get("protocol", [""])[0]  # empty = all protocols
         country = params.get("country", [""])[0]

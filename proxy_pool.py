@@ -457,6 +457,8 @@ def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 
         params = []
         # never return invalid placeholder IPs (e.g. 0.0.0.0) — they pollute pools
         q += " AND ip NOT IN ('0.0.0.0', '127.0.0.1', '255.255.255.255')"
+        # F8-8: auto-banned zombies have last_seen='' — never serve them
+        q += " AND last_seen != ''"
         if protocol:
             q += " AND protocol = ?"
             params.append(protocol)

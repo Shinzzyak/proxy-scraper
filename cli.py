@@ -24,6 +24,13 @@ import signal
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
+def _clamp_limit(value):
+    # F8-19 P0: SQLite LIMIT -3 = no limit → dumps whole pool. Reject negatives.
+    if value < 0:
+        raise argparse.ArgumentTypeError("limit must be >= 0")
+    return value
+
+
 def cmd_search(args):
     from proxy_pool import search_proxies
     results = search_proxies(
@@ -66,6 +73,9 @@ def cmd_best(args):
         else:
             for proxy in results:
                 print(f"{proxy['ip']}:{proxy['port']} [{proxy['protocol']}] score={proxy['score']} {proxy.get('country_code','')} {proxy.get('anonymity','')}")
+    elif args.json:
+        # F8-18: empty must still be valid JSON for script consumers
+        print(json.dumps({"count": 0, "proxies": []}, indent=2))
     else:
         print("No proxy available")
 
@@ -252,7 +262,7 @@ def main():
     s.add_argument("--protocol", "-p", default="")
     s.add_argument("--min-score", type=int, default=0)
     s.add_argument("--anonymity", "-a", default="")
-    s.add_argument("--limit", "-l", type=int, default=20)
+    s.add_argument("--limit", "-l", type=_clamp_limit, default=20)
     s.add_argument("--max-age-minutes", type=int, default=0, help="0 disables freshness filter")
     s.add_argument("--json", "-j", action="store_true")
 
@@ -262,7 +272,7 @@ def main():
     b.add_argument("--country", "-c", default="")
     b.add_argument("--min-score", type=int, default=50)
     b.add_argument("--max-age-minutes", type=int, default=180, help="0 disables freshness filter")
-    b.add_argument("--limit", type=int, default=0, help="Return up to N best proxies (0 = single best)")
+    b.add_argument("--limit", type=_clamp_limit, default=0, help="Return up to N best proxies (0 = single best)")
     b.add_argument("--json", "-j", action="store_true")
 
     # stats
@@ -271,7 +281,7 @@ def main():
 
     # top
     t = sub.add_parser("top")
-    t.add_argument("--limit", "-l", type=int, default=10)
+    t.add_argument("--limit", "-l", type=_clamp_limit, default=10)
     t.add_argument("--json", "-j", action="store_true")
 
     # banned
@@ -285,7 +295,7 @@ def main():
     # benchmark
     bm = sub.add_parser("benchmark")
     bm.add_argument("--protocol", "-p", default="http")
-    bm.add_argument("--limit", "-l", type=int, default=20)
+    bm.add_argument("--limit", "-l", type=_clamp_limit, default=20)
     bm.add_argument("--output", "-o", default="benchmark.json")
 
     # report
@@ -295,7 +305,7 @@ def main():
     # geo repair
     gr = sub.add_parser("geo-repair")
     gr.add_argument("--batch-size", type=int, default=100)
-    gr.add_argument("--limit", "-l", type=int, default=0, help="0 = all missing proxies")
+    gr.add_argument("--limit", "-l", type=_clamp_limit, default=0, help="0 = all missing proxies")
     gr.add_argument("--no-export", action="store_true")
     gr.add_argument("--json-fallback", default="proxies.json")
     gr.add_argument("--json", "-j", action="store_true")
