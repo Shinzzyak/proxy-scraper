@@ -33,6 +33,29 @@ ROTATE_MIN_SCORE = 30   # tolerate lower score for rotation variety
 MAX_FAILOVER = 3        # ProxyGate parity: try up to 3 proxies per request (B3)
 AUTH_WINDOW = 300       # HMAC auth timestamp window (seconds) — replay-safe (B4)
 
+# Cooldown mapping per failure type (farukbagci/proxy-pool — 3M records @48req/s):
+# timeout/refused = transient → short; 429/403 = site-level ban → long (R5)
+COOLDOWN_MAP = {
+    "timed out": 60,
+    "timeout": 60,
+    "refused": 60,
+    "429": 300,
+    "too many requests": 300,
+    "403": 900,
+    "auth required": 300,
+    "407": 300,
+    "default": 120,
+}
+
+
+def _cooldown_for(error: str) -> int:
+    """Map a failure string to a cooldown seconds (per-status, not flat 300s)."""
+    err = (error or "").lower()
+    for key, secs in COOLDOWN_MAP.items():
+        if key in err:
+            return secs
+    return COOLDOWN_MAP["default"]
+
 
 def _check_auth(secret: str, client_id: str, ts: str, sig: str, window: int = AUTH_WINDOW) -> bool:
     """HMAC-SHA256 auth: sig = HMAC(secret, f'{client_id}{ts}'). Replay-safe."""
@@ -264,7 +287,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 if b"200" not in resp:
                     upstream.close()
                     self._log_usage(session_proxy, False, "upstream CONNECT rejected", int((time.monotonic() - t0) * 1000))
-                    self._blacklist_proxy(session_proxy)
+                    self._blacklist_proxy(session_proxy, "rejected")
                     last_err = "upstream CONNECT rejected"
                     continue
                 self.send_response(200, "Connection Established")
@@ -274,17 +297,17 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 return
             except Exception as e:
                 self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
-                self._blacklist_proxy(session_proxy)
+                self._blacklist_proxy(session_proxy, str(e))
                 last_err = str(e)
         self.send_error(502, f"Upstream error: {last_err}")
 
-    def _blacklist_proxy(self, proxy):
+    def _blacklist_proxy(self, proxy, error=""):
         """Blacklist a failing proxy in both session manager and rotate pool."""
         try:
             self.server.session_manager.report_failure(proxy)
             bl = self.server.rotate_state.get("blacklist")
             if bl is not None:
-                bl[proxy] = time.time() + 300  # TTL 300s (R4-3)
+                bl[proxy] = time.time() + _cooldown_for(error)  # per-status TTL (R5)
         except Exception:
             pass
 
