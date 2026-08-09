@@ -61,7 +61,8 @@ def cmd_best(args):
         results = [proxy] if proxy else []
     if results:
         if args.json:
-            print(json.dumps(results if len(results) > 1 else results[0], indent=2))
+            # R6-4: always array + count — stable shape for script consumers
+            print(json.dumps({"count": len(results), "proxies": results}, indent=2))
         else:
             for proxy in results:
                 print(f"{proxy['ip']}:{proxy['port']} [{proxy['protocol']}] score={proxy['score']} {proxy.get('country_code','')} {proxy.get('anonymity','')}")
