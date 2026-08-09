@@ -104,7 +104,9 @@ def cmd_heatmap(args):
     from proxy_pool import get_db
     from heatmap import generate_heatmap
     conn = get_db()
-    rows = conn.execute("SELECT * FROM proxies").fetchall()
+    # R5-nit: bound the query — heatmap of 100k dead proxies is useless
+    limit = min(args.limit, 5000) if getattr(args, "limit", None) else 5000
+    rows = conn.execute(f"SELECT * FROM proxies ORDER BY score DESC LIMIT {limit}").fetchall()
     proxies = [dict(r) for r in rows]
     conn.close()
     generate_heatmap(proxies, args.output or "heatmap.html")
