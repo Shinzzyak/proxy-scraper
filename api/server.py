@@ -16,7 +16,7 @@ Endpoints:
 import json
 import os
 import sys
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -112,7 +112,7 @@ def main():
                     help="Bind address (default 127.0.0.1 — use 0.0.0.0 only behind auth/reverse proxy)")
     args = ap.parse_args()
 
-    server = HTTPServer((args.host, args.port), ProxyHandler)
+    server = ThreadingHTTPServer((args.host, args.port), ProxyHandler)  # T4: was single-threaded — 1 slow query blocked /api/health
     print(f"🚀 Proxy Pool API listening on {args.host}:{args.port}")
     print(f"   GET /api/proxies?protocol=http&country=ID&limit=10")
     print(f"   GET /api/proxies/best?protocol=http")

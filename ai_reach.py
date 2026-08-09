@@ -134,7 +134,10 @@ def main():
             except TimeoutError:
                 timed_out = True  # wall hit — R4-1: must cut even mid-request
                 break
-            proxy, res = fut.result()
+            try:
+                proxy, res = fut.result()
+            except Exception:
+                continue  # T5: one bad proxy must not kill the whole run
             results.append({"proxy": proxy, "reachable": res})
             checked += 1
     finally:

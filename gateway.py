@@ -106,9 +106,13 @@ def _usage_writer():
             if len(batch) >= 50:
                 if not _flush_usage(batch):
                     # failure: re-queue items, don't drop them (P1-3),
-                    # then back off so a dead DB doesn't spin CPU (R4-2)
+                    # then back off so a dead DB doesn't spin CPU (R4-2).
+                    # put_nowait: never block the writer on a full queue (T2).
                     for it in batch:
-                        _usage_queue.put(it)
+                        try:
+                            _usage_queue.put_nowait(it)
+                        except queue.Full:
+                            pass  # queue full — drop, DB is down anyway
                     consecutive_failures += 1
                     time.sleep(min(consecutive_failures * 0.5, 5))
                 else:
@@ -118,7 +122,10 @@ def _usage_writer():
             if batch:
                 if not _flush_usage(batch):
                     for it in batch:
-                        _usage_queue.put(it)
+                        try:
+                            _usage_queue.put_nowait(it)
+                        except queue.Full:
+                            pass
                     consecutive_failures += 1
                     time.sleep(min(consecutive_failures * 0.5, 5))
                 else:
@@ -127,12 +134,16 @@ def _usage_writer():
     if batch:
         if not _flush_usage(batch):
             for it in batch:
-                _usage_queue.put(it)
+                try:
+                    _usage_queue.put_nowait(it)
+                except queue.Full:
+                    pass
 
 
-def _drain_usage():
+def _drain_usage(max_retries=3):
     """Synchronous drain (for tests): flush everything currently queued.
-    Returns (flushed, failed) counts."""
+    Returns (flushed, failed) counts. Retry-capped so a dead DB cannot
+    spin forever (T2)."""
     flushed = failed = 0
     while not _usage_queue.empty():
         batch = []
@@ -144,7 +155,8 @@ def _drain_usage():
             flushed += 1
         else:
             failed += 1
-            _usage_queue.put(batch[0])
+            if failed <= max_retries:
+                _usage_queue.put(batch[0])  # bounded retries, then drop
     return flushed, failed
 
 
@@ -485,7 +497,7 @@ def main():
     server = ThreadingHTTPServer((args.bind, args.port), GatewayHandler)
     server.session_manager = sm
     server.mode = args.mode
-    server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": set()}
+    server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": {}}
     server.auth_secret = args.auth_secret
 
     cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), daemon=True)

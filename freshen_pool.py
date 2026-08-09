@@ -269,6 +269,25 @@ def main():
         print(f"\n✅ Freshen finished: {utc_now()} ({duration}s)")
         print(f"After: {after}")
 
+        # T3: prune usage_log + auto-ban bad proxies even when gateway is down
+        try:
+            from proxy_pool import auto_ban_bad_proxies, get_db
+            banned = auto_ban_bad_proxies()
+            if banned:
+                print(f"🚫 Auto-banned {banned} bad proxies (usage success rate)")
+            conn = get_db()
+            try:
+                deleted = conn.execute(
+                    "DELETE FROM usage_log WHERE julianday(timestamp) < julianday('now', '-30 days')"
+                ).rowcount
+                if deleted:
+                    print(f"🧹 Pruned {deleted} usage_log rows (>30d)")
+                conn.commit()
+            finally:
+                conn.close()
+        except Exception as e:
+            print(f"⚠️ prune/auto-ban skipped: {e}")
+
         state.update({
             "last_run_started_at": started_at,
             "last_run_finished_at": utc_now(),
