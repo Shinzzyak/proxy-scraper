@@ -160,6 +160,16 @@ def _drain_usage(max_retries=3):
     return flushed, failed
 
 
+def _scrub_error(err: str) -> str:
+    """Strip anything that looks like credentials from an error string
+    (key-router pattern: secrets never logged)."""
+    if not err:
+        return ""
+    import re as _re
+    # user:pass@host or scheme://user:pass@ — redact the userinfo part
+    return _re.sub(r"(://|@)[^/@\s]+@", r"\1***@", err)[:200]
+
+
 def _flush_usage(batch):
     """Write batch to usage_log. Returns True on success — on failure items are
     NOT lost: caller re-queues them (P1-3)."""
@@ -169,7 +179,7 @@ def _flush_usage(batch):
         try:
             conn.executemany(
                 "INSERT INTO usage_log (ip, port, success, response_time_ms, error) VALUES (?, ?, ?, ?, ?)",
-                [(ip, port, int(ok), rt, err[:200]) for ip, port, ok, rt, err in batch],
+                [(ip, port, int(ok), rt, _scrub_error(err)) for ip, port, ok, rt, err in batch],
             )
             conn.commit()
             return True
