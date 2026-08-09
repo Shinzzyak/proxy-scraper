@@ -191,6 +191,19 @@ def is_valid_proxy_port(port: int) -> bool:
     """
     return port in COMMON_LOW_PROXY_PORTS or 1024 <= port <= 65535
 
+
+# Subnets proven dead by evidence round 3 (CONNECT-blocked / timeout / SSL junk).
+# These are bulk list pollution that scores 70 in the old validator.
+BLOCKED_SUBNETS = [
+    "103.169.142.",  # Cloudflare error 1001 on every port
+    "141.0.11.",     # timeout / SSL WRONG_VERSION_NUMBER
+]
+
+
+def is_blocked_ip(ip: str) -> bool:
+    """Return True for IPs in proven-dead subnets (evidence round 3)."""
+    return any(ip.startswith(prefix) for prefix in BLOCKED_SUBNETS)
+
 # ── User-Agent rotation (Rate Limit Protection) ───────────────────────
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
@@ -289,7 +302,7 @@ def extract_proxies(text, fmt="", max_items=None):
         # false-match CRED_RE (4 groups) and drop the line.
         if fmt == "host:port:extra":
             parts = line.split(":")
-            if len(parts) >= 2 and parts[0].count(".") == 3 and parts[1].isdigit() and is_valid_proxy_port(int(parts[1])):
+            if len(parts) >= 2 and parts[0].count(".") == 3 and parts[1].isdigit() and is_valid_proxy_port(int(parts[1])) and not is_blocked_ip(parts[0]):
                 proxies.append(f"{parts[0]}:{parts[1]}")
                 if limit and len(proxies) >= limit:
                     break
@@ -297,7 +310,7 @@ def extract_proxies(text, fmt="", max_items=None):
         if CRED_RE.search(line):
             continue
         m = PROXY_RE.search(line)
-        if m and is_valid_proxy_port(int(m.group(2))):
+        if m and is_valid_proxy_port(int(m.group(2))) and not is_blocked_ip(m.group(1)):
             proxies.append(f"{m.group(1)}:{m.group(2)}")
             if limit and len(proxies) >= limit:
                 break
@@ -475,21 +488,33 @@ def validate_tcp(proxy, timeout=VALIDATE_TCP_TIMEOUT):
 
 
 def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
-    """HTTP CONNECT test — check if proxy can relay HTTP traffic."""
+    """HTTP CONNECT test — check if proxy can relay HTTP traffic.
+
+    Evidence round 3: the old check (`b"HTTP/1" in data`) passed Cloudflare
+    error pages, 400/401/407 responses and non-proxy web servers. Now the
+    response must be a real 200 with a JSON body from httpbin.org/ip.
+    """
     ip, port = proxy.split(":")
     try:
         s = socket.create_connection((ip, int(port)), timeout=timeout)
         req = (
             f"GET http://httpbin.org/ip HTTP/1.1\r\n"
             f"Host: httpbin.org\r\n"
-            f"User-Agent: ProxyValidator/4.0\r\n"
+            f"User-Agent: ProxyValidator/5.1\r\n"
             f"Connection: close\r\n\r\n"
         )
         s.sendall(req.encode())
-        data = s.recv(4096)
+        data = b""
+        while len(data) < 8192:
+            chunk = s.recv(4096)
+            if not chunk:
+                break
+            data += chunk
         s.close()
-        # Check for 200 OK response
-        return b"200 OK" in data or b"HTTP/1" in data
+        if b"200 OK" not in data:
+            return False
+        # must be a JSON IP echo — rules out HTML error pages
+        return b'"origin"' in data or b'"ip"' in data
     except Exception:
         return False
 

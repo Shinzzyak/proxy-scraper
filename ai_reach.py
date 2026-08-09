@@ -143,7 +143,11 @@ def main():
                 "summary": summary,
                 "results": results,
             }
-            print(json.dumps(out, indent=2))
+            text = json.dumps(out, indent=2)
+            if args.output:
+                with open(args.output, "w") as f:
+                    f.write(text + "\n")
+            print(text)
             sys.stdout.flush()
             os._exit(2)
 
