@@ -80,6 +80,8 @@ PROXY_SOURCES = [
     ("vmheaven-all", "https://raw.githubusercontent.com/vmheaven/VMHeaven.io-Free-Proxy-List/main/allproxy.txt", "host:port"),
     ("theriturajps-all", "https://raw.githubusercontent.com/theriturajps/proxy-list/main/proxies.txt", "host:port"),
     ("akshay7273-all", "https://raw.githubusercontent.com/Akshay7273/ProxyMan-free-proxy-list/main/proxies.txt", "host:port"),
+    ("fate0-proxylist", "https://raw.githubusercontent.com/fate0/proxylist/master/proxy.list", "jsonlines"),
+    ("mishakorzik-all", "https://raw.githubusercontent.com/mishakorzik/Free-Proxy/main/proxy.txt", "host:port"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
     ("geonode-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
     ("geonode-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
@@ -318,6 +320,28 @@ def extract_proxies(text, fmt="", max_items=None):
                         break
         except Exception:
             pass
+        return proxies
+    # R19: fmt "jsonlines" — satu JSON object per baris (fate0/proxylist):
+    # {"host": "1.2.3.4", "port": 8080, ...}
+    if fmt == "jsonlines":
+        for line in text.splitlines():
+            line = line.strip()
+            if not line or not line.startswith("{"):
+                continue
+            try:
+                item = json.loads(line)
+                ip, port = item.get("host", ""), item.get("port", "")
+                if (
+                    ip and port
+                    and _is_valid_ipv4(ip)  # R15-12
+                    and is_valid_proxy_port(int(port))
+                    and not is_blocked_ip(ip)
+                ):
+                    proxies.append(f"{ip}:{port}")
+                    if limit and len(proxies) >= limit:
+                        return proxies
+            except Exception:
+                continue
         return proxies
     for line in text.splitlines():
         line = line.strip()

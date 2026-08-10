@@ -88,6 +88,13 @@ class ConnectProbeTests(unittest.TestCase):
             mc.return_value = fake
             self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
 
+    def test_jsonlines_extract(self):
+        """R19: fmt jsonlines (fate0/proxylist) — host/port per baris JSON."""
+        txt = ('{"anonymity": "high", "host": "1.2.3.4", "port": 8080}\n'
+               '{"host": "5.6.7.8", "port": 3128}\nnot json\n')
+        p = scraper.extract_proxies(txt, "jsonlines", 10)
+        self.assertEqual(p, ["1.2.3.4:8080", "5.6.7.8:3128"])
+
     def test_probe_connect_uses_fresh_socket(self):
         """R17-T1: probe harus socket BARU — socket lama sudah close."""
         with patch("socket.create_connection") as mc:
