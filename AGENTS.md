@@ -30,7 +30,6 @@ Important snapshot files:
 - `proxies-by-protocol.json` — grouped proxy snapshot
 - `proxies-stats.json` — summary stats for the committed snapshot
 - `source-health.json` — source reach/health from latest run
-- `report-weekly.md` — human-readable report
 
 ### Rebuild local live DB
 
