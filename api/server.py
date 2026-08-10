@@ -138,6 +138,7 @@ def main():
     args = ap.parse_args()
 
     server = ThreadingHTTPServer((args.host, args.port), ProxyHandler)  # T4: was single-threaded — 1 slow query blocked /api/health
+    server.daemon_threads = True  # R11-5: shutdown ga nunggu tunnel idle
     print(f"🚀 Proxy Pool API listening on {args.host}:{args.port}")
     print(f"   GET /api/proxies?protocol=http&country=ID&limit=10")
     print(f"   GET /api/proxies/best?protocol=http")

@@ -563,6 +563,7 @@ def main():
 
     sm = SessionManager(default_ttl=args.session_ttl)
     server = ThreadingHTTPServer((args.bind, args.port), GatewayHandler)
+    server.daemon_threads = True  # R11-5: shutdown ga nunggu tunnel idle
     server.session_manager = sm
     server.mode = args.mode
     server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": {}}

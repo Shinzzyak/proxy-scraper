@@ -335,6 +335,9 @@ DATACENTER_ASNS = {
     "Amazon", "AWS", "Google", "Microsoft", "Azure", "Cloudflare",
     "DigitalOcean", "Vultr", "OVH", "Hetzner", "Linode", "Alibaba",
     "Tencent", "Oracle", "IBM", "Rackspace", "Equinix", "CoreSite",
+    # R11-1: hosting providers yang sering ter-label "residential" (false positive)
+    "Contabo", "netcup", "UCLOUD", "Performive",
+    "Hosting", "Data Center", "Datacenter", "Colo", "Server",
 }
 
 def detect_fingerprint(isp: str) -> Dict:

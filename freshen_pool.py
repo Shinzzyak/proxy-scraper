@@ -163,8 +163,15 @@ def export_pool_snapshots(max_age_minutes: int = 1440) -> int:
         key=lambda p: (-int(p.get("score") or 0), int(p.get("response_time_ms") or 999999), p.get("ip", "")),
     )
 
-    (ROOT / "proxies.txt").write_text("\n".join(f"{p['ip']}:{p['port']}" for p in proxies) + ("\n" if proxies else ""))
-    (ROOT / "proxies.json").write_text(json.dumps(proxies, indent=2))
+    # R11-3: atomic writes — crash mid-write (OOM/SIGKILL saat cron) tidak boleh
+    # ninggalin file terpotong yang bisa ke-commit publish_snapshot
+    def _atomic_write(path, text):
+        tmp = path.with_suffix(path.suffix + ".tmp")
+        tmp.write_text(text)
+        tmp.replace(path)
+
+    _atomic_write(ROOT / "proxies.txt", "\n".join(f"{p['ip']}:{p['port']}" for p in proxies) + ("\n" if proxies else ""))
+    _atomic_write(ROOT / "proxies.json", json.dumps(proxies, indent=2))
 
     by_country = {}
     by_protocol = {}
@@ -174,8 +181,8 @@ def export_pool_snapshots(max_age_minutes: int = 1440) -> int:
         by_protocol.setdefault(p.get("protocol") or "unknown", []).append(p)
         by_anonymity[p.get("anonymity") or "unknown"] = by_anonymity.get(p.get("anonymity") or "unknown", 0) + 1
 
-    (ROOT / "proxies-by-country.json").write_text(json.dumps(by_country, indent=2))
-    (ROOT / "proxies-by-protocol.json").write_text(json.dumps(by_protocol, indent=2))
+    _atomic_write(ROOT / "proxies-by-country.json", json.dumps(by_country, indent=2))
+    _atomic_write(ROOT / "proxies-by-protocol.json", json.dumps(by_protocol, indent=2))
 
     stats = {
         "generated_at": utc_now(),
@@ -188,7 +195,7 @@ def export_pool_snapshots(max_age_minutes: int = 1440) -> int:
         "avg_response_time_ms": round(sum(int(p.get("response_time_ms") or 0) for p in proxies) / len(proxies), 1) if proxies else 0,
         "avg_score": round(sum(int(p.get("score") or 0) for p in proxies) / len(proxies), 1) if proxies else 0,
     }
-    (ROOT / "proxies-stats.json").write_text(json.dumps(stats, indent=2))
+    _atomic_write(ROOT / "proxies-stats.json", json.dumps(stats, indent=2))
     print(f"✅ Final pool snapshots exported: {len(proxies)} proxies")
     return len(proxies)
 

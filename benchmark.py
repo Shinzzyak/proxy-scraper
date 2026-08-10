@@ -10,7 +10,7 @@ import os
 import time
 import urllib.request
 import urllib.error
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError
 from typing import List, Dict, Optional
 
 TARGETS = [
@@ -20,6 +20,8 @@ TARGETS = [
 ]
 TIMEOUT = 10
 MAX_WORKERS = 50
+# R11-2: wall-clock cap for benchmark_batch (mirror ai_reach WALL_TIMEOUT)
+BENCH_WALL_TIMEOUT = int(os.environ.get("BENCH_WALL_TIMEOUT", "120"))
 
 
 def benchmark_single(proxy_dict: Dict, target: str = None) -> Dict:
@@ -83,14 +85,17 @@ def benchmark_batch(proxies: List[Dict], max_workers: int = MAX_WORKERS,
                 futs[fut] = p
 
         done = 0
-        for fut in as_completed(futs):
-            done += 1
-            result = fut.result()
-            results.append(result)
-            status = "✅" if result["status"] == "ok" else "❌"
-            print(f"  {status} {result['ip']}:{result['port']} → {result['latency_ms']}ms ({result['status']})")
-            if done % 50 == 0:
-                print(f"  ... {done}/{total * len(targets)} tested")
+        try:
+            for fut in as_completed(futs, timeout=BENCH_WALL_TIMEOUT):  # R11-2: wall cap
+                done += 1
+                result = fut.result()
+                results.append(result)
+                status = "✅" if result["status"] == "ok" else "❌"
+                print(f"  {status} {result['ip']}:{result['port']} → {result['latency_ms']}ms ({result['status']})")
+                if done % 50 == 0:
+                    print(f"  ... {done}/{total * len(targets)} tested")
+        except TimeoutError:
+            print(f"  ⏱️ wall timeout ({BENCH_WALL_TIMEOUT}s) — {done} tested, stopping")
 
     # Aggregate by proxy (best latency across targets)
     best = {}
