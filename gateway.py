@@ -56,6 +56,7 @@ COOLDOWN_MAP = {
     "403": 900,
     "auth required": 300,
     "407": 300,
+    "http-only": 0,  # R21-GW1: HTTP-only proxy tolak CONNECT — langsung reusable (retry loop butuh coba proxy lain secepatnya)
     "default": 120,
 }
 
@@ -245,11 +246,12 @@ def _pick_proxy(country="", exclude=None):
     return "DIRECT"
 
 
-def _next_proxy_round_robin(pool_state, country=""):
+def _next_proxy_round_robin(pool_state, country="", exclude=None):
     """Round-robin over a fresh pool snapshot, refreshed periodically.
 
     pool_state: dict with 'list' (list of host:port), 'index', 'lock'.
     country: optional ISO code filter (X-Country header).
+    exclude: optional set of host:port already tried this request (R21-GW3).
     Returns next proxy or 'DIRECT' when pool empty.
 
     R6-3: whole read-modify-write (refresh + index++ + blacklist scan) runs
@@ -283,10 +285,13 @@ def _next_proxy_round_robin(pool_state, country=""):
             # TTL 300s — recovered proxies re-enter rotation (R4-3).
             bl = pool_state.get("blacklist", {})
             now = time.time()
-            for _ in range(len(pool_state["list"])):
+            tried = exclude or set()
+            for _ in range(len(pool_state["list"]) + len(tried)):
                 proxy = pool_state["list"][pool_state["index"] % len(pool_state["list"])]
                 pool_state["index"] += 1
                 unban_at = bl.get(proxy, 0)
+                if proxy in tried:
+                    continue  # R21-GW3: sudah dicoba request ini — skip
                 if now >= unban_at:
                     return proxy
             return "DIRECT"
@@ -302,14 +307,14 @@ class GatewayHandler(BaseHTTPRequestHandler):
     timeout = UPSTREAM_PROXY_TIMEOUT
     """HTTP forward proxy that routes via session→proxy mapping."""
 
-    def _get_session_proxy(self, country=""):
+    def _get_session_proxy(self, country="", exclude=None):
         if not country:
             country = self.headers.get("X-Country", "").upper()
         if self.server.mode == "rotate":
-            return _next_proxy_round_robin(self.server.rotate_state, country)
+            return _next_proxy_round_robin(self.server.rotate_state, country, exclude)
         session_id = self.headers.get("X-Session-ID", "")
         if not session_id:
-            proxy = _pick_proxy(country)
+            proxy = _pick_proxy(country, exclude=exclude)
             # R10-5: country requested but unavailable — 503, jangan DIRECT leak
             if proxy is None:
                 raise CountryUnavailable(country)
@@ -372,10 +377,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
             return
         country = self.headers.get("X-Country", "").upper()
         last_err = None
+        tried = set()  # R21-GW3: proxy yang sudah dicoba request ini
         for _ in range(MAX_FAILOVER):
             upstream = None
             try:
-                session_proxy = self._get_session_proxy(country=country)
+                session_proxy = self._get_session_proxy(country=country, exclude=tried)
             except CountryUnavailable as e:
                 # R10-5: no proxy for requested country — 503, jangan DIRECT leak
                 self.send_error(503, f"No proxy available for country: {e.country}")
@@ -400,7 +406,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 if b"200" not in resp:
                     upstream.close()
                     self._log_usage(session_proxy, False, "upstream CONNECT rejected", int((time.monotonic() - t0) * 1000))
-                    self._blacklist_proxy(session_proxy, "rejected")
+                    tried.add(session_proxy)  # R21-GW3: jangan coba lagi request ini
+                    # R21-GW1: HTTP-only proxy (balas 403/405/500 untuk CONNECT)
+                    # bukan "mati" — jangan cooldown panjang. Blacklist pendek
+                    # (10s) supaya retry loop coba proxy lain dalam request sama,
+                    # tapi proxy bisa dipakai lagi nanti (untuk HTTP path).
+                    if b"200" not in resp and resp[:12] in (b"HTTP/1.1 403", b"HTTP/1.0 403", b"HTTP/1.1 405", b"HTTP/1.0 405", b"HTTP/1.1 500", b"HTTP/1.0 500", b"HTTP/1.1 400", b"HTTP/1.0 400"):
+                        self._blacklist_proxy(session_proxy, "http-only")
+                    else:
+                        self._blacklist_proxy(session_proxy, "rejected")
                     # R15-2: release mapping sticky — kalau tidak, session tetap
                     # terkunci ke proxy mati sampai TTL habis (3x retry proxy sama)
                     session_id = self.headers.get("X-Session-ID", "")
@@ -421,6 +435,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
                         upstream.close()
                 except Exception:
                     pass
+                if session_proxy:
+                    tried.add(session_proxy)  # R21-GW3
                 self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
                 self._blacklist_proxy(session_proxy, str(e))
                 # R15-2: release mapping sticky juga saat error (proxy mati
@@ -475,90 +491,86 @@ class GatewayHandler(BaseHTTPRequestHandler):
         if not _auth_ok(self, self.server.auth_secret):
             self.send_error(407, "Proxy Authentication Required")
             return
-        try:
-            session_proxy = self._get_session_proxy()
-        except CountryUnavailable as e:
-            # R11-8: HTTP path — 503, bukan traceback/connection reset
-            self.send_error(503, f"No proxy available for country: {e.country}")
-            return
         url = self.path
-
-        if session_proxy == "DIRECT":
-            self._forward_direct(method, url)
-            return
-
+        body = None
+        content_length = int(self.headers.get("Content-Length", 0))
+        if content_length > 0:
+            body = self.rfile.read(content_length)
         t0 = time.monotonic()
-        try:
-            handler = urllib.request.ProxyHandler({
-                "http": f"http://{session_proxy}",
-                "https": f"http://{session_proxy}",
-            })
-            opener = urllib.request.build_opener(handler)
-            body = None
-            content_length = int(self.headers.get("Content-Length", 0))
-            if content_length > 0:
-                body = self.rfile.read(content_length)
-
-            req = urllib.request.Request(url, data=body, method=method)
-            for key, val in self.headers.items():
-                # R7-1: NEVER forward Proxy-Authorization (HMAC client creds)
-                # to a public upstream — replay within AUTH_WINDOW.
-                if key.lower() not in ("proxy-connection", "host", "x-session-id", "proxy-authorization"):
-                    req.add_header(key, val)
-
-            resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
-            self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
-            self.send_response(resp.status)
-            for key, val in resp.headers.items():
-                if key.lower() not in ("transfer-encoding", "connection"):
-                    self.send_header(key, val)
-            self.end_headers()
+        last_err = None
+        tried = set()  # R21-GW3
+        for _ in range(MAX_FAILOVER):  # R21-GW2: retry loop HTTP path (sama seperti CONNECT)
             try:
-                # R16-N4: timeout hanya berlaku sampai header; body read bisa
-                # hang selamanya kalau proxy lambat — set socket timeout ulang.
-                # R17-T5: resp.fp = BufferedReader, socket di fp.raw._sock.
-                # R18-T3: jalur urllib kadang raw = SocketIO tanpa _sock —
-                # fallback ke settimeout langsung di raw.
-                fp = getattr(resp, "fp", None)
-                raw = getattr(fp, "raw", None)
-                sock = getattr(raw, "_sock", None)
-                if sock is not None:
-                    sock.settimeout(UPSTREAM_PROXY_TIMEOUT)
-                elif raw is not None and hasattr(raw, "settimeout"):
-                    raw.settimeout(UPSTREAM_PROXY_TIMEOUT)
-                chunk = resp.read(65536)
-                while chunk:
-                    self.wfile.write(chunk)
-                    chunk = resp.read(65536)
-            finally:
-                resp.close()  # R11-4: jangan tunggu GC — socket leak transient saat burst
-        except urllib.error.HTTPError as e:
-            self._log_usage(session_proxy, False, f"HTTP {e.code}", int((time.monotonic() - t0) * 1000))
-            self.send_response(e.code)
-            self.end_headers()
-            # R15-14: e.read() bisa hang kalau upstream kirim header error tapi
-            # body menggantung — baca terbatas + timeout
+                session_proxy = self._get_session_proxy(exclude=tried)
+            except CountryUnavailable as e:
+                # R11-8: HTTP path — 503, bukan traceback/connection reset
+                self.send_error(503, f"No proxy available for country: {e.country}")
+                return
+            if session_proxy == "DIRECT":
+                self._forward_direct(method, url, body)
+                return
             try:
-                if e.readable():
-                    fp = getattr(e, "fp", None)
-                    raw = getattr(fp, "raw", None)  # R17-T5: socket di fp.raw._sock
+                handler = urllib.request.ProxyHandler({
+                    "http": f"http://{session_proxy}",
+                    "https": f"http://{session_proxy}",
+                })
+                opener = urllib.request.build_opener(handler)
+                req = urllib.request.Request(url, data=body, method=method)
+                for key, val in self.headers.items():
+                    # R7-1: NEVER forward Proxy-Authorization (HMAC client creds)
+                    # to a public upstream — replay within AUTH_WINDOW.
+                    if key.lower() not in ("proxy-connection", "host", "x-session-id", "proxy-authorization"):
+                        req.add_header(key, val)
+                resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
+                self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
+                self.send_response(resp.status)
+                for key, val in resp.headers.items():
+                    if key.lower() not in ("transfer-encoding", "connection"):
+                        self.send_header(key, val)
+                self.end_headers()
+                try:
+                    # R16-N4: timeout hanya berlaku sampai header; body read bisa
+                    # hang selamanya kalau proxy lambat — set socket timeout ulang.
+                    # R17-T5: resp.fp = BufferedReader, socket di fp.raw._sock.
+                    # R18-T3: jalur urllib kadang raw = SocketIO tanpa _sock —
+                    # fallback ke settimeout langsung di raw.
+                    fp = getattr(resp, "fp", None)
+                    raw = getattr(fp, "raw", None)
                     sock = getattr(raw, "_sock", None)
                     if sock is not None:
                         sock.settimeout(UPSTREAM_PROXY_TIMEOUT)
-                    self.wfile.write(e.read(8192))
-            except Exception:
-                pass
-        except Exception as e:
-            self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
-            self.send_error(502, f"Upstream error: {e}")
+                    elif raw is not None and hasattr(raw, "settimeout"):
+                        raw.settimeout(UPSTREAM_PROXY_TIMEOUT)
+                    chunk = resp.read(65536)
+                    while chunk:
+                        self.wfile.write(chunk)
+                        chunk = resp.read(65536)
+                except Exception:
+                    pass  # client hang/timeout — proxy already logged
+                return
+            except CountryUnavailable:
+                raise
+            except Exception as e:
+                try:
+                    self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
+                except Exception:
+                    pass
+                if session_proxy:
+                    tried.add(session_proxy)  # R21-GW3
+                try:
+                    self.server.session_manager.report_failure(session_proxy)
+                except Exception:
+                    pass
+                last_err = str(e)
+        self.send_error(502, f"Upstream error: {last_err}")
 
-    def _forward_direct(self, method, url):
+    def _forward_direct(self, method, url, body=None):
         """Forward without upstream proxy."""
         try:
-            body = None
-            content_length = int(self.headers.get("Content-Length", 0))
-            if content_length > 0:
-                body = self.rfile.read(content_length)
+            if body is None:
+                content_length = int(self.headers.get("Content-Length", 0))
+                if content_length > 0:
+                    body = self.rfile.read(content_length)
             req = urllib.request.Request(url, data=body, method=method)
             for key, val in self.headers.items():
                 # R7-1: never forward Proxy-Authorization to origin either
