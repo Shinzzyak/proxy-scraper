@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-10T13:15:45Z",
-  "total_sources": 164,
-  "alive_sources": 162,
+  "generated_at": "2026-08-10T13:21:27Z",
+  "total_sources": 172,
+  "alive_sources": 170,
   "dead_sources": 2,
-  "total_proxies": 352993,
+  "total_proxies": 363708,
   "sources": {
     "gem-rix4uni-http": {
       "url": null,
@@ -96,6 +96,13 @@
       "error": null,
       "last_seen": "2026-08-10 11:18:48"
     },
+    "kangproxy-https": {
+      "url": null,
+      "alive": true,
+      "proxies": 5863,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
+    },
     "openproxylist-http": {
       "url": null,
       "alive": true,
@@ -164,7 +171,7 @@
       "alive": true,
       "proxies": 2982,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "murongpig-socks4": {
       "url": null,
@@ -192,14 +199,14 @@
       "alive": true,
       "proxies": 2952,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "fyvri-http": {
       "url": null,
       "alive": true,
       "proxies": 2950,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "gfp-https": {
       "url": null,
@@ -213,14 +220,14 @@
       "alive": true,
       "proxies": 2944,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "gfp-socks5": {
       "url": null,
       "alive": true,
       "proxies": 2944,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "ercindedeoglu-http": {
       "url": null,
@@ -276,7 +283,7 @@
       "alive": true,
       "proxies": 2738,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "ebrasha-http": {
       "url": null,
@@ -311,21 +318,21 @@
       "alive": true,
       "proxies": 2551,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "gem-proxyscraper-http": {
       "url": null,
       "alive": true,
       "proxies": 2549,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "speedx-http": {
       "url": null,
       "alive": true,
       "proxies": 2549,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "hproxy-http": {
       "url": null,
@@ -381,7 +388,7 @@
       "alive": true,
       "proxies": 2154,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "gem-komutan234-socks5": {
       "url": null,
@@ -402,7 +409,7 @@
       "alive": true,
       "proxies": 1938,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "speedx-socks5-cdn": {
       "url": null,
@@ -425,12 +432,19 @@
       "error": null,
       "last_seen": "2026-08-10 11:18:49"
     },
+    "kangproxy-socks4": {
+      "url": null,
+      "alive": true,
+      "proxies": 1798,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
+    },
     "jetkai-http": {
       "url": null,
       "alive": true,
       "proxies": 1795,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "sunny9577-http": {
       "url": null,
@@ -444,7 +458,7 @@
       "alive": true,
       "proxies": 1776,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "proxyscrape-all-txt": {
       "url": null,
@@ -458,7 +472,7 @@
       "alive": true,
       "proxies": 1602,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "proxifly-https": {
       "url": null,
@@ -472,7 +486,7 @@
       "alive": true,
       "proxies": 1289,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "akshay7273-all": {
       "url": null,
@@ -507,7 +521,7 @@
       "alive": true,
       "proxies": 912,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "proxyscrape-v4-https": {
       "url": null,
@@ -515,6 +529,13 @@
       "proxies": 871,
       "error": null,
       "last_seen": "2026-08-10 11:23:44"
+    },
+    "anon-socks4": {
+      "url": null,
+      "alive": true,
+      "proxies": 850,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
     },
     "vpslab-all-elite": {
       "url": null,
@@ -551,6 +572,20 @@
       "error": null,
       "last_seen": "2026-08-10 11:23:43"
     },
+    "kangproxy-http": {
+      "url": null,
+      "alive": true,
+      "proxies": 675,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
+    },
+    "monosans-all": {
+      "url": null,
+      "alive": true,
+      "proxies": 664,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
+    },
     "shiftytr-socks4": {
       "url": null,
       "alive": true,
@@ -565,19 +600,19 @@
       "error": null,
       "last_seen": "2026-08-09 19:16:08"
     },
-    "monosans-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 606,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
-    },
     "proxifly-http-raw": {
       "url": null,
       "alive": true,
       "proxies": 596,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
+    },
+    "kangproxy-socks5": {
+      "url": null,
+      "alive": true,
+      "proxies": 572,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
     },
     "proxifly-http": {
       "url": null,
@@ -647,14 +682,14 @@
       "alive": true,
       "proxies": 463,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "zaeem20-https": {
       "url": null,
       "alive": true,
       "proxies": 460,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "relayglass-all": {
       "url": null,
@@ -691,12 +726,19 @@
       "error": null,
       "last_seen": "2026-08-09 18:12:18"
     },
+    "spys-socks": {
+      "url": null,
+      "alive": true,
+      "proxies": 396,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
+    },
     "vpslab-socks5": {
       "url": null,
       "alive": true,
       "proxies": 372,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "proxifly-socks4": {
       "url": null,
@@ -724,7 +766,7 @@
       "alive": true,
       "proxies": 349,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "proxyscrape-api-socks5": {
       "url": null,
@@ -750,9 +792,16 @@
     "gem-databay-socks5": {
       "url": null,
       "alive": true,
-      "proxies": 336,
+      "proxies": 328,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
+    },
+    "gem-zloiuser-socks4": {
+      "url": null,
+      "alive": true,
+      "proxies": 319,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
     },
     "geonode-socks4": {
       "url": null,
@@ -815,7 +864,7 @@
       "alive": true,
       "proxies": 276,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "gem-skillter-socks5": {
       "url": null,
@@ -878,14 +927,14 @@
       "alive": true,
       "proxies": 226,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "proxifly-socks5-raw": {
       "url": null,
       "alive": true,
       "proxies": 226,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "gem-ch4120n-socks4": {
       "url": null,
@@ -899,7 +948,7 @@
       "alive": true,
       "proxies": 216,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "rawproxys-socks4": {
       "url": null,
@@ -907,6 +956,13 @@
       "proxies": 214,
       "error": null,
       "last_seen": "2026-08-09 19:16:08"
+    },
+    "gem-zloiuser-socks5": {
+      "url": null,
+      "alive": true,
+      "proxies": 205,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:24"
     },
     "ab57-proxyold": {
       "url": null,
@@ -927,7 +983,7 @@
       "alive": true,
       "proxies": 198,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "proxylist-to-socks5": {
       "url": null,
@@ -962,7 +1018,7 @@
       "alive": true,
       "proxies": 169,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "gem-skillter-socks4": {
       "url": null,
@@ -983,14 +1039,7 @@
       "alive": true,
       "proxies": 142,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
-    },
-    "monosans-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 142,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "gem-zloiuser-http": {
       "url": null,
@@ -1020,47 +1069,54 @@
       "error": null,
       "last_seen": "2026-08-10 11:23:43"
     },
+    "monosans-socks5": {
+      "url": null,
+      "alive": true,
+      "proxies": 129,
+      "error": null,
+      "last_seen": "2026-08-10 13:21:23"
+    },
     "zaeem20-socks5": {
       "url": null,
       "alive": true,
       "proxies": 126,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "zaeem20-socks4": {
       "url": null,
       "alive": true,
       "proxies": 117,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "roosterkid-https": {
       "url": null,
       "alive": true,
       "proxies": 89,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "gem-iplocate-socks4": {
       "url": null,
       "alive": true,
       "proxies": 81,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "prxchk-http": {
       "url": null,
       "alive": true,
       "proxies": 58,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "anon-https": {
       "url": null,
       "alive": true,
       "proxies": 41,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "cybergw-http": {
       "url": null,
@@ -1081,7 +1137,7 @@
       "alive": true,
       "proxies": 40,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "prxchk-socks4": {
       "url": null,
@@ -1095,21 +1151,21 @@
       "alive": true,
       "proxies": 27,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "watchttvv-http": {
       "url": null,
       "alive": true,
       "proxies": 18,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "shiftytr-https": {
       "url": null,
       "alive": true,
       "proxies": 13,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "geonode-p2-socks5": {
       "url": null,
@@ -1123,21 +1179,21 @@
       "alive": true,
       "proxies": 10,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:24"
     },
     "roosterkid-socks5": {
       "url": null,
       "alive": true,
       "proxies": 9,
       "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "fatezero-http": {
       "url": null,
       "alive": true,
       "proxies": 3,
       "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "last_seen": "2026-08-10 13:21:23"
     },
     "geonode-p2-https": {
       "url": null,
