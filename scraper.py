@@ -192,6 +192,16 @@ PROXY_SOURCES = [
     ("gem-proxmint-socks4", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks4.txt", "host:port"),
     ("gem-proxmint-socks5", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/socks5.txt", "host:port"),
     ("gem-zloiuser-http", "https://raw.githubusercontent.com/zloi-user/hideip.me/main/http.txt", "host:port:extra"),
+    ("gem-zloiuser-socks5", "https://raw.githubusercontent.com/zloi-user/hideip.me/main/socks5.txt", "host:port:extra"),
+    ("gem-zloiuser-socks4", "https://raw.githubusercontent.com/zloi-user/hideip.me/main/socks4.txt", "host:port:extra"),
+    # R24-TAMAK: KangProxy — commit tiap ±2 jam (paling fresh), besar
+    ("kangproxy-http", "https://raw.githubusercontent.com/officialputuid/KangProxy/main/http/http.txt", "host:port"),
+    ("kangproxy-https", "https://raw.githubusercontent.com/officialputuid/KangProxy/main/https/https.txt", "host:port"),
+    ("kangproxy-socks4", "https://raw.githubusercontent.com/officialputuid/KangProxy/main/socks4/socks4.txt", "host:port"),
+    ("kangproxy-socks5", "https://raw.githubusercontent.com/officialputuid/KangProxy/main/socks5/socks5.txt", "host:port"),
+    # R24-TAMAK: spys.me socks.txt (beda dari spys-cred proxy.txt) + anon socks4
+    ("spys-socks", "https://spys.me/socks.txt", "host:port"),
+    ("anon-socks4", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks4_proxies.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
