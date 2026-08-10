@@ -321,18 +321,23 @@ def fetch(url, timeout=15, retries=3, backoff=1.5):
     return ""
 
 
-def _rank_by_port_prior(proxies, limit):
+def _rank_by_port_prior(proxies, limit, protocol_hint=None):
     """R21-ML: Naive-Bayes prior port — pilih proxy yang port-nya paling
     sering hidup di pool (P(alive|port) dari data validasi historis).
-    Deterministic: tie-break urutan asli (stable sort)."""
+    Deterministic: tie-break urutan asli (stable sort).
+    R21-ML2: prior PER-PROTOCOL — fyvri (http) port 3128/8080/80 harus
+    menang, bukan port socks5 (5678/1080/4145). Kalau source HTTP tapi
+    prior global, HTTP ports kalah terus → sample aneh → 0 valid → ban."""
     try:
         from proxy_pool import get_db
         conn = get_db()
         try:
-            rows = conn.execute(
-                "SELECT port, COUNT(*) FROM proxies WHERE last_seen != '' "
-                "GROUP BY port"
-            ).fetchall()
+            q = "SELECT port, COUNT(*) FROM proxies WHERE last_seen != ''"
+            if protocol_hint:
+                q += " AND protocol = ?"
+                rows = conn.execute(q + " GROUP BY port", (protocol_hint,)).fetchall()
+            else:
+                rows = conn.execute(q + " GROUP BY port").fetchall()
         finally:
             conn.close()
     except Exception:
@@ -565,7 +570,7 @@ def scrape_source(name, url, fmt):
         # Ranking dulu, ambil top-N. Deterministic (tie-break urutan asli).
         if POOL_AVAILABLE:
             try:
-                proxies = _rank_by_port_prior(proxies, limit)
+                proxies = _rank_by_port_prior(proxies, limit, source_protocol_hint(name))
             except Exception:
                 proxies = proxies[:limit]
         else:

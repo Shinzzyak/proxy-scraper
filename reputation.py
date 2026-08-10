@@ -92,8 +92,13 @@ def update_reputation(source_name: str, submitted: int, valid: int):
                 "SELECT valid_proxies FROM source_reputation WHERE source_name = ?",
                 (source_name,),
             ).fetchone()[0]
-            if runs < 2 or valid_ever == 0:
-                print(f"ℹ️  GRACE: {source_name} (run ke-{runs}, valid_ever={valid_ever}, {final_rate:.1%} — skip ban)")
+            # R21-GRACE3: kalau valid_ever > 0 tapi rasio valid/submitted ekstrem
+            # (< 0.01% = <1 valid per 10k submitted) — sampling rusak (R21-ML
+            # ranking/prior), bukan source jelek. fyvri: 35k submitted, 1 valid.
+            sample_broken = valid_ever > 0 and total_sub / max(valid_ever, 1) > 10000
+            if runs < 2 or valid_ever == 0 or sample_broken:
+                reason = "sample broken" if sample_broken else f"valid_ever={valid_ever}"
+                print(f"ℹ️  GRACE: {source_name} (run ke-{runs}, {reason}, {final_rate:.1%} — skip ban)")
             else:
                 conn.execute(
                     "UPDATE source_reputation SET is_banned = 1, ban_reason = ? WHERE source_name = ?",

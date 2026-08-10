@@ -111,17 +111,21 @@ class ConnectProbeTests(unittest.TestCase):
         from unittest.mock import patch as _patch
         import proxy_pool
         class FakeCur:
-            def fetchall(self):
-                return [(8080, 50), (3128, 10)]
+            def __init__(self, rows): self.rows = rows
+            def fetchall(self): return self.rows
         class FakeConn:
-            def execute(self, q):
-                return FakeCur()
-            def close(self):
-                pass
-        with _patch("proxy_pool.get_db", return_value=FakeConn()):
-            proxies = ["1.1.1.1:9999", "2.2.2.2:8080", "3.3.3.3:3128"]
-            r = scraper._rank_by_port_prior(proxies, 2)
-        # 8080 > 3128 > 9999 (9999 tidak ada di prior → laplace kecil)
+            def __init__(self, rows): self.rows = rows
+            def execute(self, q, args=None):
+                # filter protocol diterapkan oleh mock (simulasi DB)
+                proto = args[0] if args else None
+                filtered = self.rows if not proto else [r for r in self.rows if r[0] in (8080, 3128)]  # http ports
+                return FakeCur(filtered)
+            def close(self): pass
+        # prior http: 8080=50, 3128=10 (5678 EXCLUDED — bukan http port)
+        with _patch("proxy_pool.get_db", return_value=FakeConn([(8080, 50), (3128, 10), (5678, 300)])):
+            proxies = ["1.1.1.1:9999", "2.2.2.2:8080", "3.3.3.3:3128", "4.4.4.4:5678"]
+            r = scraper._rank_by_port_prior(proxies, 2, protocol_hint="http")
+        # 8080 > 3128 > 5678 (tidak di prior http) > 9999 (laplace kecil)
         self.assertEqual(r, ["2.2.2.2:8080", "3.3.3.3:3128"])
 
     def test_jsonlines_extract(self):
