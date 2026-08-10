@@ -9,9 +9,11 @@ This is NOT a sticky proxy in the provider sense — stickiness is enforced
 by this gateway layer. Upstream proxies are public free proxies.
 """
 import argparse
+import base64
 import json
 import os
 import queue
+import re
 import select
 import socket
 import sys
@@ -87,10 +89,9 @@ def _check_auth(secret: str, client_id: str, ts: str, sig: str, window: int = AU
 
 
 def _auth_ok(handler, secret: str) -> bool:
-    """Check Proxy-Authorization: Basic <client_id:ts:sig>. 407 on failure."""
+    """Check Proxy-Authorization: Basic <clien...ig>. 407 on failure."""
     if not secret:
         return True
-    import base64
     try:
         header = handler.headers.get("Proxy-Authorization", "")
         if not header.startswith("Basic "):
@@ -205,6 +206,67 @@ def _flush_usage(batch):
             conn.close()
     except Exception:
         return False
+
+
+def _sid_from_username(headers):
+    """R26-Z1 (proxy rotation): extract (sid, region, ttl) dari username
+    cliproxy-style di Proxy-Authorization Basic.
+
+    Format URL proxy:
+        http://<user>-region-<REGION>-sid-<SID>-t-<TTL>:<pass>@host:port
+    Contoh:
+        http://bulk-region-ID-sid-a1b2c3d4-t-300:secret@127.0.0.1:8081
+
+    Satu sid → satu egress IP (sticky via SessionManager). Ganti sid =
+    session baru = IP baru. Region opsional filter negara pool. TTL default
+    DEFAULT_SESSION_TTL kalau tidak ada t-<N>.
+
+    Auth di gateway ini format '<client_id>:<ts>:<sig>' — sid ada di
+    client_id (bagian sebelum ':' pertama).
+    """
+    auth = headers.get("Proxy-Authorization", "")
+    if not auth.startswith("Basic "):
+        return None, "", 0
+    try:
+        decoded = base64.b64decode(auth[6:]).decode("utf-8", "ignore")
+        user = decoded.split(":", 1)[0]
+    except Exception:
+        return None, "", 0
+    m = re.search(r"sid-([a-zA-Z0-9_]+)", user)
+    if not m:
+        return None, "", 0
+    sid = m.group(1)
+    region = ""
+    rm = re.search(r"region-([A-Za-z]{2})", user)
+    if rm:
+        region = rm.group(1).upper()
+    ttl = 0
+    tm = re.search(r"t-(\d+)", user)
+    if tm:
+        try:
+            ttl = min(int(tm.group(1)), 3600)
+        except ValueError:
+            ttl = 0
+    return sid, region, ttl
+
+
+def _egress_ip(proxy_str):
+    """'socks5://1.2.3.4:1080' → '1.2.3.4'. 'DIRECT' → 'DIRECT'."""
+    if not proxy_str or proxy_str == "DIRECT":
+        return "DIRECT"
+    return proxy_str.split("://")[-1].split(":")[0]
+
+
+def _session_proxy_of(sm, sid):
+    """IP proxy yang di-pin ke sid (kalau ada). None kalau belum."""
+    try:
+        sessions = getattr(sm, "_sessions", {})
+        entry = sessions.get(sid)
+        if entry:
+            return entry[0] if isinstance(entry, tuple) else entry
+    except Exception:
+        pass
+    return None
 
 
 def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
@@ -349,11 +411,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
     """HTTP forward proxy that routes via session→proxy mapping."""
 
     def _get_session_proxy(self, country="", exclude=None, protocol=""):
+        # R26-Z1 (proxy rotation): sid dari username cliproxy-style dulu
+        sid, username_region, username_ttl = _sid_from_username(self.headers)
         if not country:
             country = self.headers.get("X-Country", "").upper()
+        if not country and username_region:
+            country = username_region
         if self.server.mode == "rotate":
             return _next_proxy_round_robin(self.server.rotate_state, country, exclude, protocol)
-        session_id = self.headers.get("X-Session-ID", "")
+        session_id = sid or self.headers.get("X-Session-ID", "")
         if not session_id:
             proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
             # R10-5: country requested but unavailable — 503, jangan DIRECT leak
@@ -362,7 +428,10 @@ class GatewayHandler(BaseHTTPRequestHandler):
             return proxy or "DIRECT"
         ttl = DEFAULT_SESSION_TTL
         try:
-            ttl = min(int(self.headers.get("X-Session-TTL", "")), 3600)
+            if username_ttl:
+                ttl = min(username_ttl, 3600)
+            else:
+                ttl = min(int(self.headers.get("X-Session-TTL", "")), 3600)
         except ValueError:
             pass
         # R11-7: retry dengan exclude — proxy #1 flaky jangan bikin session DIRECT
@@ -536,7 +605,63 @@ class GatewayHandler(BaseHTTPRequestHandler):
             self.send_error(502, f"Direct connection failed: {e}")
 
     def do_GET(self):
+        # R26-Z1 (proxy rotation): endpoint kontrol — /ip, /ips, /session/<sid>
+        if self._do_control():
+            return
         self._forward_via_proxy("GET")
+
+    def _do_control(self):
+        """GET /ip → egress IP session; GET /ips → daftar IP + status;
+        GET /session/<sid> → status satu session. Dijawab langsung gateway
+        (tidak forward upstream) — mirip icanhazip."""
+        path = self.path.split("?", 1)[0]
+        if path not in ("/ip", "/ips") and not path.startswith("/session/"):
+            return False
+        if not _auth_ok(self, self.server.auth_secret):
+            self.send_error(407, "Proxy Authentication Required")
+            return True
+        sm = self.server.session_manager
+        sid, region, ttl = _sid_from_username(self.headers)
+        if path == "/ip":
+            proxy = None
+            if sid:
+                proxy = _session_proxy_of(sm, sid)
+                if proxy is None:
+                    try:
+                        proxy = self._get_session_proxy(exclude=set(), protocol="")
+                    except Exception:
+                        proxy = None
+            body = {"ip": _egress_ip(proxy) if proxy else "DIRECT",
+                    "sid": sid or None, "proxy": proxy or "DIRECT"}
+        elif path == "/ips":
+            ips = []
+            seen = set()
+            for s, entry in getattr(sm, "_sessions", {}).items():
+                p = entry[0] if isinstance(entry, tuple) else entry
+                ip = _egress_ip(p)
+                if ip in seen or ip == "DIRECT":
+                    continue
+                seen.add(ip)
+                blocked = False
+                try:
+                    bl = self.server.rotate_state.get("blacklist") or {}
+                    blocked = bl.get(p, 0) > time.time()
+                except Exception:
+                    pass
+                ips.append({"ip": ip, "sid": s, "status": "blocked" if blocked else "alive"})
+            body = {"ips": ips}
+        else:  # /session/<sid>
+            req_sid = path.split("/")[-1]
+            proxy = _session_proxy_of(sm, req_sid)
+            body = {"sid": req_sid, "ip": _egress_ip(proxy) if proxy else None,
+                    "status": "alive" if proxy else "unknown"}
+        payload = json.dumps(body).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+        return True
 
     def do_POST(self):
         self._forward_via_proxy("POST")
