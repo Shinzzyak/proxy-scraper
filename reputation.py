@@ -74,12 +74,22 @@ def update_reputation(source_name: str, submitted: int, valid: int):
 
         # Check ban threshold; auto-unban when recovered (P1-8: bans were permanent)
         # R4-10: never ban on tiny samples — 3 submitted proxies is noise.
+        # R19-GRACE: jangan ban source di run PERTAMA — source baru (mis. proxy
+        # China yang hanya reachable dari dalam China) sering 0% dari VPS luar,
+        # tapi valid di lokasi asal. Grace: butuh >= 2 run tercatat sebelum ban.
         if final_rate < BAN_THRESHOLD and total_sub >= MIN_BAN_SAMPLE:
-            conn.execute(
-                "UPDATE source_reputation SET is_banned = 1, ban_reason = ? WHERE source_name = ?",
-                (f"Success rate {final_rate:.1%} < {BAN_THRESHOLD:.0%}", source_name)
-            )
-            print(f"🚫 BANNED: {source_name} (success rate: {final_rate:.1%})")
+            runs = conn.execute(
+                "SELECT COUNT(*) FROM source_history WHERE source_name = ?",
+                (source_name,),
+            ).fetchone()[0]
+            if runs < 2:  # R19-GRACE: baru 1x run — skip ban
+                print(f"ℹ️  GRACE: {source_name} (run ke-{runs}, {final_rate:.1%} — skip ban)")
+            else:
+                conn.execute(
+                    "UPDATE source_reputation SET is_banned = 1, ban_reason = ? WHERE source_name = ?",
+                    (f"Success rate {final_rate:.1%} < {BAN_THRESHOLD:.0%}", source_name)
+                )
+                print(f"🚫 BANNED: {source_name} (success rate: {final_rate:.1%})")
         elif final_rate >= WARN_THRESHOLD:
             # recovered — clear the ban so the source is scraped again
             conn.execute(
