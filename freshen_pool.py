@@ -46,7 +46,10 @@ def load_state() -> dict:
 
 def save_state(state: dict):
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(state, indent=2))
+    # R9-15: atomic write — crash mid-write must not corrupt state JSON
+    tmp = STATE_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(state, indent=2))
+    tmp.replace(STATE_FILE)
 
 
 def acquire_lock(max_age_minutes: int = 180) -> bool:
