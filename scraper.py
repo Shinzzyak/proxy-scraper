@@ -321,6 +321,33 @@ def fetch(url, timeout=15, retries=3, backoff=1.5):
     return ""
 
 
+def _rank_by_port_prior(proxies, limit):
+    """R21-ML: Naive-Bayes prior port — pilih proxy yang port-nya paling
+    sering hidup di pool (P(alive|port) dari data validasi historis).
+    Deterministic: tie-break urutan asli (stable sort)."""
+    try:
+        from proxy_pool import get_db
+        conn = get_db()
+        try:
+            rows = conn.execute(
+                "SELECT port, COUNT(*) FROM proxies WHERE last_seen != '' "
+                "GROUP BY port"
+            ).fetchall()
+        finally:
+            conn.close()
+    except Exception:
+        return proxies[:limit]
+    port_alive = {r[0]: r[1] for r in rows}
+    if not port_alive:
+        return proxies[:limit]
+    total = sum(port_alive.values())
+    # prior log-prob + laplace smooth (port baru tidak dapat -inf)
+    def score(p):
+        port = int(p.rsplit(":", 1)[1])
+        return (port_alive.get(port, 0) + 1) / (total + len(port_alive))
+    return sorted(proxies, key=score, reverse=True)[:limit]
+
+
 def extract_proxies(text, fmt="", max_items=None):
     proxies = []
     limit = max_items or MAX_PROXIES_PER_SOURCE
@@ -533,7 +560,16 @@ def scrape_source(name, url, fmt):
         text = "\n".join(text.splitlines()[:limit])
         proxies = extract_proxies(text, fmt)
     elif len(proxies) > limit:
-        proxies = proxies[:limit]
+        # R21-ML: kalau kelebihan cap, jangan ambil baris pertama buta —
+        # prior port dari pool hidup (Naive-Bayes: P(alive|port) dari data).
+        # Ranking dulu, ambil top-N. Deterministic (tie-break urutan asli).
+        if POOL_AVAILABLE:
+            try:
+                proxies = _rank_by_port_prior(proxies, limit)
+            except Exception:
+                proxies = proxies[:limit]
+        else:
+            proxies = proxies[:limit]
     capped = len(proxies) >= limit  # R17-T3: flag pakai limit (bukan MAX)
     source_health[name] = {
         "url": url,

@@ -106,6 +106,24 @@ class ConnectProbeTests(unittest.TestCase):
             mc.return_value = fake
             self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
 
+    def test_rank_by_port_prior(self):
+        """R21-ML: port yang sering hidup di pool harus menang di ranking."""
+        from unittest.mock import patch as _patch
+        import proxy_pool
+        class FakeCur:
+            def fetchall(self):
+                return [(8080, 50), (3128, 10)]
+        class FakeConn:
+            def execute(self, q):
+                return FakeCur()
+            def close(self):
+                pass
+        with _patch("proxy_pool.get_db", return_value=FakeConn()):
+            proxies = ["1.1.1.1:9999", "2.2.2.2:8080", "3.3.3.3:3128"]
+            r = scraper._rank_by_port_prior(proxies, 2)
+        # 8080 > 3128 > 9999 (9999 tidak ada di prior → laplace kecil)
+        self.assertEqual(r, ["2.2.2.2:8080", "3.3.3.3:3128"])
+
     def test_jsonlines_extract(self):
         """R19: fmt jsonlines (fate0/proxylist) — host/port per baris JSON."""
         txt = ('{"anonymity": "high", "host": "1.2.3.4", "port": 8080}\n'
