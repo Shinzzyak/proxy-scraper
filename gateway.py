@@ -384,7 +384,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
             try:
                 upstream = socket.create_connection(session_proxy.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
                 upstream.settimeout(UPSTREAM_PROXY_TIMEOUT)  # R10-4: recv ikut timeout — silent upstream ga hang 10s×3
-                upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n".encode())
+                upstream.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # R16-G1: matikan Nagle — hemat 1 RTT/burst di tunnel
+                # T3: sebagian proxy publik reject CONNECT tanpa UA
+                upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\nUser-Agent: Gateway/1.0\r\nProxy-Connection: keep-alive\r\n\r\n".encode())
                 # R9-3: response can arrive in 2+ segments — loop until header end
                 resp = b""
                 while b"\r\n\r\n" not in resp and len(resp) < 8192:
@@ -440,6 +442,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
         """CONNECT without upstream proxy (direct)."""
         try:
             remote = socket.create_connection((host, port), timeout=GATEWAY_TIMEOUT)
+            remote.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # R16-G1
             self.send_response(200, "Connection Established")
             self.end_headers()
             self._tunnel(self.connection, remote)
@@ -508,6 +511,12 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     self.send_header(key, val)
             self.end_headers()
             try:
+                # R16-N4: timeout hanya berlaku sampai header; body read bisa
+                # hang selamanya kalau proxy lambat — set socket timeout ulang
+                fp = getattr(resp, "fp", None)
+                sock = getattr(fp, "_sock", None)
+                if sock is not None:
+                    sock.settimeout(UPSTREAM_PROXY_TIMEOUT)
                 chunk = resp.read(65536)
                 while chunk:
                     self.wfile.write(chunk)
@@ -571,6 +580,23 @@ class GatewayHandler(BaseHTTPRequestHandler):
         """Bidirectional byte relay between client and remote socket."""
         sockets = [client, remote]
         try:
+            # R16-G1: TCP_NODELAY di kedua ujung — Nagle + delayed-ACK = +1 RTT
+            # per burst chatty protocol
+            for s in sockets:
+                try:
+                    s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                    # R16-G4: SO_KEEPALIVE deteksi peer mati — ganti idle-kill
+                    # 15s (GATEWAY_TIMEOUT) yang memutus tunnel + TLS session
+                    # resumption klien. Keepalive = 60s idle, probe 5x, 10s.
+                    s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+                    try:
+                        s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60)
+                        s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 10)
+                        s.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 5)
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
             while True:
                 # R15-1: select pada fd tertutup (proxy mati mid-session) → ValueError
                 # guard: buang socket yang sudah closed dari list
@@ -584,7 +610,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 if errors:
                     break
                 if not readable:
-                    break
+                    # R16-G4: jangan break saat idle — SO_KEEPALIVE yang deteksi
+                    # peer mati; tunnel tetap hidup untuk TLS session resumption
+                    continue
                 for sock in readable:
                     try:
                         data = sock.recv(65536)

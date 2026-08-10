@@ -64,10 +64,7 @@ PROXY_SOURCES = [
     ("geonode-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
     ("geonode-socks4", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks4", "geonode"),
     ("geonode-socks5", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5", "geonode"),
-    ("geonode-p2-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
-    ("geonode-p2-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
-    ("geonode-p2-socks4", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=socks4", "geonode"),
-    ("geonode-p2-socks5", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=2&sort_by=lastChecked&sort_type=desc&protocols=socks5", "geonode"),
+    # R16: geonode-p2-* mati total (7 run, 0 alive) — hapus, buang request sia-sia
     ("openproxylist-http", "https://openproxylist.xyz/http.txt", "host:port"),
     ("openproxylist-socks4", "https://openproxylist.xyz/socks4.txt", "host:port"),
     ("openproxylist-socks5", "https://openproxylist.xyz/socks5.txt", "host:port"),
@@ -439,6 +436,13 @@ def scrape_source(name, url, fmt):
         print("(empty)")
         return []
     proxies = extract_proxies(text, fmt)
+    # R16: per-source cap override — source pass-rate rendah (lihat
+    # source_history ROI) jangan habiskan kuota validasi untuk duplikat
+    limit = MAX_PROXIES_PER_SOURCE
+    if name.startswith(("speedx-", "gfp-", "murongpig-", "ercindedeoglu-")):
+        limit = 3000
+    if len(proxies) > limit:
+        proxies = proxies[:limit]
     capped = len(proxies) >= MAX_PROXIES_PER_SOURCE
     source_health[name] = {
         "url": url,
@@ -559,6 +563,12 @@ def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
         # must be a JSON IP echo — rules out HTML error pages
         if b'"origin"' not in data and b'"ip"' not in data:
             return False
+        # R16-N1: validator harus uji CONNECT juga — banyak proxy HTTP-relay-only
+        # lolos GET absolute-URI tapi reject CONNECT → 12+ failover sia-sia di
+        # gateway (usage_log: 'upstream CONNECT rejected'). Probe CONNECT ke
+        # port 443; kalau tidak 200, proxy dibuang.
+        if not _probe_connect(s, ip, int(port), timeout):
+            return False
         # hidden-gems round 6: header leak detection — a transparent proxy
         # that appends Via/X-Forwarded-For/Forwarded leaks client identity.
         # These are flagged (not rejected): pool stays usable, but the proxy
@@ -569,6 +579,30 @@ def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
             if hdr in lower:
                 leaked.append(hdr[:-1].decode())
         return leaked  # [] = anonymous, non-empty = transparent/leaky
+    except Exception:
+        return False
+
+
+def _probe_connect(sock, host, port, timeout):
+    """R16-N1: probe CONNECT via existing socket — proxy yang tidak bisa
+    CONNECT (HTTP-relay-only) dibuang. Return True kalau dapat '200'."""
+    try:
+        sock.settimeout(timeout)
+        req = (
+            f"CONNECT httpbin.org:443 HTTP/1.1\r\n"
+            f"Host: httpbin.org:443\r\n"
+            f"User-Agent: ProxyValidator/5.1\r\n"  # T3: sebagian proxy reject CONNECT tanpa UA
+            f"Proxy-Connection: keep-alive\r\n"
+            f"\r\n"
+        )
+        sock.sendall(req.encode())
+        data = b""
+        while len(data) < 4096:
+            chunk = sock.recv(2048)
+            if not chunk:
+                break
+            data += chunk
+        return b"200" in data
     except Exception:
         return False
 

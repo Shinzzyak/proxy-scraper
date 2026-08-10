@@ -292,6 +292,7 @@ def get_best_proxy(protocol: str = "http", country_code: str = "", min_score: in
         params = [protocol, min_score]
         # never return invalid placeholder IPs (e.g. 0.0.0.0) — they pollute pools
         q += " AND ip NOT IN ('0.0.0.0', '127.0.0.1', '255.255.255.255')"
+        q += " AND last_seen != ''"  # R16-N3: zombie (auto-ban) jangan ter-pick — konsisten dgn search_proxies
         if country_code:
             q += " AND country_code = ?"
             params.append(country_code.upper())
@@ -313,6 +314,7 @@ def get_sticky_group(isp: str = "", country_code: str = "", min_score: int = 50,
     try:
         q = "SELECT * FROM proxies WHERE isp != '' AND score >= ?"
         params = [min_score]
+        q += " AND last_seen != ''"  # R16-N3: konsisten — zombie jangan di-pick
         if isp:
             q += " AND isp = ?"
             params.append(isp)

@@ -9,8 +9,9 @@ class SourceCoverageTests(unittest.TestCase):
         names = {name for name, _, _ in scraper.PROXY_SOURCES}
         self.assertTrue({
             "geonode-http", "geonode-https", "geonode-socks4", "geonode-socks5",
-            "geonode-p2-http", "geonode-p2-https", "geonode-p2-socks4", "geonode-p2-socks5",
         } <= names)
+        # R16: geonode-p2-* dihapus (7 run mati total, 0 alive) — pastikan tidak kembali
+        self.assertFalse({"geonode-p2-http", "geonode-p2-https", "geonode-p2-socks4", "geonode-p2-socks5"} & names)
 
 
 class ProtocolHintTests(unittest.TestCase):
