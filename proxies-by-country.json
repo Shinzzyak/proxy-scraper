@@ -163,6 +163,22 @@
       "source_name": "hproxy-socks5"
     },
     {
+      "ip": "123.58.219.171",
+      "port": 10808,
+      "protocol": "socks5",
+      "score": 75,
+      "anonymity": "unknown",
+      "country": "Hong Kong",
+      "country_code": "HK",
+      "city": "Hong Kong",
+      "isp": "UCLOUD INFORMATION TECHNOLOGY (HK) LIMITED",
+      "response_time_ms": 40,
+      "last_seen": "2026-08-10T05:05:55Z",
+      "first_seen": "2026-08-09T22:01:17Z",
+      "is_datacenter": 1,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "8.217.248.219",
       "port": 1080,
       "protocol": "socks5",
@@ -239,22 +255,6 @@
       "response_time_ms": 1082,
       "last_seen": "2026-08-10T04:01:13Z",
       "first_seen": "2026-08-09T22:01:21Z",
-      "is_datacenter": 1,
-      "source_name": "monosans-all"
-    },
-    {
-      "ip": "123.58.219.171",
-      "port": 10808,
-      "protocol": "socks5",
-      "score": 61,
-      "anonymity": "unknown",
-      "country": "Hong Kong",
-      "country_code": "HK",
-      "city": "Hong Kong",
-      "isp": "UCLOUD INFORMATION TECHNOLOGY (HK) LIMITED",
-      "response_time_ms": 1041,
-      "last_seen": "2026-08-10T04:01:02Z",
-      "first_seen": "2026-08-09T22:01:17Z",
       "is_datacenter": 1,
       "source_name": "monosans-all"
     },
@@ -462,11 +462,11 @@
       "country_code": "VN",
       "city": "Hanoi",
       "isp": "Viettel Group",
-      "response_time_ms": 60,
-      "last_seen": "2026-08-10T04:01:00Z",
+      "response_time_ms": 53,
+      "last_seen": "2026-08-10T05:05:55Z",
       "first_seen": "2026-08-10T04:01:00Z",
       "is_datacenter": 0,
-      "source_name": "monosans-all"
+      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "163.181.207.169",
@@ -679,22 +679,6 @@
       "source_name": "hproxy-socks5"
     },
     {
-      "ip": "115.136.121.54",
-      "port": 9050,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "South Korea",
-      "country_code": "KR",
-      "city": "Songpa-gu",
-      "isp": "LG POWERCOMM",
-      "response_time_ms": 70,
-      "last_seen": "2026-08-10T04:01:00Z",
-      "first_seen": "2026-08-10T04:01:00Z",
-      "is_datacenter": 0,
-      "source_name": "monosans-all"
-    },
-    {
       "ip": "43.164.136.189",
       "port": 1080,
       "protocol": "socks5",
@@ -709,6 +693,22 @@
       "first_seen": "2026-08-09T22:01:19Z",
       "is_datacenter": 1,
       "source_name": "monosans-all"
+    },
+    {
+      "ip": "121.169.46.116",
+      "port": 1090,
+      "protocol": "socks5",
+      "score": 75,
+      "anonymity": "unknown",
+      "country": "South Korea",
+      "country_code": "KR",
+      "city": "Suwon",
+      "isp": "Korea Telecom",
+      "response_time_ms": 78,
+      "last_seen": "2026-08-10T05:05:55Z",
+      "first_seen": "2026-08-09T22:01:15Z",
+      "is_datacenter": 0,
+      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "193.122.105.251",
@@ -727,18 +727,18 @@
       "source_name": "roosterkid-socks4"
     },
     {
-      "ip": "121.169.46.116",
-      "port": 1090,
-      "protocol": "socks5",
-      "score": 75,
+      "ip": "115.136.121.54",
+      "port": 9050,
+      "protocol": "socks4",
+      "score": 58,
       "anonymity": "unknown",
       "country": "South Korea",
       "country_code": "KR",
-      "city": "Suwon",
-      "isp": "Korea Telecom",
-      "response_time_ms": 83,
-      "last_seen": "2026-08-09T22:01:15Z",
-      "first_seen": "2026-08-09T22:01:15Z",
+      "city": "Songpa-gu",
+      "isp": "LG POWERCOMM",
+      "response_time_ms": 70,
+      "last_seen": "2026-08-10T05:05:58Z",
+      "first_seen": "2026-08-10T04:01:00Z",
       "is_datacenter": 0,
       "source_name": "proxifly-socks5-raw"
     },
@@ -2875,22 +2875,6 @@
       "source_name": "proxifly-socks5-raw"
     },
     {
-      "ip": "144.124.227.88",
-      "port": 3129,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "The Netherlands",
-      "country_code": "NL",
-      "city": "Amsterdam",
-      "isp": "Servers Tech Fzco",
-      "response_time_ms": 241,
-      "last_seen": "2026-08-10T04:01:05Z",
-      "first_seen": "2026-08-09T22:01:15Z",
-      "is_datacenter": 1,
-      "source_name": "monosans-all"
-    },
-    {
       "ip": "144.124.232.204",
       "port": 443,
       "protocol": "socks5",
@@ -3081,6 +3065,22 @@
       "first_seen": "2026-08-10T04:01:09Z",
       "is_datacenter": 0,
       "source_name": "monosans-all"
+    },
+    {
+      "ip": "144.124.227.88",
+      "port": 3129,
+      "protocol": "socks4",
+      "score": 44,
+      "anonymity": "unknown",
+      "country": "The Netherlands",
+      "country_code": "NL",
+      "city": "Amsterdam",
+      "isp": "Servers Tech Fzco",
+      "response_time_ms": 1265,
+      "last_seen": "2026-08-10T05:05:59Z",
+      "first_seen": "2026-08-09T22:01:15Z",
+      "is_datacenter": 1,
+      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "185.171.83.65",
@@ -3373,22 +3373,6 @@
       "source_name": "monosans-socks4"
     },
     {
-      "ip": "129.151.9.55",
-      "port": 10808,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "United States",
-      "country_code": "US",
-      "city": "Phoenix",
-      "isp": "Oracle Corporation",
-      "response_time_ms": 204,
-      "last_seen": "2026-08-10T04:01:01Z",
-      "first_seen": "2026-08-09T20:35:25Z",
-      "is_datacenter": 1,
-      "source_name": "proxifly-socks5-raw"
-    },
-    {
       "ip": "64.181.250.108",
       "port": 50001,
       "protocol": "socks5",
@@ -3485,20 +3469,20 @@
       "source_name": "proxifly-socks5-raw"
     },
     {
-      "ip": "152.53.194.105",
-      "port": 1080,
+      "ip": "107.173.230.93",
+      "port": 40000,
       "protocol": "socks5",
       "score": 75,
       "anonymity": "unknown",
       "country": "United States",
       "country_code": "US",
-      "city": "Manassas",
-      "isp": "netcup GmbH",
-      "response_time_ms": 239,
-      "last_seen": "2026-08-09T19:15:51Z",
-      "first_seen": "2026-08-09T19:15:51Z",
-      "is_datacenter": 1,
-      "source_name": "gem-databay-socks5"
+      "city": "Buffalo",
+      "isp": "HostPapa",
+      "response_time_ms": 236,
+      "last_seen": "2026-08-10T05:05:56Z",
+      "first_seen": "2026-08-09T20:35:21Z",
+      "is_datacenter": 0,
+      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "104.234.124.3",
@@ -3547,6 +3531,22 @@
       "first_seen": "2026-08-09T19:15:39Z",
       "is_datacenter": 1,
       "source_name": "gem-proxmint-socks5"
+    },
+    {
+      "ip": "152.53.194.105",
+      "port": 1080,
+      "protocol": "socks5",
+      "score": 75,
+      "anonymity": "unknown",
+      "country": "United States",
+      "country_code": "US",
+      "city": "Manassas",
+      "isp": "netcup GmbH",
+      "response_time_ms": 245,
+      "last_seen": "2026-08-10T05:04:52Z",
+      "first_seen": "2026-08-09T19:15:51Z",
+      "is_datacenter": 1,
+      "source_name": "geonode-p2-socks5"
     },
     {
       "ip": "107.173.42.121",
@@ -4205,6 +4205,22 @@
       "source_name": "monosans-all"
     },
     {
+      "ip": "129.151.9.55",
+      "port": 10808,
+      "protocol": "socks5",
+      "score": 61,
+      "anonymity": "unknown",
+      "country": "United States",
+      "country_code": "US",
+      "city": "Phoenix",
+      "isp": "Oracle Corporation",
+      "response_time_ms": 1238,
+      "last_seen": "2026-08-10T05:05:56Z",
+      "first_seen": "2026-08-09T20:35:25Z",
+      "is_datacenter": 1,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "156.238.226.151",
       "port": 40001,
       "protocol": "socks5",
@@ -4219,22 +4235,6 @@
       "first_seen": "2026-08-09T22:01:18Z",
       "is_datacenter": 0,
       "source_name": "monosans-all"
-    },
-    {
-      "ip": "107.173.230.93",
-      "port": 40000,
-      "protocol": "socks5",
-      "score": 61,
-      "anonymity": "unknown",
-      "country": "United States",
-      "country_code": "US",
-      "city": "Buffalo",
-      "isp": "HostPapa",
-      "response_time_ms": 1288,
-      "last_seen": "2026-08-09T22:01:16Z",
-      "first_seen": "2026-08-09T20:35:21Z",
-      "is_datacenter": 0,
-      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "144.24.47.42",
@@ -4481,6 +4481,22 @@
       "source_name": "roosterkid-socks4"
     },
     {
+      "ip": "129.226.94.181",
+      "port": 1080,
+      "protocol": "socks5",
+      "score": 75,
+      "anonymity": "unknown",
+      "country": "Singapore",
+      "country_code": "SG",
+      "city": "Singapore",
+      "isp": "Tencent Cloud Computing (Beijing) Co",
+      "response_time_ms": 2,
+      "last_seen": "2026-08-10T05:05:55Z",
+      "first_seen": "2026-08-10T05:04:52Z",
+      "is_datacenter": 1,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "13.212.26.15",
       "port": 51311,
       "protocol": "socks5",
@@ -4511,22 +4527,6 @@
       "first_seen": "2026-08-09T19:15:51Z",
       "is_datacenter": 1,
       "source_name": "hproxy-socks5"
-    },
-    {
-      "ip": "140.245.109.203",
-      "port": 1080,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "Singapore",
-      "country_code": "SG",
-      "city": "Singapore",
-      "isp": "Oracle Corporation",
-      "response_time_ms": 2,
-      "last_seen": "2026-08-09T22:01:14Z",
-      "first_seen": "2026-08-09T19:15:47Z",
-      "is_datacenter": 1,
-      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "45.77.244.108",
@@ -4817,6 +4817,22 @@
       "source_name": "monosans-all"
     },
     {
+      "ip": "140.245.109.203",
+      "port": 1080,
+      "protocol": "socks5",
+      "score": 61,
+      "anonymity": "unknown",
+      "country": "Singapore",
+      "country_code": "SG",
+      "city": "Singapore",
+      "isp": "Oracle Corporation",
+      "response_time_ms": 1028,
+      "last_seen": "2026-08-10T05:05:56Z",
+      "first_seen": "2026-08-09T19:15:47Z",
+      "is_datacenter": 1,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "140.245.53.190",
       "port": 1088,
       "protocol": "socks5",
@@ -4826,8 +4842,8 @@
       "country_code": "SG",
       "city": "Singapore",
       "isp": "Oracle Corporation",
-      "response_time_ms": 1049,
-      "last_seen": "2026-08-10T04:01:04Z",
+      "response_time_ms": 1028,
+      "last_seen": "2026-08-10T05:05:56Z",
       "first_seen": "2026-08-09T19:15:48Z",
       "is_datacenter": 1,
       "source_name": "proxifly-socks5-raw"
@@ -4963,22 +4979,6 @@
       "first_seen": "2026-08-09T19:15:41Z",
       "is_datacenter": 1,
       "source_name": "hproxy-socks5"
-    },
-    {
-      "ip": "103.236.190.197",
-      "port": 1080,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "Indonesia",
-      "country_code": "ID",
-      "city": "West Jakarta",
-      "isp": "PT Victory Network Indonesia",
-      "response_time_ms": 18,
-      "last_seen": "2026-08-10T04:01:00Z",
-      "first_seen": "2026-08-10T04:01:00Z",
-      "is_datacenter": 0,
-      "source_name": "monosans-all"
     },
     {
       "ip": "108.136.140.236",
@@ -5301,6 +5301,22 @@
       "source_name": "proxifly-socks4"
     },
     {
+      "ip": "103.236.190.197",
+      "port": 1080,
+      "protocol": "socks5",
+      "score": 54,
+      "anonymity": "unknown",
+      "country": "Indonesia",
+      "country_code": "ID",
+      "city": "West Jakarta",
+      "isp": "PT Victory Network Indonesia",
+      "response_time_ms": 2076,
+      "last_seen": "2026-08-10T05:04:53Z",
+      "first_seen": "2026-08-10T04:01:00Z",
+      "is_datacenter": 0,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "103.111.136.82",
       "port": 8199,
       "protocol": "socks5",
@@ -5448,6 +5464,22 @@
     }
   ],
   "KH": [
+    {
+      "ip": "111.67.103.90",
+      "port": 1080,
+      "protocol": "socks5",
+      "score": 75,
+      "anonymity": "unknown",
+      "country": "Cambodia",
+      "country_code": "KH",
+      "city": "Phnom Penh",
+      "isp": "Mega Truenet Communication Co., Ltd.",
+      "response_time_ms": 40,
+      "last_seen": "2026-08-10T05:04:51Z",
+      "first_seen": "2026-08-10T05:04:51Z",
+      "is_datacenter": 0,
+      "source_name": "proxifly-socks5-raw"
+    },
     {
       "ip": "220.158.232.118",
       "port": 1080,
@@ -5670,8 +5702,8 @@
       "country_code": "IN",
       "city": "Mumbai",
       "isp": "Oracle Corporation",
-      "response_time_ms": 54,
-      "last_seen": "2026-08-10T04:01:03Z",
+      "response_time_ms": 53,
+      "last_seen": "2026-08-10T05:05:55Z",
       "first_seen": "2026-08-09T20:35:24Z",
       "is_datacenter": 1,
       "source_name": "proxifly-socks5-raw"
@@ -5903,6 +5935,22 @@
       "source_name": "hproxy-socks5"
     },
     {
+      "ip": "101.36.104.46",
+      "port": 10808,
+      "protocol": "socks5",
+      "score": 75,
+      "anonymity": "unknown",
+      "country": "Japan",
+      "country_code": "JP",
+      "city": "Tokyo",
+      "isp": "UCLOUD INFORMATION TECHNOLOGY (HK) LIMITED",
+      "response_time_ms": 78,
+      "last_seen": "2026-08-10T05:05:55Z",
+      "first_seen": "2026-08-09T18:11:49Z",
+      "is_datacenter": 1,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "101.36.104.239",
       "port": 10808,
       "protocol": "socks5",
@@ -5913,10 +5961,10 @@
       "city": "Tokyo",
       "isp": "UCLOUD INFORMATION TECHNOLOGY (HK) LIMITED",
       "response_time_ms": 81,
-      "last_seen": "2026-08-10T04:01:00Z",
+      "last_seen": "2026-08-10T05:05:55Z",
       "first_seen": "2026-08-09T18:11:46Z",
       "is_datacenter": 1,
-      "source_name": "monosans-all"
+      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "20.210.39.155",
@@ -6012,22 +6060,6 @@
       "last_seen": "2026-08-09T22:01:25Z",
       "first_seen": "2026-08-09T22:01:25Z",
       "is_datacenter": 0,
-      "source_name": "monosans-all"
-    },
-    {
-      "ip": "101.36.104.46",
-      "port": 10808,
-      "protocol": "socks5",
-      "score": 61,
-      "anonymity": "unknown",
-      "country": "Japan",
-      "country_code": "JP",
-      "city": "Tokyo",
-      "isp": "UCLOUD INFORMATION TECHNOLOGY (HK) LIMITED",
-      "response_time_ms": 1123,
-      "last_seen": "2026-08-09T22:01:16Z",
-      "first_seen": "2026-08-09T18:11:49Z",
-      "is_datacenter": 1,
       "source_name": "monosans-all"
     }
   ],
@@ -6213,6 +6245,22 @@
       "source_name": "hproxy-socks5"
     },
     {
+      "ip": "109.172.55.210",
+      "port": 1082,
+      "protocol": "socks5",
+      "score": 75,
+      "anonymity": "unknown",
+      "country": "France",
+      "country_code": "FR",
+      "city": "Paris",
+      "isp": "Global Connectivity Solutions LLP",
+      "response_time_ms": 158,
+      "last_seen": "2026-08-10T05:04:52Z",
+      "first_seen": "2026-08-09T20:35:24Z",
+      "is_datacenter": 0,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "213.136.92.91",
       "port": 1080,
       "protocol": "socks5",
@@ -6261,22 +6309,6 @@
       "source_name": "proxifly-socks5-raw"
     },
     {
-      "ip": "109.172.55.210",
-      "port": 1082,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "France",
-      "country_code": "FR",
-      "city": "Paris",
-      "isp": "Global Connectivity Solutions LLP",
-      "response_time_ms": 226,
-      "last_seen": "2026-08-09T20:35:24Z",
-      "first_seen": "2026-08-09T20:35:24Z",
-      "is_datacenter": 0,
-      "source_name": "proxyscrape-v4-socks5"
-    },
-    {
       "ip": "194.163.174.78",
       "port": 1087,
       "protocol": "socks5",
@@ -6321,22 +6353,6 @@
       "response_time_ms": 323,
       "last_seen": "2026-08-10T04:01:04Z",
       "first_seen": "2026-08-09T20:35:27Z",
-      "is_datacenter": 1,
-      "source_name": "proxifly-socks5-raw"
-    },
-    {
-      "ip": "109.123.251.109",
-      "port": 1080,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "France",
-      "country_code": "FR",
-      "city": "Lauterbourg",
-      "isp": "Contabo GmbH",
-      "response_time_ms": 353,
-      "last_seen": "2026-08-10T04:01:02Z",
-      "first_seen": "2026-08-09T18:12:00Z",
       "is_datacenter": 1,
       "source_name": "proxifly-socks5-raw"
     },
@@ -6466,6 +6482,22 @@
       "last_seen": "2026-08-10T04:01:15Z",
       "first_seen": "2026-08-09T22:01:21Z",
       "is_datacenter": 0,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
+      "ip": "109.123.251.109",
+      "port": 1080,
+      "protocol": "socks4",
+      "score": 44,
+      "anonymity": "unknown",
+      "country": "France",
+      "country_code": "FR",
+      "city": "Lauterbourg",
+      "isp": "Contabo GmbH",
+      "response_time_ms": 1331,
+      "last_seen": "2026-08-10T05:06:00Z",
+      "first_seen": "2026-08-09T18:12:00Z",
+      "is_datacenter": 1,
       "source_name": "proxifly-socks5-raw"
     }
   ],
@@ -7545,6 +7577,22 @@
       "source_name": "proxifly-socks5-raw"
     },
     {
+      "ip": "128.0.26.27",
+      "port": 1080,
+      "protocol": "socks5",
+      "score": 61,
+      "anonymity": "unknown",
+      "country": "Russia",
+      "country_code": "RU",
+      "city": "Moscow",
+      "isp": "Sibirskie Seti Ltd.",
+      "response_time_ms": 1270,
+      "last_seen": "2026-08-10T05:05:57Z",
+      "first_seen": "2026-08-10T05:05:57Z",
+      "is_datacenter": 0,
+      "source_name": "proxifly-socks5-raw"
+    },
+    {
       "ip": "109.201.65.228",
       "port": 1080,
       "protocol": "socks5",
@@ -8127,22 +8175,6 @@
       "source_name": "monosans-all"
     },
     {
-      "ip": "144.22.165.206",
-      "port": 1088,
-      "protocol": "socks5",
-      "score": 75,
-      "anonymity": "unknown",
-      "country": "Brazil",
-      "country_code": "BR",
-      "city": "S\u00e3o Paulo",
-      "isp": "Oracle Corporation",
-      "response_time_ms": 468,
-      "last_seen": "2026-08-10T04:01:04Z",
-      "first_seen": "2026-08-09T20:35:25Z",
-      "is_datacenter": 1,
-      "source_name": "proxifly-socks5-raw"
-    },
-    {
       "ip": "191.252.219.129",
       "port": 8889,
       "protocol": "http",
@@ -8157,6 +8189,22 @@
       "first_seen": "2026-08-10T04:01:14Z",
       "is_datacenter": 0,
       "source_name": "monosans-all"
+    },
+    {
+      "ip": "144.22.165.206",
+      "port": 1088,
+      "protocol": "socks5",
+      "score": 61,
+      "anonymity": "unknown",
+      "country": "Brazil",
+      "country_code": "BR",
+      "city": "S\u00e3o Paulo",
+      "isp": "Oracle Corporation",
+      "response_time_ms": 1429,
+      "last_seen": "2026-08-10T05:05:57Z",
+      "first_seen": "2026-08-09T20:35:25Z",
+      "is_datacenter": 1,
+      "source_name": "proxifly-socks5-raw"
     },
     {
       "ip": "177.52.25.34",

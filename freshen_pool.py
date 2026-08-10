@@ -210,8 +210,48 @@ def export_pool_snapshots(max_age_minutes: int = 1440) -> int:
         "avg_score": round(sum(int(p.get("score") or 0) for p in proxies) / len(proxies), 1) if proxies else 0,
     }
     _atomic_write(ROOT / "proxies-stats.json", json.dumps(stats, indent=2))
+    # R14-4: source-health.json selalu di-re-export dari DB (source_history)
+    # — jangan bergantung pada run scraper `--health` yang bisa di-stash/drop
+    # oleh publish_snapshot (artifact stash → drop). DB selalu punya data.
+    try:
+        sh = _source_health_from_db()
+        _atomic_write(ROOT / "source-health.json", json.dumps(sh, indent=2))
+        print(f"✅ Source health exported: {sh.get('total_sources')} sources ({sh.get('alive_sources')} alive)")
+    except Exception as exc:
+        print(f"⚠️ source-health export failed: {exc}", file=sys.stderr)
     print(f"✅ Final pool snapshots exported: {len(proxies)} proxies")
     return len(proxies)
+
+
+def _source_health_from_db() -> dict:
+    """Build source-health.json from source_history (segar, tidak tergantung
+    scraper --health yang file-nya bisa hilang di stash/drop publish)."""
+    import sqlite3
+    conn = sqlite3.connect(str(DATA_DIR / "proxies.db"))
+    try:
+        rows = conn.execute(
+            "SELECT source_name, alive, proxy_count, MAX(timestamp) AS ts "
+            "FROM source_history GROUP BY source_name"
+        ).fetchall()
+    finally:
+        conn.close()
+    sources = {}
+    for name, alive, proxy_count, ts in rows:
+        sources[name] = {
+            "url": None,
+            "alive": bool(alive),
+            "proxies": proxy_count or 0,
+            "error": None,
+            "last_seen": ts,
+        }
+    return {
+        "generated_at": utc_now(),
+        "total_sources": len(sources),
+        "alive_sources": sum(1 for v in sources.values() if v["alive"]),
+        "dead_sources": sum(1 for v in sources.values() if not v["alive"]),
+        "total_proxies": sum(v["proxies"] for v in sources.values()),
+        "sources": dict(sorted(sources.items(), key=lambda x: x[1]["proxies"], reverse=True)),
+    }
 
 
 def main():

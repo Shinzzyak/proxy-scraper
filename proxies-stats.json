@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-10T04:01:33Z",
+  "generated_at": "2026-08-10T05:06:55Z",
   "source": "pool-db",
   "max_age_minutes": 1440,
-  "total": 529,
+  "total": 532,
   "by_country": {
     "AL": 2,
     "AR": 3,
@@ -30,7 +30,7 @@
     "IR": 3,
     "IT": 4,
     "JP": 15,
-    "KH": 4,
+    "KH": 5,
     "KR": 7,
     "KZ": 1,
     "LT": 1,
@@ -44,9 +44,9 @@
     "PE": 2,
     "PK": 6,
     "PL": 1,
-    "RU": 30,
+    "RU": 31,
     "SE": 4,
-    "SG": 28,
+    "SG": 29,
     "TH": 3,
     "TR": 4,
     "TW": 5,
@@ -60,12 +60,12 @@
   },
   "by_protocol": {
     "http": 115,
-    "socks4": 53,
+    "socks4": 56,
     "socks5": 361
   },
   "by_anonymity": {
-    "unknown": 529
+    "unknown": 532
   },
-  "avg_response_time_ms": 402.9,
-  "avg_score": 69.6
+  "avg_response_time_ms": 410.4,
+  "avg_score": 69.4
 }
