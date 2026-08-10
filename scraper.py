@@ -519,11 +519,9 @@ def scrape_source(name, url, fmt):
         source_health[name] = {"url": url, "alive": False, "proxies": 0, "time_s": round(elapsed, 2), "error": "empty"}
         print("(empty)")
         return []
-    proxies = extract_proxies(text, fmt)
-    # R16: per-source cap override — source pass-rate rendah (lihat
-    # source_history ROI) jangan habiskan kuota validasi untuk duplikat.
+    proxies = extract_proxies(text, fmt, MAX_PROXIES_PER_SOURCE)
     # R17-T2: cap SEBELUM extract (line-based) — jangan parse 400k baris
-    # kalau cuma butuh 3000.
+    # kalau cuma butuh 3000. R20-P2-6: extract limit-aware (return early).
     limit = MAX_PROXIES_PER_SOURCE
     if name.startswith(("speedx-", "gfp-", "murongpig-", "ercindedeoglu-")):
         limit = 3000
