@@ -625,8 +625,14 @@ def main():
     except KeyboardInterrupt:
         print("\n🛑 Gateway stopped")
         _usage_stop.set()
+        try:
+            writer.join(timeout=5)  # R12-7: writer selesai dulu, baru drain — cegah race item hilang
+        except Exception:
+            pass
         flushed, failed = _drain_usage()
         print(f"💾 usage_log drained: {flushed} flushed, {failed} failed")
+        if _dropped_usage:
+            print(f"⚠️ {_dropped_usage} usage events dropped (queue full)")  # R12-7: drop ga sembunyi
         server.server_close()
 
 
