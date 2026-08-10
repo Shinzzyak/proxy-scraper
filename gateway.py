@@ -425,15 +425,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     continue
                 self.send_response(200, "Connection Established")
                 self.end_headers()
-                self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
-                # R22-GW4: MITM detection — proxy free list sering SSLVPN MITM
-                # (inject cert palsu CN=SSLVPN, C=CN). Client TLS handshake
-                # gagal verify → "unknown CA". Gateway tidak bisa lihat cert
-                # end-to-end, tapi bisa PROBE: TLS handshake singkat dari sisi
-                # gateway, verify cert asli. Kalau proxy MITM → cert fake →
-                # handshake/verify gagal → blacklist + retry proxy lain.
-                # Ponytail: probe menambah 1 RTT/request; cache per-proxy
-                # (probe sekali per 5 menit) kalau throughput butuh.
+                # R22-P2: log_usage sukses HANYA setelah probe MITM lolos —
+                # sebelumnya dicatat sebelum probe → sukses palsu masuk usage_log.
                 if not self.server.allow_mitm and self._probe_mitm(host, port, session_proxy):
                     self._log_usage(session_proxy, False, "MITM cert", int((time.monotonic() - t0) * 1000))
                     tried.add(session_proxy)
@@ -444,6 +437,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                         pass
                     last_err = "MITM proxy (fake cert)"
                     continue
+                self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
                 self._tunnel(self.connection, upstream)
                 return
             except Exception as e:
@@ -650,11 +644,16 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 cache[session_proxy] = (now, True)  # cert fake → MITM
                 return True
             except Exception:
-                cache[session_proxy] = (now, True)
+                cache[session_proxy] = (now, True)  # TLS handshake gagal lain — anggap MITM
                 return True
             ok = bool(cert)  # cert valid & verified
             cache[session_proxy] = (now, not ok)
             return not ok
+        except (socket.timeout, ConnectionRefusedError, OSError):
+            # R22-P3: timeout/refused ≠ MITM — proxy jelek/mati, bukan fake cert.
+            # Jangan blacklist 600s (mitm) — biarkan cooldown normal (refused 60s).
+            cache[session_proxy] = (now, False)
+            return False
         except Exception:
             cache[session_proxy] = (now, True)
             return True
