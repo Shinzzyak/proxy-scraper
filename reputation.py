@@ -125,9 +125,13 @@ def is_banned(source_name: str) -> bool:
 def get_banned_sources() -> List[Dict]:
     conn = get_db()
     try:
-        rows = conn.execute(
-            "SELECT * FROM source_reputation WHERE is_banned = 1 ORDER BY success_rate"
-        ).fetchall()
+        # R15-5: DB baru tanpa tabel source_reputation → jangan crash
+        try:
+            rows = conn.execute(
+                "SELECT * FROM source_reputation WHERE is_banned = 1 ORDER BY success_rate"
+            ).fetchall()
+        except sqlite3.OperationalError:
+            return []
         return [dict(r) for r in rows]
     finally:
         conn.close()

@@ -309,11 +309,13 @@ def extract_proxies(text, fmt="", max_items=None):
             continue
         if CRED_RE.search(line):
             continue
-        m = PROXY_RE.search(line)
-        if m and is_valid_proxy_port(int(m.group(2))) and not is_blocked_ip(m.group(1)):
-            proxies.append(f"{m.group(1)}:{m.group(2)}")
-            if limit and len(proxies) >= limit:
-                break
+        # R15-3: re.finditer per line — feed 1-baris (minified HTML) punya
+        # banyak proxy per baris, re.search cuma ambil yang pertama
+        for m in PROXY_RE.finditer(line):
+            if m and is_valid_proxy_port(int(m.group(2))) and not is_blocked_ip(m.group(1)):
+                proxies.append(f"{m.group(1)}:{m.group(2)}")
+                if limit and len(proxies) >= limit:
+                    return proxies
     return proxies
 
 

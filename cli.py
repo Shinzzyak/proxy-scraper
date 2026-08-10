@@ -148,7 +148,7 @@ def cmd_geo_repair(args):
     result = repair_geo(
         batch_size=args.batch_size,
         limit=args.limit,
-        export=not args.no_export,
+        export=not args.no_export and not args.json,  # R15-7: --json query-only, jangan tulis artifacts
         json_fallback=args.json_fallback,
         quiet=args.json,          # R14-1: --json → stdout murni JSON
         skip_fingerprints=args.json,  # R14-2: --json query-only, tanpa side-effect

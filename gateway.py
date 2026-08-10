@@ -396,6 +396,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     upstream.close()
                     self._log_usage(session_proxy, False, "upstream CONNECT rejected", int((time.monotonic() - t0) * 1000))
                     self._blacklist_proxy(session_proxy, "rejected")
+                    # R15-2: release mapping sticky — kalau tidak, session tetap
+                    # terkunci ke proxy mati sampai TTL habis (3x retry proxy sama)
+                    session_id = self.headers.get("X-Session-ID", "")
+                    if session_id:
+                        self.server.session_manager.release(session_id)
                     last_err = "upstream CONNECT rejected"
                     continue
                 self.send_response(200, "Connection Established")
@@ -413,6 +418,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     pass
                 self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
                 self._blacklist_proxy(session_proxy, str(e))
+                # R15-2: release mapping sticky juga saat error (proxy mati
+                # mid-CONNECT) — jangan biarkan session terkunci ke proxy mati
+                session_id = self.headers.get("X-Session-ID", "")
+                if session_id:
+                    self.server.session_manager.release(session_id)
                 last_err = str(e)
         self.send_error(502, f"Upstream error: {last_err}")
 
@@ -553,19 +563,36 @@ class GatewayHandler(BaseHTTPRequestHandler):
         sockets = [client, remote]
         try:
             while True:
-                readable, _, errors = select.select(sockets, [], sockets, GATEWAY_TIMEOUT)
+                # R15-1: select pada fd tertutup (proxy mati mid-session) → ValueError
+                # guard: buang socket yang sudah closed dari list
+                sockets = [s for s in sockets if s.fileno() != -1]
+                if len(sockets) < 2:
+                    break
+                try:
+                    readable, _, errors = select.select(sockets, [], sockets, GATEWAY_TIMEOUT)
+                except (OSError, ValueError):
+                    break
                 if errors:
                     break
                 if not readable:
                     break
                 for sock in readable:
-                    data = sock.recv(65536)
+                    try:
+                        data = sock.recv(65536)
+                    except (OSError, ValueError):
+                        return
                     if not data:
                         return
                     target = remote if sock is client else client
-                    target.sendall(data)
+                    try:
+                        target.sendall(data)
+                    except (OSError, ValueError):
+                        return
         finally:
-            remote.close()
+            try:
+                remote.close()
+            except Exception:
+                pass
 
     def log_message(self, format, *args):
         # Suppress default access log noise; only log errors
