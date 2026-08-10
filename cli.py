@@ -41,6 +41,7 @@ def cmd_search(args):
         anonymity=args.anonymity or "",
         max_results=args.limit,
         max_age_minutes=args.max_age_minutes,
+        residential_only=getattr(args, "residential_only", False),
     )
     if args.json:
         print(json.dumps(results, indent=2))
@@ -265,6 +266,7 @@ def main():
     s.add_argument("--anonymity", "-a", default="")
     s.add_argument("--limit", "-l", type=_clamp_limit, default=20)
     s.add_argument("--max-age-minutes", type=int, default=0, help="0 disables freshness filter")
+    s.add_argument("--residential-only", action="store_true", help="hanya proxy residential (bukan datacenter)")
     s.add_argument("--json", "-j", action="store_true")
 
     # best

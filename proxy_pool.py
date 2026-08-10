@@ -449,7 +449,7 @@ def get_pool_stats() -> Dict:
 
 def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 0,
                     anonymity: str = "", max_results: int = 50,
-                    max_age_minutes: int = 0) -> List[Dict]:
+                    max_age_minutes: int = 0, residential_only: bool = False) -> List[Dict]:
     """Search proxies by criteria. max_age_minutes=0 disables freshness filter."""
     conn = get_db()
     try:
@@ -459,6 +459,9 @@ def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 
         q += " AND ip NOT IN ('0.0.0.0', '127.0.0.1', '255.255.255.255')"
         # F8-8: auto-banned zombies have last_seen='' — never serve them
         q += " AND last_seen != ''"
+        if residential_only:
+            # hidden-gems r9 (cravinos/residential-proxy-filter): drop datacenter egress
+            q += " AND is_datacenter = 0"
         if protocol:
             q += " AND protocol = ?"
             params.append(protocol)
