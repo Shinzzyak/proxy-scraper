@@ -209,7 +209,7 @@ def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
         _dropped_usage += 1  # bounded queue — drop under burst, count it
 
 
-def _pick_proxy(country=""):
+def _pick_proxy(country="", exclude=None):
     """Select a fresh HTTP proxy from the pool.
 
     Returns 'host:port' string. Falls back to direct connection
@@ -217,8 +217,20 @@ def _pick_proxy(country=""):
     found, returns None (caller decides — do NOT silently fall back).
     """
     try:
-        from proxy_pool import get_best_proxy
+        from proxy_pool import get_best_proxy, search_proxies
         # min_score=1: score 0 = auto-banned (R5-nit) — jangan pernah pilih
+        if exclude:
+            # R11-7: pick a fresh proxy NOT in exclude set (retry loop)
+            rows = search_proxies(
+                protocol="http", country_code=country, min_score=1,
+                max_age_minutes=180, max_results=20,
+            )
+            for r in rows:
+                candidate = f"{r['ip']}:{r['port']}"
+                if candidate not in exclude:
+                    return candidate
+            if country:
+                return None
         proxy = get_best_proxy(protocol="http", country_code=country, min_score=1, max_age_minutes=180)  # R10-1: samakan dengan rotate (7aeaff5) — 60m bikin sticky 100% DIRECT di tengah siklus 6h
         if proxy:
             return f"{proxy['ip']}:{proxy['port']}"
@@ -300,13 +312,22 @@ class GatewayHandler(BaseHTTPRequestHandler):
             ttl = min(int(self.headers.get("X-Session-TTL", "")), 3600)
         except ValueError:
             pass
-        # R11-6: session path must not leak DIRECT when country unavailable
-        try:
-            return self.server.session_manager.get_or_create(
-                session_id, lambda: _pick_proxy(country) or _raise_country(country), ttl=ttl
-            )
-        except CountryUnavailable:
-            raise
+        # R11-7: retry dengan exclude — proxy #1 flaky jangan bikin session DIRECT
+        exclude = set()  # proxies already tried in this retry loop
+        for attempt in range(3):
+            try:
+                picked = _pick_proxy(country, exclude=exclude)
+                if picked is None:
+                    raise CountryUnavailable(country)
+                exclude.add(picked)
+                return self.server.session_manager.get_or_create(
+                    session_id, lambda p=picked: p, ttl=ttl
+                )
+            except CountryUnavailable:
+                raise
+            except Exception:
+                if attempt == 2:
+                    raise
 
     def _log_usage(self, proxy, success, error="", duration_ms=0):
         """Enqueue proxy usage event (async writer batches to usage_log)."""
