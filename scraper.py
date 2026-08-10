@@ -527,6 +527,10 @@ def scrape_source(name, url, fmt):
     limit = MAX_PROXIES_PER_SOURCE
     if name.startswith(("speedx-", "gfp-", "murongpig-", "ercindedeoglu-")):
         limit = 3000
+    # R20-P1-2: raksasa 0% valid (probe TCP 37/100 fyvri) — 15k/run × 4 = 60k
+    # slot validasi habis untuk duplikat. Sample 3000 cukup untuk estimasi rate.
+    if name.startswith(("fyvri-", "mishakorzik-", "solispirit-", "xyzs996-", "zevtyardt-")):
+        limit = 3000
     if fmt in ("host:port", "host:port:extra") and len(proxies) > limit:
         text = "\n".join(text.splitlines()[:limit])
         proxies = extract_proxies(text, fmt)
