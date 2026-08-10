@@ -36,6 +36,9 @@ class SessionManager:
         block every other session lookup.
         """
         ttl = ttl if ttl is not None else self._default_ttl
+        if ttl <= 0:
+            # R9-7: TTL=0/negatif — jangan simpan entry sama sekali (X-Session-TTL: 0 valid)
+            return provider_fn()
         now = time.time()
         with self._lock:
             entry = self._sessions.get(session_id)
@@ -43,7 +46,9 @@ class SessionManager:
                 proxy, expiry = entry
                 if now < expiry and proxy not in self._blacklist:
                     return proxy
-                # entry expired or proxy blacklisted -> fall through to re-pick
+                # R9-8: entry expired/blacklisted — hapus sekarang, jangan nunggu cleanup
+                del self._sessions[session_id]
+                # fall through to re-pick
         proxy = provider_fn()
         # never hand out a blacklisted proxy; bound the retry loop so a
         # provider returning the same dead proxy cannot hang forever (P0-1)
