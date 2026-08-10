@@ -60,8 +60,9 @@ PROXY_SOURCES = [
     ("anon-socks5", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt", "host:port"),
     ("opsxcq-mixed", "https://raw.githubusercontent.com/opsxcq/proxy-list/master/list.txt", "host:port"),
     # ── R19: perluasan sumber — web kecil, besar, sampai China (kiblat) ──
+    # 89ip-socks dihapus: proxytype=10 return IP SAMA dengan 01 (verified) —
+    # hanya noise duplikat.
     ("89ip-http", "http://www.89ip.cn/tqdl.html?num=500&format=txt&proxytype=01", "host:port"),
-    ("89ip-socks", "http://www.89ip.cn/tqdl.html?num=500&format=txt&proxytype=10", "host:port"),
     ("zevtyardt-all", "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/all.txt", "host:port"),
     ("shiftytr-http", "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt", "host:port"),
     ("shiftytr-socks4", "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks4.txt", "host:port"),
