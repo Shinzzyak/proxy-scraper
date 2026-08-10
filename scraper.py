@@ -94,6 +94,7 @@ PROXY_SOURCES = [
     ("fyvri-http", "https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/http.txt", "host:port"),
     ("fyvri-socks5", "https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/socks5.txt", "host:port"),
     ("xyzs996-http", "https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/main/http.txt", "host:port"),
+    ("proxripper-all", "https://raw.githubusercontent.com/Mohammedcha/ProxRipper/main/summary.json", "proxripper"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
     ("geonode-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
     ("geonode-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
@@ -364,6 +365,24 @@ def extract_proxies(text, fmt="", max_items=None):
                         return proxies
             except Exception:
                 continue
+        return proxies
+    # R19: fmt "proxripper" — JSON list, tiap item punya results.<proto>.added_list
+    # (Mohammedcha/ProxRipper summary.json — ~47k IP)
+    if fmt == "proxripper":
+        try:
+            data = json.loads(text)
+            if isinstance(data, list):
+                for entry in data:
+                    results = entry.get("results", {})
+                    for proto in ("http", "https", "socks4", "socks5"):
+                        added = results.get(proto, {}).get("added_list", [])
+                        for p in added:
+                            if isinstance(p, str) and _is_valid_ipv4(p.split(":")[0]):
+                                proxies.append(p)
+                                if limit and len(proxies) >= limit:
+                                    return proxies
+        except Exception:
+            pass
         return proxies
     for line in text.splitlines():
         line = line.strip()
