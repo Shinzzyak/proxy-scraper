@@ -150,9 +150,13 @@ def cmd_geo_repair(args):
         limit=args.limit,
         export=not args.no_export,
         json_fallback=args.json_fallback,
+        quiet=args.json,          # R14-1: --json → stdout murni JSON
+        skip_fingerprints=args.json,  # R14-2: --json query-only, tanpa side-effect
     )
     if args.json:
         print(json.dumps(result, indent=2))
+    elif not args.quiet:
+        print(f"known_geo={result['known_geo']} countries={result['countries']} unknown={result['unknown_geo']}")
 
 
 def cmd_sources(args):

@@ -45,8 +45,12 @@ def _export_pool_artifacts() -> None:
     print(f"✅ TXT output → proxies.txt ({len(proxies)} proxies)")
 
 
-def repair_geo(batch_size: int = 100, limit: int = 0, export: bool = True, json_fallback: str = "proxies.json") -> Dict:
+def repair_geo(batch_size: int = 100, limit: int = 0, export: bool = True, json_fallback: str = "proxies.json",
+               quiet: bool = False, skip_fingerprints: bool = False) -> Dict:
     """Fill missing country/city/ISP for existing DB proxies."""
+    def _log(msg):
+        if not quiet:
+            print(msg)
     conn = get_db()
     try:
         rows = conn.execute(
@@ -62,7 +66,7 @@ def repair_geo(batch_size: int = 100, limit: int = 0, export: bool = True, json_
             missing = missing[:limit]
 
         ips = [r["ip"] for r in missing]
-        print(f"🌍 Repairing geo for {len(ips)} proxies...")
+        _log(f"🌍 Repairing geo for {len(ips)} proxies...")
         geo = geo_batch_lookup(ips, batch_size=batch_size)
 
         updated = 0
@@ -139,11 +143,12 @@ def repair_geo(batch_size: int = 100, limit: int = 0, export: bool = True, json_
     finally:
         conn.close()
 
-    update_fingerprints()
+    if not skip_fingerprints:
+        update_fingerprints()
     if export:
         _export_pool_artifacts()
 
-    print(
+    _log(
         "✅ Geo repair complete: "
         f"{result['known_geo']}/{result['total']} known geo, "
         f"{result['countries']} countries, {result['unknown_geo']} unknown"
