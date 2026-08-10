@@ -73,6 +73,8 @@ PROXY_SOURCES = [
     ("prxchk-http", "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt", "host:port"),
     ("prxchk-socks4", "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks4.txt", "host:port"),
     ("prxchk-socks5", "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks5.txt", "host:port"),
+    ("iplocate-all", "https://raw.githubusercontent.com/iPlocate/free-proxy-list/main/all-proxies.txt", "host:port"),
+    ("watchttvv-http", "https://raw.githubusercontent.com/watchttvv/free-proxy-list/main/proxy.txt", "host:port"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
     ("geonode-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
     ("geonode-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
