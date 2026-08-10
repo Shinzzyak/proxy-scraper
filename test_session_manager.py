@@ -31,12 +31,15 @@ class SessionManagerTests(unittest.TestCase):
         self.assertEqual(proxy, "5.6.7.8:80")
 
     def test_cleanup_removes_expired_sessions(self):
-        sm = SessionManager(default_ttl=0)
+        # R9-8: expired entries are deleted inline at get_or_create — cleanup
+        # still guards any that slipped through (e.g. expiry passed after read).
+        sm = SessionManager(default_ttl=60)
         sm.get_or_create("a", lambda: "1:80")
         sm.get_or_create("b", lambda: "2:80")
+        sm._sessions["a"] = ("1:80", time.time() - 1)  # force-expire
         removed = sm.cleanup()
-        self.assertEqual(removed, 2)
-        self.assertEqual(len(sm), 0)
+        self.assertEqual(removed, 1)
+        self.assertEqual(len(sm), 1)
 
     def test_cleanup_keeps_alive_sessions(self):
         sm = SessionManager(default_ttl=600)
