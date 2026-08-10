@@ -119,7 +119,7 @@ def cmd_heatmap(args):
     conn = get_db()
     # R5-nit: bound the query — heatmap of 100k dead proxies is useless
     limit = min(args.limit, 5000) if getattr(args, "limit", None) else 5000
-    rows = conn.execute(f"SELECT * FROM proxies ORDER BY score DESC LIMIT {limit}").fetchall()
+    rows = conn.execute(f"SELECT * FROM proxies WHERE last_seen != '' ORDER BY score DESC LIMIT {limit}").fetchall()  # R12-5: zombie ga ikut heatmap
     proxies = [dict(r) for r in rows]
     conn.close()
     generate_heatmap(proxies, args.output or "heatmap.html")

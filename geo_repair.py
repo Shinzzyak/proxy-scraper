@@ -33,7 +33,7 @@ def _export_pool_artifacts() -> None:
 
     conn = get_db()
     try:
-        rows = conn.execute("SELECT * FROM proxies ORDER BY score DESC, response_time_ms ASC").fetchall()
+        rows = conn.execute("SELECT * FROM proxies WHERE last_seen != '' ORDER BY score DESC, response_time_ms ASC").fetchall()  # R12-4: zombie auto-ban jangan masuk snapshot
         proxies = [dict(r) for r in rows]
     finally:
         conn.close()
@@ -116,7 +116,7 @@ def repair_geo(batch_size: int = 100, limit: int = 0, export: bool = True, json_
                         r["port"],
                     ),
                 )
-                fallback_updates += conn.total_changes
+                fallback_updates += 1  # R12-4: rowcount akumulatif salah — hitung per statement
             conn.commit()
 
         stats = conn.execute(
