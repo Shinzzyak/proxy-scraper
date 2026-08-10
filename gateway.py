@@ -251,6 +251,8 @@ def _next_proxy_round_robin(pool_state, country=""):
                 pool_state["key"] = key
                 pool_state["index"] = 0
                 pool_state["refreshed"] = now
+                # R12-8: purge expired blacklist entries at refresh — dict grows unbounded otherwise
+                pool_state["blacklist"] = {p: t for p, t in pool_state.get("blacklist", {}).items() if t > now}
             if not pool_state.get("list"):
                 return "DIRECT"
             # skip blacklisted proxies (P0-2: rotate used to serve dead proxies).

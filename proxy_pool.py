@@ -160,6 +160,7 @@ def get_usage_leaderboard(limit: int = 20) -> List[Dict]:
                 ROUND(100.0 * SUM(success) / MAX(COUNT(*), 1), 1) as success_rate,
                 ROUND(AVG(response_time_ms), 0) as avg_ms
             FROM usage_log
+            WHERE EXISTS (SELECT 1 FROM proxies p WHERE p.ip = usage_log.ip AND p.port = usage_log.port AND p.last_seen != '')  -- R12-1: hanya proxy valid
             GROUP BY ip, port
             HAVING total_uses >= 3
             ORDER BY success_rate DESC, total_uses DESC
@@ -444,6 +445,7 @@ def get_pool_stats() -> Dict:
                 SUM(CASE WHEN is_datacenter=1 THEN 1 ELSE 0 END) as datacenter_count,
                 SUM(CASE WHEN is_datacenter=0 THEN 1 ELSE 0 END) as residential_count
             FROM proxies
+            WHERE last_seen != ''  -- R12-1: zombie auto-ban tidak dihitung
         """).fetchone()
         return dict(row) if row else {}
     finally:

@@ -24,22 +24,29 @@ from proxy_pool import get_db, get_pool_stats, get_usage_leaderboard, get_best_p
 
 
 class ProxyHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
+    def _handle_request(self, head_only=False):
         parsed = urlparse(self.path)
         params = parse_qs(parsed.query)
 
         if parsed.path == "/api/proxies":
-            self._handle_proxies(params)
+            self._handle_proxies(params, head_only)
         elif parsed.path == "/api/proxies/best":
-            self._handle_best(params)
+            self._handle_best(params, head_only)
         elif parsed.path == "/api/stats":
-            self._handle_stats()
+            self._handle_stats(head_only)
         elif parsed.path == "/api/leaderboard":
-            self._handle_leaderboard()
+            self._handle_leaderboard(head_only)
         elif parsed.path == "/api/health":
-            self._json_response({"status": "ok", "service": "proxy-pool-api"})
+            self._json_response({"status": "ok", "service": "proxy-pool-api"}, head_only=head_only)
         else:
-            self._json_response({"error": "Not found"}, 404)
+            self._json_response({"error": "Not found"}, 404, head_only=head_only)
+
+    def do_GET(self):
+        self._handle_request()
+
+    def do_HEAD(self):
+        # F8-6 + R12-6: HEAD tanpa body
+        self._handle_request(head_only=True)
 
     def do_OPTIONS(self):
         # F8-6: CORS preflight — browser cross-origin fetch sends OPTIONS first
@@ -50,11 +57,7 @@ class ProxyHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Max-Age", "86400")
         self.end_headers()
 
-    def do_HEAD(self):
-        # F8-6: HEAD delegates to GET without body
-        self.do_GET()
-
-    def _handle_proxies(self, params):
+    def _handle_proxies(self, params, head_only=False):
         protocol = params.get("protocol", [""])[0]  # empty = all protocols
         country = params.get("country", [""])[0]
         try:
@@ -95,35 +98,36 @@ class ProxyHandler(BaseHTTPRequestHandler):
                 "protocol": protocol,
                 "country": country,
                 "proxies": proxies,
-            })
+            }, head_only=head_only)
         finally:
             conn.close()
 
-    def _handle_best(self, params):
+    def _handle_best(self, params, head_only=False):
         protocol = params.get("protocol", ["http"])[0]
         country = params.get("country", [""])[0]
         proxy = get_best_proxy(protocol, country)
         if proxy:
-            self._json_response(proxy)
+            self._json_response(proxy, head_only=head_only)
         else:
-            self._json_response({"error": "No proxy available"}, 404)
+            self._json_response({"error": "No proxy available"}, 404, head_only=head_only)
 
-    def _handle_stats(self):
+    def _handle_stats(self, head_only=False):
         stats = get_pool_stats()
-        self._json_response(stats)
+        self._json_response(stats, head_only=head_only)
 
-    def _handle_leaderboard(self):
+    def _handle_leaderboard(self, head_only=False):
         lb = get_usage_leaderboard(20)
-        self._json_response({"leaderboard": lb})
+        self._json_response({"leaderboard": lb}, head_only=head_only)
 
-    def _json_response(self, data, status=200):
+    def _json_response(self, data, status=200, head_only=False):
         body = json.dumps(data, indent=2).encode()
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", len(body))
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write(body)
+        if not head_only:
+            self.wfile.write(body)
 
     def log_message(self, format, *args):
         pass  # Suppress request logging
@@ -144,7 +148,10 @@ def main():
     print(f"   GET /api/proxies/best?protocol=http")
     print(f"   GET /api/stats")
     print(f"   GET /api/leaderboard")
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        server.server_close()  # R12-10: graceful shutdown on SIGINT
 
 
 if __name__ == "__main__":
