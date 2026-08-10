@@ -82,8 +82,18 @@ def update_reputation(source_name: str, submitted: int, valid: int):
                 "SELECT COUNT(*) FROM source_history WHERE source_name = ?",
                 (source_name,),
             ).fetchone()[0]
-            if runs < 2:  # R19-GRACE: baru 1x run — skip ban
-                print(f"ℹ️  GRACE: {source_name} (run ke-{runs}, {final_rate:.1%} — skip ban)")
+            # R19-GRACE: jangan ban source di run PERTAMA — source baru (mis. proxy
+            # China yang hanya reachable dari dalam China) sering 0% dari VPS luar,
+            # tapi valid di lokasi asal. Grace: butuh >= 2 run tercatat sebelum ban.
+            # R20-GRACE2: grace juga untuk source yang BELUM PERNAH valid — 0 valid
+            # di semua run = belum pernah diuji benar (bisa jadi bug probe/geo),
+            # jangan ban sampai pernah valid minimal 1x.
+            valid_ever = conn.execute(
+                "SELECT valid_proxies FROM source_reputation WHERE source_name = ?",
+                (source_name,),
+            ).fetchone()[0]
+            if runs < 2 or valid_ever == 0:
+                print(f"ℹ️  GRACE: {source_name} (run ke-{runs}, valid_ever={valid_ever}, {final_rate:.1%} — skip ban)")
             else:
                 conn.execute(
                     "UPDATE source_reputation SET is_banned = 1, ban_reason = ? WHERE source_name = ?",
