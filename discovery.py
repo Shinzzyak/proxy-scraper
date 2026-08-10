@@ -10,6 +10,7 @@ import re
 import time
 import urllib.request
 import urllib.parse
+import urllib.error
 from typing import List, Dict
 
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
@@ -39,10 +40,18 @@ def github_search(query: str, page: int = 1) -> List[Dict]:
     params = urllib.parse.urlencode({"q": query, "per_page": 10, "page": page, "sort": "updated"})
     url = f"https://api.github.com/search/repositories?{params}"
     req = urllib.request.Request(url, headers=headers)
+    # R12-12: rate limit handling — GitHub unauthenticated = 10 req/min
     try:
         resp = urllib.request.urlopen(req, timeout=15)
         data = json.loads(resp.read().decode())
         return data.get("items", [])
+    except urllib.error.HTTPError as e:
+        if e.code in (403, 429):
+            print(f"  ⚠ GitHub rate limited ({e.code}) — sleep 60s")
+            time.sleep(60)
+        else:
+            print(f"  ⚠ GitHub search failed: {e}")
+        return []
     except Exception as e:
         print(f"  ⚠ GitHub search failed: {e}")
         return []
@@ -57,22 +66,24 @@ def find_proxy_files(owner: str, repo: str) -> List[Dict]:
     if GITHUB_TOKEN:
         headers["Authorization"] = f"token {GITHUB_TOKEN}"
 
-    url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/main?recursive=1"
+    # R12-3: resolve default branch once — repo bisa trunk/dev, bukan main/master
+    branch = "main"
+    try:
+        repo_url = f"https://api.github.com/repos/{owner}/{repo}"
+        req = urllib.request.Request(repo_url, headers=headers)
+        repo_data = json.loads(urllib.request.urlopen(req, timeout=10).read().decode())
+        branch = repo_data.get("default_branch", "main")
+    except Exception:
+        pass
+
+    url = f"https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1"
     req = urllib.request.Request(url, headers=headers)
     try:
         resp = urllib.request.urlopen(req, timeout=10)
         data = json.loads(resp.read().decode())
         tree = data.get("tree", [])
     except Exception:
-        # Try master branch
-        try:
-            url = url.replace("main", "master")
-            req = urllib.request.Request(url, headers=headers)
-            resp = urllib.request.urlopen(req, timeout=10)
-            data = json.loads(resp.read().decode())
-            tree = data.get("tree", [])
-        except Exception:
-            return []
+        return []
 
     proxy_files = []
     patterns = [
@@ -88,7 +99,7 @@ def find_proxy_files(owner: str, repo: str) -> List[Dict]:
         for pat in patterns:
             if re.search(pat, path, re.IGNORECASE):
                 proxy_files.append({
-                    "url": f"https://raw.githubusercontent.com/{owner}/{repo}/main/{item['path']}",
+                    "url": f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{item['path']}",  # R12-3: raw pakai branch yang sama dengan tree
                     "path": item["path"],
                     "size": item.get("size", 0),
                 })
