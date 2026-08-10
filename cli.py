@@ -26,6 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def _clamp_limit(value):
     # F8-19 P0: SQLite LIMIT -3 = no limit → dumps whole pool. Reject negatives.
+    value = int(value)  # argparse passes str — compare ints (R9-11)
     if value < 0:
         raise argparse.ArgumentTypeError("limit must be >= 0")
     return value
