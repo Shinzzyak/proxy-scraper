@@ -454,10 +454,13 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 if key.lower() not in ("transfer-encoding", "connection"):
                     self.send_header(key, val)
             self.end_headers()
-            chunk = resp.read(65536)
-            while chunk:
-                self.wfile.write(chunk)
+            try:
                 chunk = resp.read(65536)
+                while chunk:
+                    self.wfile.write(chunk)
+                    chunk = resp.read(65536)
+            finally:
+                resp.close()  # R11-4: jangan tunggu GC — socket leak transient saat burst
         except urllib.error.HTTPError as e:
             self._log_usage(session_proxy, False, f"HTTP {e.code}", int((time.monotonic() - t0) * 1000))
             self.send_response(e.code)
@@ -486,10 +489,13 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 if key.lower() not in ("transfer-encoding", "connection"):
                     self.send_header(key, val)
             self.end_headers()
-            chunk = resp.read(65536)
-            while chunk:
-                self.wfile.write(chunk)
+            try:
                 chunk = resp.read(65536)
+                while chunk:
+                    self.wfile.write(chunk)
+                    chunk = resp.read(65536)
+            finally:
+                resp.close()  # R11-4
         except urllib.error.HTTPError as e:
             self.send_response(e.code)
             self.end_headers()
