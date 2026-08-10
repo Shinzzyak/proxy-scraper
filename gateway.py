@@ -29,6 +29,11 @@ class CountryUnavailable(Exception):
         super().__init__(f"no proxy available for country {country}")
         self.country = country
 
+
+def _raise_country(country):
+    """Provider helper: raise instead of returning DIRECT (R11-6)."""
+    raise CountryUnavailable(country)
+
 # ponytail: one default TTL; when proxy pool exposes health, reduce TTL for unhealthy proxies
 DEFAULT_SESSION_TTL = 300
 DEFAULT_BIND = "127.0.0.1"
@@ -254,6 +259,9 @@ def _next_proxy_round_robin(pool_state, country=""):
                 # R12-8: purge expired blacklist entries at refresh — dict grows unbounded otherwise
                 pool_state["blacklist"] = {p: t for p, t in pool_state.get("blacklist", {}).items() if t > now}
             if not pool_state.get("list"):
+                # R11-6: country requested but none — raise, jangan DIRECT leak
+                if country:
+                    raise CountryUnavailable(country)
                 return "DIRECT"
             # skip blacklisted proxies (P0-2: rotate used to serve dead proxies).
             # TTL 300s — recovered proxies re-enter rotation (R4-3).
@@ -266,6 +274,8 @@ def _next_proxy_round_robin(pool_state, country=""):
                 if now >= unban_at:
                     return proxy
             return "DIRECT"
+    except CountryUnavailable:
+        raise  # R11-6: jangan swallow — caller harus 503
     except Exception:
         return "DIRECT"
 
@@ -290,9 +300,10 @@ class GatewayHandler(BaseHTTPRequestHandler):
             ttl = min(int(self.headers.get("X-Session-TTL", "")), 3600)
         except ValueError:
             pass
+        # R11-6: session path must not leak DIRECT when country unavailable
         try:
             return self.server.session_manager.get_or_create(
-                session_id, lambda: _pick_proxy(country) or "DIRECT", ttl=ttl
+                session_id, lambda: _pick_proxy(country) or _raise_country(country), ttl=ttl
             )
         except CountryUnavailable:
             raise
@@ -423,7 +434,12 @@ class GatewayHandler(BaseHTTPRequestHandler):
         if not _auth_ok(self, self.server.auth_secret):
             self.send_error(407, "Proxy Authentication Required")
             return
-        session_proxy = self._get_session_proxy()
+        try:
+            session_proxy = self._get_session_proxy()
+        except CountryUnavailable as e:
+            # R11-8: HTTP path — 503, bukan traceback/connection reset
+            self.send_error(503, f"No proxy available for country: {e.country}")
+            return
         url = self.path
 
         if session_proxy == "DIRECT":
