@@ -12,9 +12,9 @@ import time
 from typing import Dict, List, Optional
 from proxy_pool import get_db
 
-BAN_THRESHOLD = float(os.environ.get("REPUTATION_BAN_THRESHOLD", "0.30"))
-WARN_THRESHOLD = float(os.environ.get("REPUTATION_WARN_THRESHOLD", "0.50"))
-MIN_BAN_SAMPLE = int(os.environ.get("REPUTATION_MIN_BAN_SAMPLE", "20"))  # R4-10
+BAN_THRESHOLD = float(os.environ.get("REPUTATION_BAN_THRESHOLD", "0.10"))
+WARN_THRESHOLD = float(os.environ.get("REPUTATION_WARN_THRESHOLD", "0.30"))
+MIN_BAN_SAMPLE = int(os.environ.get("REPUTATION_MIN_BAN_SAMPLE", "100"))  # R4-10
 
 
 def init_reputation_table():
