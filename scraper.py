@@ -208,7 +208,7 @@ CRED_RE = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5}):([^:]+):(
 URL_CREDS_RE = re.compile(r"https?://([^:]+):([^@]+)@(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})")
 
 # Bounds: some upstream lists publish 400k+ proxies. Keep cron safe on small VPS.
-MAX_FETCH_BYTES = int(os.getenv("PROXY_SOURCE_MAX_BYTES", "10000000"))
+MAX_FETCH_BYTES = int(os.getenv("PROXY_SOURCE_MAX_BYTES", "25000000"))
 MAX_PROXIES_PER_SOURCE = int(os.getenv("PROXY_MAX_PROXIES_PER_SOURCE", "15000"))
 COMMON_LOW_PROXY_PORTS = {80, 81, 82, 83, 84, 85, 88, 443, 444, 808, 888, 999, 1000}
 
