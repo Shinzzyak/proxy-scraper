@@ -95,6 +95,14 @@ class ConnectProbeTests(unittest.TestCase):
         p = scraper.extract_proxies(txt, "jsonlines", 10)
         self.assertEqual(p, ["1.2.3.4:8080", "5.6.7.8:3128"])
 
+    def test_jsonlines_rejects_float_port(self):
+        """R19-P1: port float ("8080.9" → 8080.9) harus diskip, bukan korup."""
+        txt = ('{"host": "1.2.3.4", "port": 8080.9}\n'
+               '{"host": "1.2.3.4", "port": "8080"}\n'
+               '{"host": "1.2.3.4", "port": true}\n')
+        p = scraper.extract_proxies(txt, "jsonlines", 10)
+        self.assertEqual(p, ["1.2.3.4:8080"])
+
     def test_probe_connect_uses_fresh_socket(self):
         """R17-T1: probe harus socket BARU — socket lama sudah close."""
         with patch("socket.create_connection") as mc:

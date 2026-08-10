@@ -198,7 +198,7 @@ CRED_RE = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5}):([^:]+):(
 URL_CREDS_RE = re.compile(r"https?://([^:]+):([^@]+)@(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})")
 
 # Bounds: some upstream lists publish 400k+ proxies. Keep cron safe on small VPS.
-MAX_FETCH_BYTES = int(os.getenv("PROXY_SOURCE_MAX_BYTES", "2000000"))
+MAX_FETCH_BYTES = int(os.getenv("PROXY_SOURCE_MAX_BYTES", "10000000"))
 MAX_PROXIES_PER_SOURCE = int(os.getenv("PROXY_MAX_PROXIES_PER_SOURCE", "15000"))
 COMMON_LOW_PROXY_PORTS = {80, 81, 82, 83, 84, 85, 88, 443, 444, 808, 888, 999, 1000}
 
@@ -336,10 +336,20 @@ def extract_proxies(text, fmt="", max_items=None):
             try:
                 item = json.loads(line)
                 ip, port = item.get("host", ""), item.get("port", "")
+                # R19-P1: port float ("8080.9" → 8080.9) lolos int() → korup.
+                # Terima int asli atau string numerik; tolak float/bool.
+                if isinstance(port, bool):
+                    continue
+                if isinstance(port, float) or not isinstance(port, (int, str)):
+                    continue
+                if isinstance(port, str):
+                    if not port.isdigit():
+                        continue
+                    port = int(port)
                 if (
-                    ip and port
+                    ip
                     and _is_valid_ipv4(ip)  # R15-12
-                    and is_valid_proxy_port(int(port))
+                    and is_valid_proxy_port(port)
                     and not is_blocked_ip(ip)
                 ):
                     proxies.append(f"{ip}:{port}")

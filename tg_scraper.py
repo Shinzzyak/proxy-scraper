@@ -406,7 +406,7 @@ def scrape_all_channels(channels: list = None, pages: int = 3) -> dict:
 
 # ── Integration with proxy_pool ─────────────────────────────────────────
 
-def add_to_pool(results: dict, db_path: str = None):
+def add_to_pool(results: dict, db_path: str = None, skip_validate: bool = False):
     """Add scraped proxies to the pool database."""
     sys.path.insert(0, str(Path(__file__).parent))
     from proxy_pool import get_db
@@ -423,19 +423,24 @@ def add_to_pool(results: dict, db_path: str = None):
         print("\n⚠️ No proxies to add")
         return 0
 
-    # Validate TCP
-    print(f"\n🔍 Validating {len(all_proxies)} Telegram proxies...")
-    import socket
-    valid = []
-    for p in all_proxies:
-        ip, port = p.split(":")
-        try:
-            s = socket.create_connection((ip, int(port)), timeout=5)
-            s.close()
-            valid.append(p)
-        except:
-            pass
-    print(f"  ✅ {len(valid)}/{len(all_proxies)} alive")
+    # Validate TCP — serial, 5s timeout/proxy. R19: ribuan proxy = berjam-jam;
+    # skip-validate biar pool validator (200 worker) yang handle.
+    if skip_validate:
+        print(f"\n🔍 Skipping TCP validation ({len(all_proxies)} proxies → pool langsung)")
+        valid = sorted(all_proxies)
+    else:
+        print(f"\n🔍 Validating {len(all_proxies)} Telegram proxies...")
+        import socket
+        valid = []
+        for p in all_proxies:
+            ip, port = p.split(":")
+            try:
+                s = socket.create_connection((ip, int(port)), timeout=5)
+                s.close()
+                valid.append(p)
+            except:
+                pass
+        print(f"  ✅ {len(valid)}/{len(all_proxies)} alive")
 
     if not valid:
         return 0
@@ -592,7 +597,7 @@ def main():
     print(f"\n📄 Raw output → {output_file} ({len(all_proxies)} proxies)")
 
     if args.add_to_pool and all_proxies:
-        add_to_pool(results)
+        add_to_pool(results, skip_validate=True)
 
     # Update volatile runtime state separately from tracked channel config.
     save_state(
