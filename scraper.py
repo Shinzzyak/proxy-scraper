@@ -202,6 +202,63 @@ PROXY_SOURCES = [
     # R24-TAMAK: spys.me socks.txt (beda dari spys-cred proxy.txt) + anon socks4
     ("spys-socks", "https://spys.me/socks.txt", "host:port"),
     ("anon-socks4", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks4_proxies.txt", "host:port"),
+    # ── R25-EU: sumber per-negara Eropa (DE/FR/NL/GB/PL/RO/ES/IT/CZ/SE) ──
+    # Tujuan: egress diverse untuk rotation; pool lama dominasi ASIA.
+    # proxifly country files: format proto://ip:port, dominan HTTP (verified
+    # 2026-08-11: 689 proxy EU, ~92% http). fmt host:port cukup (PROXY_RE
+    # menangkap ip:port di dalam proto://).
+    ("proxifly-country-DE", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/DE/data.txt", "host:port"),
+    ("proxifly-country-FR", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/FR/data.txt", "host:port"),
+    ("proxifly-country-NL", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/NL/data.txt", "host:port"),
+    ("proxifly-country-GB", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/GB/data.txt", "host:port"),
+    ("proxifly-country-PL", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/PL/data.txt", "host:port"),
+    ("proxifly-country-RO", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/RO/data.txt", "host:port"),
+    ("proxifly-country-ES", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/ES/data.txt", "host:port"),
+    ("proxifly-country-IT", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/IT/data.txt", "host:port"),
+    ("proxifly-country-CZ", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CZ/data.txt", "host:port"),
+    ("proxifly-country-SE", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/SE/data.txt", "host:port"),
+    # geonode country filter (verified 2026-08-11: 363 EU, protocols
+    # http,socks4,socks5 gabungan — parser geonode ambil ip:port, validator
+    # deteksi protocol otomatis). Comma-separated country TIDAK didukung
+    # (return 0) → satu URL per negara.
+    ("geonode-eu-DE", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=DE", "geonode"),
+    ("geonode-eu-FR", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=FR", "geonode"),
+    ("geonode-eu-NL", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=NL", "geonode"),
+    ("geonode-eu-GB", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=GB", "geonode"),
+    ("geonode-eu-PL", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=PL", "geonode"),
+    ("geonode-eu-RO", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=RO", "geonode"),
+    ("geonode-eu-ES", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=ES", "geonode"),
+    ("geonode-eu-IT", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=IT", "geonode"),
+    ("geonode-eu-CZ", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=CZ", "geonode"),
+    ("geonode-eu-SE", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=SE", "geonode"),
+    # R25-EU lanjutan: negara EU kecil — cakupan egress lebih luas
+    ("proxifly-country-AT", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/AT/data.txt", "host:port"),
+    ("proxifly-country-CH", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CH/data.txt", "host:port"),
+    ("proxifly-country-FI", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/FI/data.txt", "host:port"),
+    ("proxifly-country-IE", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/IE/data.txt", "host:port"),
+    ("proxifly-country-LT", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/LT/data.txt", "host:port"),
+    ("proxifly-country-LV", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/LV/data.txt", "host:port"),
+    ("proxifly-country-HU", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/HU/data.txt", "host:port"),
+    ("proxifly-country-UA", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/UA/data.txt", "host:port"),
+    ("proxifly-country-BG", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/BG/data.txt", "host:port"),
+    ("geonode-eu-UA", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=UA", "geonode"),
+    ("geonode-eu-FI", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=FI", "geonode"),
+    ("geonode-eu-BG", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=BG", "geonode"),
+    # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
+    # 100 UK proxy fresh)
+    ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
+    # proxyscrape v2 country filter (verified 2026-08-11: ~104 EU, kecil tapi
+    # fresh; duplikat dengan proxifly/geonode sudah di-dedup pool)
+    ("proxyscrape-eu-DE", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=DE", "host:port"),
+    ("proxyscrape-eu-FR", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=FR", "host:port"),
+    ("proxyscrape-eu-NL", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=NL", "host:port"),
+    ("proxyscrape-eu-GB", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=GB", "host:port"),
+    ("proxyscrape-eu-PL", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=PL", "host:port"),
+    ("proxyscrape-eu-RO", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=RO", "host:port"),
+    ("proxyscrape-eu-ES", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=ES", "host:port"),
+    ("proxyscrape-eu-IT", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=IT", "host:port"),
+    ("proxyscrape-eu-SE", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=SE", "host:port"),
+    ("proxyscrape-eu-CZ", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=CZ", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────

@@ -1,1213 +1,601 @@
 {
-  "generated_at": "2026-08-10T13:21:27Z",
-  "total_sources": 172,
-  "alive_sources": 170,
-  "dead_sources": 2,
-  "total_proxies": 363708,
+  "generated_at": "2026-08-10T19:44:23Z",
+  "total_sources": 74,
+  "alive_sources": 74,
+  "dead_sources": 0,
+  "total_proxies": 27023,
   "sources": {
-    "gem-rix4uni-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "goodproxy-raw": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "proxripper-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "proxy4parsing-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:14:20"
-    },
-    "solispirit-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "solispirit-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "solispirit-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "zevtyardt-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "zevtyardt-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:14:20"
-    },
-    "zevtyardt-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 15000,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "vmheaven-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 10959,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "handevel-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 6801,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "ebrasha-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 6305,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "kangproxy-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 5863,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "openproxylist-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 5736,
-      "error": null,
-      "last_seen": "2026-08-10 12:39:34"
-    },
-    "theriturajps-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 5045,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "ebrasha-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 4333,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "gem-r00tee-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 4105,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "openproxylist-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 4048,
-      "error": null,
-      "last_seen": "2026-08-10 11:31:29"
-    },
-    "gem-dpangestuw-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 3877,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "anon-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 3256,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "gem-komutan234-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 3167,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "gem-dpangestuw-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 3014,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
     "xyzs996-http": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/main/http.txt",
       "alive": true,
       "proxies": 2982,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "murongpig-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 2974,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "gem-r00tee-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 2964,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "murongpig-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2952,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
+      "time_s": 1.49,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "murongpig-socks5": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/socks5.txt",
       "alive": true,
       "proxies": 2952,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "fyvri-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2950,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "gfp-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 2944,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
+      "time_s": 0.88,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "gfp-socks4": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/socks4.txt",
       "alive": true,
       "proxies": 2944,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "time_s": 0.27,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "gfp-socks5": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/wiki/gfpcom/free-proxy-list/lists/socks5.txt",
       "alive": true,
       "proxies": 2944,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "ercindedeoglu-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2943,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "zevtyardt-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 2943,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "gfp-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2942,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "ercindedeoglu-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 2930,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "fyvri-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2930,
-      "error": null,
-      "last_seen": "2026-08-10 12:36:27"
-    },
-    "ercindedeoglu-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2922,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
-    },
-    "speedx-http-cdn": {
-      "url": null,
-      "alive": true,
-      "proxies": 2832,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
+      "time_s": 0.56,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "mishakorzik-all": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/mishakorzik/Free-Proxy/main/proxy.txt",
       "alive": true,
       "proxies": 2738,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "ebrasha-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2729,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "ebrasha-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2586,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "gem-komutan234-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 2577,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "gem-cyberh4ck3r-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 2562,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "gem-cyberh4ck3r-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2551,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "gem-proxyscraper-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2549,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "speedx-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2549,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "hproxy-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 2535,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "gem-dpangestuw-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2487,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
-    },
-    "speedx-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 2480,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:43"
-    },
-    "openproxylist-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2477,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "proxifly-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 2451,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "speedx-socks4-cdn": {
-      "url": null,
-      "alive": true,
-      "proxies": 2386,
-      "error": null,
-      "last_seen": "2026-08-10 11:31:28"
-    },
-    "gem-r00tee-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2325,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
+      "time_s": 2.96,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "jetkai-https": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-https.txt",
       "alive": true,
       "proxies": 2154,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "gem-komutan234-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2109,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "gem-cyberh4ck3r-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 2098,
-      "error": null,
-      "last_seen": "2026-08-10 11:31:29"
-    },
-    "speedx-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 1938,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "speedx-socks5-cdn": {
-      "url": null,
-      "alive": true,
-      "proxies": 1907,
-      "error": null,
-      "last_seen": "2026-08-10 12:39:33"
-    },
-    "besjs-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 1867,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "gem-databay-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 1805,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "kangproxy-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 1798,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "time_s": 0.09,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "jetkai-http": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt",
       "alive": true,
       "proxies": 1795,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "sunny9577-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 1776,
-      "error": null,
-      "last_seen": "2026-08-10 12:39:33"
+      "time_s": 0.32,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "sunny9577-raw-http": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
       "alive": true,
-      "proxies": 1776,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "proxyscrape-all-txt": {
-      "url": null,
-      "alive": true,
-      "proxies": 1760,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "jetkai-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 1602,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "proxifly-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 1302,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:47"
+      "proxies": 1790,
+      "time_s": 0.08,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "proxifly-https-raw": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/https/data.txt",
       "alive": true,
-      "proxies": 1289,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "akshay7273-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 1226,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "vpslab-all-ssl": {
-      "url": null,
-      "alive": true,
-      "proxies": 998,
-      "error": null,
-      "last_seen": "2026-08-10 12:39:33"
-    },
-    "gem-vanndev-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 994,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "iplocate-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 986,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "hproxy-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 912,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "proxyscrape-v4-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 871,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "anon-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 850,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "vpslab-all-elite": {
-      "url": null,
-      "alive": true,
-      "proxies": 846,
-      "error": null,
-      "last_seen": "2026-08-10 11:31:29"
-    },
-    "proxyscrape-api-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 802,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "proxylist-to-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 742,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:47"
-    },
-    "aliilapro-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 731,
-      "error": null,
-      "last_seen": "2026-08-10 11:14:20"
-    },
-    "vpslab-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 727,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "kangproxy-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 675,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "proxies": 1286,
+      "time_s": 0.35,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "monosans-all": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt",
       "alive": true,
-      "proxies": 664,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "shiftytr-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 661,
-      "error": null,
-      "last_seen": "2026-08-10 12:36:27"
-    },
-    "rawproxys-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 645,
-      "error": null,
-      "last_seen": "2026-08-09 19:16:08"
+      "proxies": 587,
+      "time_s": 0.18,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "proxifly-http-raw": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt",
       "alive": true,
-      "proxies": 596,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "kangproxy-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 572,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "proxifly-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 572,
-      "error": null,
-      "last_seen": "2026-08-10 12:36:27"
-    },
-    "gem-databay-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 531,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "89ip-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 500,
-      "error": null,
-      "last_seen": "2026-08-10 11:14:20"
-    },
-    "89ip-socks": {
-      "url": null,
-      "alive": true,
-      "proxies": 499,
-      "error": null,
-      "last_seen": "2026-08-10 08:14:06"
-    },
-    "geonode-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 498,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "ahahaabas-st-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 494,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "geonode-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 482,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "proxyscrape-v4-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 476,
-      "error": null,
-      "last_seen": "2026-08-10 11:14:21"
-    },
-    "geonode-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 469,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
+      "proxies": 554,
+      "time_s": 0.11,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "gem-iplocate-socks5": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/socks5.txt",
       "alive": true,
-      "proxies": 463,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "zaeem20-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 460,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "relayglass-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 440,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
-    },
-    "themiralay-all": {
-      "url": null,
-      "alive": true,
-      "proxies": 438,
-      "error": null,
-      "last_seen": "2026-08-10 12:39:33"
-    },
-    "jetkai-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 402,
-      "error": null,
-      "last_seen": "2026-08-10 12:39:33"
-    },
-    "clarketm-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 399,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:47"
-    },
-    "geonode-p2-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 398,
-      "error": null,
-      "last_seen": "2026-08-09 18:12:18"
-    },
-    "spys-socks": {
-      "url": null,
-      "alive": true,
-      "proxies": 396,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "vpslab-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 372,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "proxifly-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 365,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "proxifly-socks4-raw": {
-      "url": null,
-      "alive": true,
-      "proxies": 354,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "gem-iplocate-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 352,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
+      "proxies": 514,
+      "time_s": 0.11,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "gem-ch4120n-socks5": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/master/proxies/socks5.txt",
       "alive": true,
-      "proxies": 349,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "proxies": 453,
+      "time_s": 0.47,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "proxyscrape-api-socks5": {
-      "url": null,
+    "vpslab-socks5": {
+      "url": "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5_all.txt",
       "alive": true,
       "proxies": 343,
-      "error": null,
-      "last_seen": "2026-08-10 11:31:29"
-    },
-    "opsxcq-mixed": {
-      "url": null,
-      "alive": true,
-      "proxies": 342,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "monosans-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 340,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "gem-databay-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 328,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "gem-zloiuser-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 319,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "geonode-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 309,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "stormsia-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 298,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "socks-proxy-net": {
-      "url": null,
-      "alive": true,
-      "proxies": 292,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "rawproxys-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 291,
-      "error": null,
-      "last_seen": "2026-08-09 19:16:08"
-    },
-    "vpslab-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 290,
-      "error": null,
-      "last_seen": "2026-08-10 12:36:27"
-    },
-    "anon-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 287,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
-    },
-    "gem-ch4120n-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 281,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "gem-skillter-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 276,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "shiftytr-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 276,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "gem-skillter-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 273,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "gem-proxmint-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 258,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "gem-elliot-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 257,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "proxylist-to-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 255,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "proxyscrape-v4-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 255,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
-    },
-    "proxyscrape-api-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 254,
-      "error": null,
-      "last_seen": "2026-08-10 12:36:27"
-    },
-    "fate0-proxylist": {
-      "url": null,
-      "alive": true,
-      "proxies": 251,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "proxyscrape-v4-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 235,
-      "error": null,
-      "last_seen": "2026-08-10 12:39:33"
-    },
-    "hookzof-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 226,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "proxifly-socks5-raw": {
-      "url": null,
-      "alive": true,
-      "proxies": 226,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "gem-ch4120n-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 224,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
+      "time_s": 0.34,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "zaeem20-http": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/http.txt",
       "alive": true,
-      "proxies": 216,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "rawproxys-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 214,
-      "error": null,
-      "last_seen": "2026-08-09 19:16:08"
-    },
-    "gem-zloiuser-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 205,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "ab57-proxyold": {
-      "url": null,
-      "alive": true,
-      "proxies": 204,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "gem-cyberh4ck3r-https": {
-      "url": null,
-      "alive": true,
-      "proxies": 201,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
+      "proxies": 254,
+      "time_s": 0.17,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "freeproxylistnet-anon": {
-      "url": null,
+      "url": "https://free-proxy-list.net/anonymous-proxy.html",
       "alive": true,
       "proxies": 198,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "time_s": 0.1,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "proxylist-to-socks5": {
-      "url": null,
+    "proxifly-country-RO": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/RO/data.txt",
       "alive": true,
-      "proxies": 191,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:47"
+      "proxies": 194,
+      "time_s": 0.36,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "gem-proxmint-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 184,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "gproxynet-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 178,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:48"
-    },
-    "gem-proxmint-socks5": {
-      "url": null,
+    "gem-zloiuser-socks5": {
+      "url": "https://raw.githubusercontent.com/zloi-user/hideip.me/main/socks5.txt",
       "alive": true,
       "proxies": 169,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "time_s": 0.12,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "proxifly-socks5": {
-      "url": null,
+    "geonode-eu-NL": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=NL",
       "alive": true,
-      "proxies": 169,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "proxies": 167,
+      "time_s": 3.27,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "gem-skillter-socks4": {
-      "url": null,
+    "proxifly-country-DE": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/DE/data.txt",
       "alive": true,
       "proxies": 162,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
+      "time_s": 0.39,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "roosterkid-socks4": {
-      "url": null,
+    "proxifly-country-FR": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/FR/data.txt",
       "alive": true,
-      "proxies": 150,
-      "error": null,
-      "last_seen": "2026-08-10 12:36:27"
+      "proxies": 160,
+      "time_s": 0.36,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-socks5-raw": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks5/data.txt",
+      "alive": true,
+      "proxies": 159,
+      "time_s": 0.09,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "gem-elliot-socks5": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/socks5/global/socks5_checked.txt",
       "alive": true,
-      "proxies": 142,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "gem-zloiuser-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 136,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:44"
-    },
-    "ab57-proxylist": {
-      "url": null,
-      "alive": true,
-      "proxies": 134,
-      "error": null,
-      "last_seen": "2026-08-10 11:18:49"
-    },
-    "gem-elliot-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 134,
-      "error": null,
-      "last_seen": "2026-08-10 11:31:29"
-    },
-    "monosans-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 130,
-      "error": null,
-      "last_seen": "2026-08-10 11:23:43"
-    },
-    "monosans-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 129,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
-    },
-    "zaeem20-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 126,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "zaeem20-socks4": {
-      "url": null,
-      "alive": true,
-      "proxies": 117,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "proxies": 127,
+      "time_s": 0.41,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "roosterkid-https": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt",
       "alive": true,
-      "proxies": 89,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "proxies": 117,
+      "time_s": 0.07,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "zaeem20-socks4": {
+      "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/refs/heads/master/socks4.txt",
+      "alive": true,
+      "proxies": 115,
+      "time_s": 0.43,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "monosans-socks5": {
+      "url": "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/socks5.txt",
+      "alive": true,
+      "proxies": 104,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "fpl-uk": {
+      "url": "https://free-proxy-list.net/uk-proxy.html",
+      "alive": true,
+      "proxies": 100,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-DE": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=DE",
+      "alive": true,
+      "proxies": 97,
+      "time_s": 3.38,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "gem-iplocate-socks4": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/protocols/socks4.txt",
       "alive": true,
-      "proxies": 81,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
-    },
-    "prxchk-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 58,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "proxies": 83,
+      "time_s": 0.32,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "anon-https": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/https_proxies.txt",
       "alive": true,
-      "proxies": 41,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "proxies": 68,
+      "time_s": 0.03,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "cybergw-http": {
-      "url": null,
+    "proxifly-country-LV": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/LV/data.txt",
       "alive": true,
-      "proxies": 40,
-      "error": null,
-      "last_seen": "2026-08-10 11:31:29"
+      "proxies": 62,
+      "time_s": 0.54,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "cybergw-socks5": {
-      "url": null,
+    "prxchk-http": {
+      "url": "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
       "alive": true,
-      "proxies": 40,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:44"
+      "proxies": 58,
+      "time_s": 0.11,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-GB": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/GB/data.txt",
+      "alive": true,
+      "proxies": 43,
+      "time_s": 0.35,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-NL": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/NL/data.txt",
+      "alive": true,
+      "proxies": 42,
+      "time_s": 0.34,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "shiftytr-http": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt",
       "alive": true,
       "proxies": 40,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "time_s": 0.06,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "prxchk-socks4": {
-      "url": null,
+    "geonode-eu-UA": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=UA",
       "alive": true,
-      "proxies": 32,
-      "error": null,
-      "last_seen": "2026-08-10 13:15:43"
+      "proxies": 38,
+      "time_s": 2.16,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-FR": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=FR",
+      "alive": true,
+      "proxies": 34,
+      "time_s": 2.35,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-LT": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/LT/data.txt",
+      "alive": true,
+      "proxies": 33,
+      "time_s": 0.46,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-FI": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=FI",
+      "alive": true,
+      "proxies": 31,
+      "time_s": 1.91,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-PL": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/PL/data.txt",
+      "alive": true,
+      "proxies": 29,
+      "time_s": 0.36,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "premiumproxy-net": {
-      "url": null,
+      "url": "https://premiumproxy.net/",
       "alive": true,
       "proxies": 27,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "time_s": 0.89,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "watchttvv-http": {
-      "url": null,
+    "proxifly-country-IT": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/IT/data.txt",
+      "alive": true,
+      "proxies": 22,
+      "time_s": 0.34,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-ES": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/ES/data.txt",
       "alive": true,
       "proxies": 18,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "time_s": 0.37,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxyscrape-eu-FR": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=FR",
+      "alive": true,
+      "proxies": 16,
+      "time_s": 0.06,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-CZ": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CZ/data.txt",
+      "alive": true,
+      "proxies": 14,
+      "time_s": 0.27,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-SE": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=SE",
+      "alive": true,
+      "proxies": 14,
+      "time_s": 2.0,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-GB": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=GB",
+      "alive": true,
+      "proxies": 14,
+      "time_s": 2.21,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "shiftytr-https": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/https.txt",
       "alive": true,
       "proxies": 13,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "time_s": 0.43,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "geonode-p2-socks5": {
-      "url": null,
+    "proxifly-country-FI": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/FI/data.txt",
       "alive": true,
-      "proxies": 10,
-      "error": null,
-      "last_seen": "2026-08-10 05:04:59"
+      "proxies": 12,
+      "time_s": 0.4,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-IE": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/IE/data.txt",
+      "alive": true,
+      "proxies": 12,
+      "time_s": 0.43,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-BG": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=BG",
+      "alive": true,
+      "proxies": 11,
+      "time_s": 1.69,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-PL": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=PL",
+      "alive": true,
+      "proxies": 11,
+      "time_s": 2.32,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "prxchk-socks5": {
-      "url": null,
+      "url": "https://raw.githubusercontent.com/prxchk/proxy-list/main/socks5.txt",
       "alive": true,
       "proxies": 10,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:24"
+      "time_s": 0.13,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "roosterkid-socks5": {
-      "url": null,
+    "proxyscrape-eu-GB": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=GB",
+      "alive": true,
+      "proxies": 10,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-AT": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/AT/data.txt",
       "alive": true,
       "proxies": 9,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "time_s": 0.5,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-ES": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=ES",
+      "alive": true,
+      "proxies": 9,
+      "time_s": 2.32,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-CH": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CH/data.txt",
+      "alive": true,
+      "proxies": 8,
+      "time_s": 0.39,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxyscrape-eu-DE": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=DE",
+      "alive": true,
+      "proxies": 8,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-IT": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=IT",
+      "alive": true,
+      "proxies": 7,
+      "time_s": 2.14,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-HU": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/HU/data.txt",
+      "alive": true,
+      "proxies": 6,
+      "time_s": 0.36,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-RO": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=RO",
+      "alive": true,
+      "proxies": 6,
+      "time_s": 2.16,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "roosterkid-socks5": {
+      "url": "https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt",
+      "alive": true,
+      "proxies": 5,
+      "time_s": 0.33,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-SE": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/SE/data.txt",
+      "alive": true,
+      "proxies": 5,
+      "time_s": 0.39,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-BG": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/BG/data.txt",
+      "alive": true,
+      "proxies": 5,
+      "time_s": 0.3,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxyscrape-eu-ES": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=ES",
+      "alive": true,
+      "proxies": 5,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxifly-country-UA": {
+      "url": "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/UA/data.txt",
+      "alive": true,
+      "proxies": 5,
+      "time_s": 0.44,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxyscrape-eu-NL": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=NL",
+      "alive": true,
+      "proxies": 4,
+      "time_s": 0.03,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
     "fatezero-http": {
-      "url": null,
+      "url": "https://static.fatezero.org/tmp/proxy.txt",
       "alive": true,
       "proxies": 3,
-      "error": null,
-      "last_seen": "2026-08-10 13:21:23"
+      "time_s": 0.35,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "geonode-p2-https": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-10 05:06:06"
+    "proxyscrape-eu-RO": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=RO",
+      "alive": true,
+      "proxies": 3,
+      "time_s": 0.04,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     },
-    "geonode-p2-socks4": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-10 05:06:06"
+    "proxyscrape-eu-PL": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=PL",
+      "alive": true,
+      "proxies": 3,
+      "time_s": 0.04,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxyscrape-eu-CZ": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=CZ",
+      "alive": true,
+      "proxies": 3,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "geonode-eu-CZ": {
+      "url": "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=CZ",
+      "alive": true,
+      "proxies": 3,
+      "time_s": 2.01,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxyscrape-eu-SE": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=SE",
+      "alive": true,
+      "proxies": 1,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
+    },
+    "proxyscrape-eu-IT": {
+      "url": "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=IT",
+      "alive": true,
+      "proxies": 1,
+      "time_s": 0.05,
+      "capped": false,
+      "max_fetch_bytes": 25000000
     }
   }
 }
