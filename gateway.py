@@ -57,6 +57,7 @@ COOLDOWN_MAP = {
     "auth required": 300,
     "407": 300,
     "http-only": 0,  # R21-GW1: HTTP-only proxy tolak CONNECT — langsung reusable (retry loop butuh coba proxy lain secepatnya)
+    "mitm": 600,  # R22-GW4: MITM proxy (fake cert) — blacklist 10 menit, jangan dipakai lagi
     "default": 120,
 }
 
@@ -425,6 +426,24 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 self.send_response(200, "Connection Established")
                 self.end_headers()
                 self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
+                # R22-GW4: MITM detection — proxy free list sering SSLVPN MITM
+                # (inject cert palsu CN=SSLVPN, C=CN). Client TLS handshake
+                # gagal verify → "unknown CA". Gateway tidak bisa lihat cert
+                # end-to-end, tapi bisa PROBE: TLS handshake singkat dari sisi
+                # gateway, verify cert asli. Kalau proxy MITM → cert fake →
+                # handshake/verify gagal → blacklist + retry proxy lain.
+                # Ponytail: probe menambah 1 RTT/request; cache per-proxy
+                # (probe sekali per 5 menit) kalau throughput butuh.
+                if not self.server.allow_mitm and not self._probe_mitm(host, port, session_proxy):
+                    self._log_usage(session_proxy, False, "MITM cert", int((time.monotonic() - t0) * 1000))
+                    tried.add(session_proxy)
+                    self._blacklist_proxy(session_proxy, "mitm")
+                    try:
+                        upstream.close()
+                    except Exception:
+                        pass
+                    last_err = "MITM proxy (fake cert)"
+                    continue
                 self._tunnel(self.connection, upstream)
                 return
             except Exception as e:
@@ -597,6 +616,49 @@ class GatewayHandler(BaseHTTPRequestHandler):
         except Exception as e:
             self.send_error(502, f"Direct error: {e}")
 
+    def _probe_mitm(self, host, port, session_proxy):
+        """R22-GW4: TLS probe via upstream proxy — verify cert asli target.
+        Proxy MITM (SSLVPN etc) inject cert palsu → verify gagal → True (MITM).
+        Cache per-proxy 300s — probe 1x per proxy, bukan per request."""
+        import ssl as ssl_mod
+        cache = self.server.mitm_cache
+        now = time.time()
+        hit = cache.get(session_proxy)
+        if hit and now < hit[0] + 300:
+            return hit[1]
+        try:
+            ip, pport = session_proxy.split(":")
+            s = socket.create_connection((ip, int(pport)), timeout=UPSTREAM_PROXY_TIMEOUT)
+            s.settimeout(UPSTREAM_PROXY_TIMEOUT)
+            s.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\nUser-Agent: Gateway/1.0\r\n\r\n".encode())
+            resp = b""
+            while b"\r\n\r\n" not in resp and len(resp) < 8192:
+                chunk = s.recv(4096)
+                if not chunk:
+                    break
+                resp += chunk
+            if b"200" not in resp:
+                s.close()
+                cache[session_proxy] = (now, True)  # CONNECT gagal = anggap MITM/jelek
+                return True
+            ctx = ssl_mod.create_default_context()
+            try:
+                tls = ctx.wrap_socket(s, server_hostname=host)
+                cert = tls.getpeercert()
+                tls.close()
+            except ssl_mod.SSLCertVerificationError:
+                cache[session_proxy] = (now, True)  # cert fake → MITM
+                return True
+            except Exception:
+                cache[session_proxy] = (now, True)
+                return True
+            ok = bool(cert)  # cert valid & verified
+            cache[session_proxy] = (now, not ok)
+            return not ok
+        except Exception:
+            cache[session_proxy] = (now, True)
+            return True
+
     @staticmethod
     def _tunnel(client, remote):
         """Bidirectional byte relay between client and remote socket."""
@@ -694,6 +756,9 @@ def main():
                         help="sticky: same session → same proxy (default); rotate: round-robin per request")
     parser.add_argument("--auth-secret", default=os.environ.get("GATEWAY_AUTH_SECRET", ""),
                         help="HMAC-SHA256 auth secret (empty = auth off)")
+    parser.add_argument("--allow-mitm", action="store_true",
+                        help="R22-GW4: izinkan proxy MITM (fake cert). DEFAULT OFF = aman; "
+                             "ON = semua proxy dipakai (TLS bisa dibaca proxy — jangan kirim credential)")
     args = parser.parse_args()
 
     sm = SessionManager(default_ttl=args.session_ttl)
@@ -702,6 +767,8 @@ def main():
     server.session_manager = sm
     server.mode = args.mode
     server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": {}}
+    server.mitm_cache = {}  # R22-GW4: proxy → (ts, is_mitm) cache 300s
+    server.allow_mitm = args.allow_mitm
     server.auth_secret = args.auth_secret
 
     cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), daemon=True)
