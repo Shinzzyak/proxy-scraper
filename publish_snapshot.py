@@ -307,7 +307,13 @@ def main() -> int:
             countries, alive_sources, total_sources, args.export_max_age_minutes
         )
         run(["git", "commit", "-m", message, "-m", body, "--author=Shinzzyak <shinzzyak@users.noreply.github.com>"], check=True, capture=False)
-        run(["git", "push", args.remote, "HEAD:{}".format(args.branch)], check=True, capture=False)
+        try:
+            run(["git", "push", args.remote, "HEAD:{}".format(args.branch)], check=True, capture=False)
+        except Exception:
+            # R15-3: commit sudah dibuat lokal; kalau push gagal (network),
+            # state TETAP di-update supaya tick berikutnya tidak publish ulang
+            # commit yang sama (publish ganda). Commit ke-push di tick berikutnya.
+            print("⚠️ git push FAILED — commit lokal tersimpan, state tetap di-update")
 
         state.update({
             "last_status": "published",
