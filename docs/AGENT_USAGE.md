@@ -71,8 +71,10 @@ PROXY_DB=data/proxies.db \
 PROXY_VALIDATION_WALL_TIMEOUT=300 \
 PROXY_SOURCE_MAX_BYTES=2000000 \
 PROXY_MAX_PROXIES_PER_SOURCE=15000 \
-python3 freshen_pool.py --telegram --telegram-pages 3 --telegram-timeout 900 --telegram-best-effort --max-validate 1500
+python3 freshen_pool.py --max-validate 1500
 ```
+
+> ⚠️ Telegram disabled since 2026-08-10 (R7-2): public preview `t.me/s/` returns "Contact @" with zero content. Flags `--telegram*` exist but are no-ops; re-enable only with an authenticated API/MTProto path.
 
 Then inspect:
 
@@ -98,7 +100,7 @@ python3 cli.py search --protocol http --country ID --min-score 50 --max-age-minu
 Cron example:
 
 ```cron
-0 */2 * * * cd /path/to/proxy-scraper && /usr/bin/env PROXY_DB=data/proxies.db PROXY_VALIDATION_WALL_TIMEOUT=300 PROXY_SOURCE_MAX_BYTES=2000000 PROXY_MAX_PROXIES_PER_SOURCE=15000 python3 freshen_pool.py --telegram --telegram-pages 3 --telegram-timeout 900 --telegram-best-effort --max-validate 1500 --log >> logs/cron.log 2>&1
+0 */6 * * * cd /path/to/proxy-scraper && /usr/bin/env PROXY_DB=data/proxies.db PROXY_VALIDATION_WALL_TIMEOUT=300 PROXY_SOURCE_MAX_BYTES=2000000 PROXY_MAX_PROXIES_PER_SOURCE=15000 python3 freshen_pool.py --max-validate 1500 --log >> logs/cron.log 2>&1
 ```
 
 Systemd timer is also fine. Keep the lock file enabled; `freshen_pool.py` prevents overlapping runs.
@@ -119,7 +121,7 @@ PROXY_DB=data/proxies.db \
 PROXY_VALIDATION_WALL_TIMEOUT=300 \
 PROXY_SOURCE_MAX_BYTES=2000000 \
 PROXY_MAX_PROXIES_PER_SOURCE=15000 \
-python3 freshen_pool.py --telegram --telegram-pages 3 --telegram-timeout 900 --telegram-best-effort --max-validate 1500 && \
+python3 freshen_pool.py --max-validate 1500 && \
 python3 publish_snapshot.py
 ```
 
@@ -176,7 +178,9 @@ Allowed low ports are common proxy ports only. Other ports below 1024 are reject
 
 ## Telegram Notes
 
-Telegram scraping uses public previews only:
+> ⚠️ **Disabled since 2026-08-10 (R7-2).** `t.me/s/<channel>` previews return "Contact @" with zero content — scraper is a no-op. Re-enable only with an authenticated API/MTProto path.
+
+Legacy behavior (kept for reference):
 
 ```text
 https://t.me/s/<channel>

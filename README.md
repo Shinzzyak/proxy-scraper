@@ -1,6 +1,6 @@
 # 🔄 Proxy Scraper v5
 
-Free proxy scraper with validation, scoring, geolocation, Telegram public-preview scraping, SQLite pool management, reports, and GitHub snapshot exports.
+Free proxy scraper with validation, scoring, geolocation, SQLite pool management, reports, and GitHub snapshot exports. (Telegram public-preview scraping: disabled 2026-08-10 — see below.)
 
 ## Agent quickstart
 
@@ -174,9 +174,10 @@ Why these defaults:
 
 | Factor | Weight | Notes |
 |---|---:|---|
-| Speed | 40% | Based on response time |
-| Anonymity | 30% | elite > transparent > unknown |
-| Protocol | 30% | socks5 > http > unknown |
+| Speed | 35% | Based on response time (blended with production latency, R9-11) |
+| Anonymity | 25% | elite > transparent > unknown |
+| Protocol | 25% | socks5 > http > unknown |
+| Usage history | 15% | From usage_log — gateway production feedback (success rate + avg latency) |
 
 Consumer rule:
 
@@ -197,19 +198,21 @@ curl "http://localhost:8080/api/leaderboard"
 
 ## Telegram scraping
 
-The scraper uses public previews only:
+> ⚠️ **NONAKTIF sejak 2026-08-10 (R7-2).** Telegram mengubah preview publik `t.me/s/<channel>` — semua halaman sekarang menampilkan "Contact @" tanpa konten (`tgme_widget_message` = 0, attachments = 0 di semua 24 channel yang diuji). `tg_scraper.py` disimpan tapi tidak dipanggil oleh cron (hemat 900s timeout per tick). **Re-enable hanya dengan path API/MTProto berauth** — lihat AGENTS.md.
+
+The scraper used public previews only (legacy, now disabled):
 
 ```text
 https://t.me/s/<channel>
 ```
 
-It extracts:
+It extracted:
 - raw `IP:PORT` text/code blocks
 - proxy-like Telegram document attachment metadata
 
-No Telegram auth is needed for the current workflow.
+No Telegram auth was needed for the legacy workflow.
 
-High-signal channels currently configured include:
+Former high-signal channels (kept for when an authenticated path exists):
 - `freeproxyses`
 - `VipProxy24`
 - `HQPROX`
