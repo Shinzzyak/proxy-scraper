@@ -22,6 +22,13 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from session_manager import SessionManager
 
+
+class CountryUnavailable(Exception):
+    """Raised when X-Country requested but no proxy for that country."""
+    def __init__(self, country):
+        super().__init__(f"no proxy available for country {country}")
+        self.country = country
+
 # ponytail: one default TTL; when proxy pool exposes health, reduce TTL for unhealthy proxies
 DEFAULT_SESSION_TTL = 300
 DEFAULT_BIND = "127.0.0.1"
@@ -271,15 +278,22 @@ class GatewayHandler(BaseHTTPRequestHandler):
             return _next_proxy_round_robin(self.server.rotate_state, country)
         session_id = self.headers.get("X-Session-ID", "")
         if not session_id:
-            return _pick_proxy(country) or "DIRECT"
+            proxy = _pick_proxy(country)
+            # R10-5: country requested but unavailable — 503, jangan DIRECT leak
+            if proxy is None:
+                raise CountryUnavailable(country)
+            return proxy or "DIRECT"
         ttl = DEFAULT_SESSION_TTL
         try:
             ttl = min(int(self.headers.get("X-Session-TTL", "")), 3600)
         except ValueError:
             pass
-        return self.server.session_manager.get_or_create(
-            session_id, lambda: _pick_proxy(country) or "DIRECT", ttl=ttl
-        )
+        try:
+            return self.server.session_manager.get_or_create(
+                session_id, lambda: _pick_proxy(country) or "DIRECT", ttl=ttl
+            )
+        except CountryUnavailable:
+            raise
 
     def _log_usage(self, proxy, success, error="", duration_ms=0):
         """Enqueue proxy usage event (async writer batches to usage_log)."""
@@ -319,7 +333,12 @@ class GatewayHandler(BaseHTTPRequestHandler):
         last_err = None
         for _ in range(MAX_FAILOVER):
             upstream = None
-            session_proxy = self._get_session_proxy(country=country)
+            try:
+                session_proxy = self._get_session_proxy(country=country)
+            except CountryUnavailable as e:
+                # R10-5: no proxy for requested country — 503, jangan DIRECT leak
+                self.send_error(503, f"No proxy available for country: {e.country}")
+                return
             if session_proxy == "DIRECT":
                 self._connect_direct(host, port)
                 return
