@@ -95,6 +95,8 @@ PROXY_SOURCES = [
     ("fyvri-socks5", "https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/socks5.txt", "host:port"),
     ("xyzs996-http", "https://raw.githubusercontent.com/xyzs996/free-proxy-health-list/main/http.txt", "host:port"),
     ("proxripper-all", "https://raw.githubusercontent.com/Mohammedcha/ProxRipper/main/summary.json", "proxripper"),
+    ("handevel-http", "https://raw.githubusercontent.com/handeveloper1/DailyProxy---Auto-Update-List/main/Proxy-TuanMinPay/http.txt", "host:port"),
+    ("stormsia-http", "https://raw.githubusercontent.com/stormsia/proxy-list/main/http.txt", "host:port"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
     ("geonode-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
     ("geonode-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
