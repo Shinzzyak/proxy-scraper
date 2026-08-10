@@ -434,7 +434,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 # handshake/verify gagal → blacklist + retry proxy lain.
                 # Ponytail: probe menambah 1 RTT/request; cache per-proxy
                 # (probe sekali per 5 menit) kalau throughput butuh.
-                if not self.server.allow_mitm and not self._probe_mitm(host, port, session_proxy):
+                if not self.server.allow_mitm and self._probe_mitm(host, port, session_proxy):
                     self._log_usage(session_proxy, False, "MITM cert", int((time.monotonic() - t0) * 1000))
                     tried.add(session_proxy)
                     self._blacklist_proxy(session_proxy, "mitm")
