@@ -297,6 +297,9 @@ def _next_proxy_round_robin(pool_state, country=""):
 
 
 class GatewayHandler(BaseHTTPRequestHandler):
+    # R17-T6: slowloris header — client kirim header sebagian lalu diam →
+    # rfile.readline blok selamanya, thread hang. Timeout global request-read.
+    timeout = UPSTREAM_PROXY_TIMEOUT
     """HTTP forward proxy that routes via session→proxy mapping."""
 
     def _get_session_proxy(self, country=""):
@@ -512,9 +515,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 # R16-N4: timeout hanya berlaku sampai header; body read bisa
-                # hang selamanya kalau proxy lambat — set socket timeout ulang
+                # hang selamanya kalau proxy lambat — set socket timeout ulang.
+                # R17-T5: resp.fp = BufferedReader, socket di fp.raw._sock.
                 fp = getattr(resp, "fp", None)
-                sock = getattr(fp, "_sock", None)
+                raw = getattr(fp, "raw", None)
+                sock = getattr(raw, "_sock", None)
                 if sock is not None:
                     sock.settimeout(UPSTREAM_PROXY_TIMEOUT)
                 chunk = resp.read(65536)
@@ -532,7 +537,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
             try:
                 if e.readable():
                     fp = getattr(e, "fp", None)
-                    sock = getattr(fp, "_sock", None)
+                    raw = getattr(fp, "raw", None)  # R17-T5: socket di fp.raw._sock
+                    sock = getattr(raw, "_sock", None)
                     if sock is not None:
                         sock.settimeout(UPSTREAM_PROXY_TIMEOUT)
                     self.wfile.write(e.read(8192))

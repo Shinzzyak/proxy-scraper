@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import scraper
 
@@ -53,6 +53,33 @@ class Socks4ValidationTests(unittest.TestCase):
         ), patch("scraper.validate_socks4", return_value=True):
             result = scraper.validate_single("1.2.3.4:1080")
         self.assertEqual(result["protocol"], "socks4")
+
+
+class ConnectProbeTests(unittest.TestCase):
+    """R17-T8: regression guard untuk CONNECT probe (R16-N1 + R17-T1)."""
+
+    def test_probe_connect_accepts_proxy_with_200(self):
+        with patch("socket.create_connection") as mc:
+            fake = Mock()
+            fake.recv.return_value = b"HTTP/1.1 200 Connection established\r\n\r\n"
+            mc.return_value = fake
+            self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
+
+    def test_probe_connect_rejects_proxy_with_403(self):
+        with patch("socket.create_connection") as mc:
+            fake = Mock()
+            fake.recv.return_value = b"HTTP/1.1 403 Forbidden\r\n\r\n"
+            mc.return_value = fake
+            self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
+
+    def test_probe_connect_uses_fresh_socket(self):
+        """R17-T1: probe harus socket BARU — socket lama sudah close."""
+        with patch("socket.create_connection") as mc:
+            fake = Mock()
+            fake.recv.return_value = b"HTTP/1.1 200 Connection established\r\n\r\n"
+            mc.return_value = fake
+            scraper._probe_connect("1.2.3.4", 8080, 5)
+            mc.assert_called_once()  # create_connection dipanggil (socket baru)
 
 
 if __name__ == "__main__":

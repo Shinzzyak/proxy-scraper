@@ -106,6 +106,9 @@ def _create_tables(conn: sqlite3.Connection):
         CREATE INDEX IF NOT EXISTS idx_usage_ip ON usage_log(ip, port);
         CREATE INDEX IF NOT EXISTS idx_usage_ts ON usage_log(timestamp);
         CREATE INDEX IF NOT EXISTS idx_source_history_name ON source_history(source_name, timestamp);
+        -- R17-T7: pick path (get_best_proxy/search_proxies) — filter protocol+score
+        -- + ORDER BY score, last_seen. Hapus SCAN+TEMP B-TREE di pool besar.
+        CREATE INDEX IF NOT EXISTS idx_proxies_pick ON proxies(protocol, score DESC, last_seen);
     """)
     # Lightweight migrations for existing DBs created by older versions.
     cols = {r[1] for r in conn.execute("PRAGMA table_info(proxies)").fetchall()}

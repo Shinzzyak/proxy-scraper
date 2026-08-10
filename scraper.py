@@ -437,13 +437,18 @@ def scrape_source(name, url, fmt):
         return []
     proxies = extract_proxies(text, fmt)
     # R16: per-source cap override — source pass-rate rendah (lihat
-    # source_history ROI) jangan habiskan kuota validasi untuk duplikat
+    # source_history ROI) jangan habiskan kuota validasi untuk duplikat.
+    # R17-T2: cap SEBELUM extract (line-based) — jangan parse 400k baris
+    # kalau cuma butuh 3000.
     limit = MAX_PROXIES_PER_SOURCE
     if name.startswith(("speedx-", "gfp-", "murongpig-", "ercindedeoglu-")):
         limit = 3000
-    if len(proxies) > limit:
+    if fmt in ("host:port", "host:port:extra") and len(proxies) > limit:
+        text = "\n".join(text.splitlines()[:limit])
+        proxies = extract_proxies(text, fmt)
+    elif len(proxies) > limit:
         proxies = proxies[:limit]
-    capped = len(proxies) >= MAX_PROXIES_PER_SOURCE
+    capped = len(proxies) >= limit  # R17-T3: flag pakai limit (bukan MAX)
     source_health[name] = {
         "url": url,
         "alive": len(proxies) > 0,
@@ -567,7 +572,9 @@ def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
         # lolos GET absolute-URI tapi reject CONNECT → 12+ failover sia-sia di
         # gateway (usage_log: 'upstream CONNECT rejected'). Probe CONNECT ke
         # port 443; kalau tidak 200, proxy dibuang.
-        if not _probe_connect(s, ip, int(port), timeout):
+        # R17-T1: socket LAMA sudah close (Connection: close) — probe pakai
+        # socket BARU, kalau tidak semua proxy HTTP ditolak (false-negative).
+        if not _probe_connect(ip, int(port), timeout):
             return False
         # hidden-gems round 6: header leak detection — a transparent proxy
         # that appends Via/X-Forwarded-For/Forwarded leaks client identity.
@@ -583,11 +590,13 @@ def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
         return False
 
 
-def _probe_connect(sock, host, port, timeout):
-    """R16-N1: probe CONNECT via existing socket — proxy yang tidak bisa
-    CONNECT (HTTP-relay-only) dibuang. Return True kalau dapat '200'."""
+def _probe_connect(host, port, timeout):
+    """R16-N1: probe CONNECT via socket BARU (R17-T1: socket lama sudah
+    close setelah GET Connection: close — recv di socket closed = EOF).
+    Return True kalau dapat '200'."""
     try:
-        sock.settimeout(timeout)
+        s = socket.create_connection((host, port), timeout=timeout)
+        s.settimeout(timeout)
         req = (
             f"CONNECT httpbin.org:443 HTTP/1.1\r\n"
             f"Host: httpbin.org:443\r\n"
@@ -595,13 +604,14 @@ def _probe_connect(sock, host, port, timeout):
             f"Proxy-Connection: keep-alive\r\n"
             f"\r\n"
         )
-        sock.sendall(req.encode())
+        s.sendall(req.encode())
         data = b""
         while len(data) < 4096:
-            chunk = sock.recv(2048)
+            chunk = s.recv(2048)
             if not chunk:
                 break
             data += chunk
+        s.close()
         return b"200" in data
     except Exception:
         return False
