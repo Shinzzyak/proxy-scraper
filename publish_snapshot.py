@@ -29,8 +29,8 @@ ARTIFACT_FILES = [
     "proxies-by-protocol.json",
     "proxies-stats.json",
     "source-health.json",
-    "report-weekly.md",
-    "heatmap.html",
+    # R14-5: report-weekly.md & heatmap.html tidak pernah di-generate cron
+    # (commit terakhir 2026-07-06, basi) — hapus dari artifact publish
 ]
 
 CORE_ARTIFACT_FILES = {
