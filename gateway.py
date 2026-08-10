@@ -237,7 +237,7 @@ def _pick_proxy(country="", exclude=None):
                     return candidate
             if country:
                 return None
-        proxy = get_best_proxy(protocol="http", country_code=country, min_score=1, max_age_minutes=180)  # R10-1: samakan dengan rotate (7aeaff5) — 60m bikin sticky 100% DIRECT di tengah siklus 6h
+        proxy = get_best_proxy(protocol="http", country_code=country, min_score=1, max_age_minutes=0)  # max_age=0: freshness disabled — free pool volatile; failover+cooldown handles dead ones
         if proxy:
             return f"{proxy['ip']}:{proxy['port']}"
         if country:

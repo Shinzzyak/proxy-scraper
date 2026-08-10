@@ -1,0 +1,17 @@
+[Unit]
+Description=Proxy-scraper HTTP forward proxy gateway (sticky/rotate, HMAC auth, MITM detection)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/proxy-scraper
+Environment=PROXY_DB=/home/ubuntu/proxy-scraper/data/proxies.db
+Environment=GATEWAY_AUTH_SECRET=64220e384db71fc3cce75e237cbdbdfd9a8c100d9d4c9306
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /home/ubuntu/proxy-scraper/gateway.py --bind 127.0.0.1 --port 8080 --mode rotate --auth-secret ${GATEWAY_AUTH_SECRET}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

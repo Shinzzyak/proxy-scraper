@@ -210,6 +210,11 @@ def cmd_telegram(args):
         tg_scraper.add_to_pool(results)
 
 
+def cmd_revalidate(args):
+    import revalidate_pool
+    revalidate_pool.revalidate(budget=args.budget, mode=args.mode)
+
+
 def cmd_freshen(args):
     import freshen_pool
     argv = ["freshen_pool.py"]
@@ -344,6 +349,12 @@ def main():
     fr.add_argument("--scrape-only", action="store_true")
     fr.add_argument("--no-lock", action="store_true")
 
+    rv = sub.add_parser("revalidate", help="R23: revalidate pool proxies (stale-first, tanpa nunggu freshen)")
+    rv.add_argument("--budget", type=int, default=300)
+    rv.add_argument("--mode", choices=["stale", "usage"], default="stale")
+    rv.add_argument("--loop", action="store_true", help="loop dengan interval")
+    rv.add_argument("--interval", type=int, default=300)
+
     args = ap.parse_args()
     if not args.command:
         ap.print_help()
@@ -356,6 +367,7 @@ def main():
         "geo-repair": cmd_geo_repair,
         "sources": cmd_sources, "source-health": cmd_source_health,
         "telegram": cmd_telegram, "freshen": cmd_freshen,
+        "revalidate": cmd_revalidate,
     }
     cmds[args.command](args)
 
