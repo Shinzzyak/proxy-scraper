@@ -518,8 +518,17 @@ class GatewayHandler(BaseHTTPRequestHandler):
             self._log_usage(session_proxy, False, f"HTTP {e.code}", int((time.monotonic() - t0) * 1000))
             self.send_response(e.code)
             self.end_headers()
-            if e.readable():
-                self.wfile.write(e.read(65536))
+            # R15-14: e.read() bisa hang kalau upstream kirim header error tapi
+            # body menggantung — baca terbatas + timeout
+            try:
+                if e.readable():
+                    fp = getattr(e, "fp", None)
+                    sock = getattr(fp, "_sock", None)
+                    if sock is not None:
+                        sock.settimeout(UPSTREAM_PROXY_TIMEOUT)
+                    self.wfile.write(e.read(8192))
+            except Exception:
+                pass
         except Exception as e:
             self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
             self.send_error(502, f"Upstream error: {e}")

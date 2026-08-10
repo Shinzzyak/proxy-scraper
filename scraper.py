@@ -192,6 +192,18 @@ def is_valid_proxy_port(port: int) -> bool:
     return port in COMMON_LOW_PROXY_PORTS or 1024 <= port <= 65535
 
 
+def _is_valid_ipv4(ip: str) -> bool:
+    """R15-12: reject obviously-invalid IPs (999.999.999.999) before they
+    waste a validator slot. Cheap octet-range check."""
+    parts = ip.split(".")
+    if len(parts) != 4:
+        return False
+    for p in parts:
+        if not p.isdigit() or not 0 <= int(p) <= 255:
+            return False
+    return True
+
+
 # Subnets proven dead by evidence round 3 (CONNECT-blocked / timeout / SSL junk).
 # These are bulk list pollution that scores 70 in the old validator.
 BLOCKED_SUBNETS = [
@@ -297,12 +309,30 @@ def extract_proxies(text, fmt="", max_items=None):
         line = line.strip()
         if not line or line.startswith(("#", "//")):
             continue
+        # R15-4: fmt "table" — parse <tr><td>ip</td><td>port</td></tr>
+        # (socks-proxy.net). Cek SEBELUM CRED_RE (baris tabel tidak punya creds).
+        if fmt == "table":
+            for m in re.finditer(r"<tr[^>]*>(.*?)</tr>", line, re.S):
+                cells = re.findall(r"<td[^>]*>(.*?)</td>", m.group(1), re.S)
+                if len(cells) >= 2:
+                    ip = cells[0].strip()
+                    port = cells[1].strip()
+                    if (
+                        _is_valid_ipv4(ip)  # R15-12
+                        and port.isdigit()
+                        and is_valid_proxy_port(int(port))
+                        and not is_blocked_ip(ip)
+                    ):
+                        proxies.append(f"{ip}:{port}")
+                        if limit and len(proxies) >= limit:
+                            return proxies
+            continue
         # fmt "host:port:extra" — e.g. ip:port:Country from zloi-user/hideip.me.
         # MUST run before CRED_RE: country names with 2 words (Hong Kong) would
         # false-match CRED_RE (4 groups) and drop the line.
         if fmt == "host:port:extra":
             parts = line.split(":")
-            if len(parts) >= 2 and parts[0].count(".") == 3 and parts[1].isdigit() and is_valid_proxy_port(int(parts[1])) and not is_blocked_ip(parts[0]):
+            if len(parts) >= 2 and _is_valid_ipv4(parts[0]) and parts[1].isdigit() and is_valid_proxy_port(int(parts[1])) and not is_blocked_ip(parts[0]):
                 proxies.append(f"{parts[0]}:{parts[1]}")
                 if limit and len(proxies) >= limit:
                     break
@@ -312,7 +342,7 @@ def extract_proxies(text, fmt="", max_items=None):
         # R15-3: re.finditer per line — feed 1-baris (minified HTML) punya
         # banyak proxy per baris, re.search cuma ambil yang pertama
         for m in PROXY_RE.finditer(line):
-            if m and is_valid_proxy_port(int(m.group(2))) and not is_blocked_ip(m.group(1)):
+            if m and _is_valid_ipv4(m.group(1)) and is_valid_proxy_port(int(m.group(2))) and not is_blocked_ip(m.group(1)):
                 proxies.append(f"{m.group(1)}:{m.group(2)}")
                 if limit and len(proxies) >= limit:
                     return proxies

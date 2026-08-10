@@ -227,6 +227,8 @@ def cmd_freshen(args):
     try:
         sys.argv = argv
         freshen_pool.main()
+    except SystemExit as e:  # R15-15: main() panggil sys.exit — propagate bersih, bukan traceback
+        raise SystemExit(e.code)
     finally:
         sys.argv = old_argv
 
