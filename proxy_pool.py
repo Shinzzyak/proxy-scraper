@@ -290,7 +290,7 @@ def upsert_proxy(proxy_dict: Dict, source: str = ""):
         conn.close()
 
 
-def get_best_proxy(protocol: str = "http", country_code: str = "", min_score: int = 50,
+def get_best_proxy(protocol: str = "", country_code: str = "", min_score: int = 50,
                    max_age_minutes: int = 180) -> Optional[Dict]:
     """Get best fresh proxy by criteria.
 

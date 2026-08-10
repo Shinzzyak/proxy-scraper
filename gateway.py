@@ -215,31 +215,37 @@ def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
         _dropped_usage += 1  # bounded queue — drop under burst, count it
 
 
-def _pick_proxy(country="", exclude=None):
-    """Select a fresh HTTP proxy from the pool.
+def _pick_proxy(country="", exclude=None, protocol=""):
+    """Select a fresh proxy from the pool.
 
-    Returns 'host:port' string. Falls back to direct connection
-    ('DIRECT') if the pool is empty. If country requested but none
-    found, returns None (caller decides — do NOT silently fall back).
+    Returns 'host:port' string (or 'socks5://host:port'). Falls back to
+    direct connection ('DIRECT') if the pool is empty. If country requested
+    but none found, returns None (caller decides — do NOT silently fall back).
     """
     try:
         from proxy_pool import get_best_proxy, search_proxies
         # min_score=1: score 0 = auto-banned (R5-nit) — jangan pernah pilih
+        # R24-GW5: protocol bebas (http + socks5) — prefix socks5:// untuk routing
         if exclude:
             # R11-7: pick a fresh proxy NOT in exclude set (retry loop)
             rows = search_proxies(
-                protocol="http", country_code=country, min_score=1,
+                protocol=protocol, country_code=country, min_score=1,
                 max_age_minutes=180, max_results=20,
             )
             for r in rows:
                 candidate = f"{r['ip']}:{r['port']}"
+                if r.get("protocol") == "socks5":
+                    candidate = "socks5://" + candidate
                 if candidate not in exclude:
                     return candidate
             if country:
                 return None
-        proxy = get_best_proxy(protocol="http", country_code=country, min_score=1, max_age_minutes=0)  # max_age=0: freshness disabled — free pool volatile; failover+cooldown handles dead ones
+        proxy = get_best_proxy(protocol=protocol, country_code=country, min_score=1, max_age_minutes=0)  # max_age=0: freshness disabled — free pool volatile; failover+cooldown handles dead ones
         if proxy:
-            return f"{proxy['ip']}:{proxy['port']}"
+            cand = f"{proxy['ip']}:{proxy['port']}"
+            if proxy.get("protocol") == "socks5":
+                cand = "socks5://" + cand
+            return cand
         if country:
             return None  # requested country unavailable — no DIRECT leak
     except Exception:
@@ -247,11 +253,12 @@ def _pick_proxy(country="", exclude=None):
     return "DIRECT"
 
 
-def _next_proxy_round_robin(pool_state, country="", exclude=None):
+def _next_proxy_round_robin(pool_state, country="", exclude=None, protocol=""):
     """Round-robin over a fresh pool snapshot, refreshed periodically.
 
     pool_state: dict with 'list' (list of host:port), 'index', 'lock'.
     country: optional ISO code filter (X-Country header).
+    protocol: optional filter ("http" / "socks5" / "" = semua).
     exclude: optional set of host:port already tried this request (R21-GW3).
     Returns next proxy or 'DIRECT' when pool empty.
 
@@ -265,13 +272,17 @@ def _next_proxy_round_robin(pool_state, country="", exclude=None):
         lock = pool_state.setdefault("lock", threading.Lock())
         with lock:
             now = time.time()
-            key = f"c:{country or '*'}"
+            key = f"c:{country or '*'}:p:{protocol or '*'}"
             if pool_state.get("list") is None or pool_state.get("key") != key or now - pool_state.get("refreshed", 0) > 120:
                 rows = search_proxies(
-                    protocol="http", country_code=country, min_score=ROTATE_MIN_SCORE,
+                    protocol=protocol, country_code=country, min_score=ROTATE_MIN_SCORE,
                     max_age_minutes=180, max_results=ROTATE_POOL_SIZE,
                 )
-                pool_state["list"] = [f"{r['ip']}:{r['port']}" for r in rows] or None
+                # R24-GW5: socks5 prefix untuk routing
+                pool_state["list"] = [
+                    (f"socks5://{r['ip']}:{r['port']}" if r.get("protocol") == "socks5" else f"{r['ip']}:{r['port']}")
+                    for r in rows
+                ] or None
                 pool_state["key"] = key
                 pool_state["index"] = 0
                 pool_state["refreshed"] = now
@@ -302,20 +313,49 @@ def _next_proxy_round_robin(pool_state, country="", exclude=None):
         return "DIRECT"
 
 
+def _socks5_connect(sock, host, port):
+    """R24-GW5: SOCKS5 handshake + CONNECT via upstream socket.
+    Raises on failure — caller closes socket. No-auth only (free pool)."""
+    import struct
+    sock.sendall(b"\x05\x01\x00")  # version 5, 1 method, no-auth
+    resp = sock.recv(2)
+    if resp != b"\x05\x00":
+        raise ConnectionError(f"SOCKS5 auth method rejected: {resp.hex()}")
+    # CONNECT request: ATYP 0x03 (domain) — free pool jarang punya reverse DNS
+    host_b = host.encode()
+    req = b"\x05\x01\x00\x03" + bytes([len(host_b)]) + host_b + struct.pack(">H", port)
+    sock.sendall(req)
+    r2 = sock.recv(10)
+    if len(r2) < 2 or r2[1] != 0:
+        raise ConnectionError(f"SOCKS5 CONNECT failed: {r2.hex()}")
+    # consume remaining BND.ADDR/BND.PORT (variable length)
+    if r2[3] == 0x01:  # IPv4
+        need = 4 + 2
+    elif r2[3] == 0x04:  # IPv6
+        need = 16 + 2
+    else:  # domain
+        need = r2[4] + 2 if len(r2) > 4 else 2
+    while len(r2) < 4 + need:
+        chunk = sock.recv(4096)
+        if not chunk:
+            raise ConnectionError("SOCKS5 truncated BND response")
+        r2 += chunk
+
+
 class GatewayHandler(BaseHTTPRequestHandler):
     # R17-T6: slowloris header — client kirim header sebagian lalu diam →
     # rfile.readline blok selamanya, thread hang. Timeout global request-read.
     timeout = UPSTREAM_PROXY_TIMEOUT
     """HTTP forward proxy that routes via session→proxy mapping."""
 
-    def _get_session_proxy(self, country="", exclude=None):
+    def _get_session_proxy(self, country="", exclude=None, protocol=""):
         if not country:
             country = self.headers.get("X-Country", "").upper()
         if self.server.mode == "rotate":
-            return _next_proxy_round_robin(self.server.rotate_state, country, exclude)
+            return _next_proxy_round_robin(self.server.rotate_state, country, exclude, protocol)
         session_id = self.headers.get("X-Session-ID", "")
         if not session_id:
-            proxy = _pick_proxy(country, exclude=exclude)
+            proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
             # R10-5: country requested but unavailable — 503, jangan DIRECT leak
             if proxy is None:
                 raise CountryUnavailable(country)
@@ -329,7 +369,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
         exclude = set()  # proxies already tried in this retry loop
         for attempt in range(3):
             try:
-                picked = _pick_proxy(country, exclude=exclude)
+                picked = _pick_proxy(country, exclude=exclude, protocol=protocol)
                 if picked is None:
                     raise CountryUnavailable(country)
                 exclude.add(picked)
@@ -346,6 +386,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
         """Enqueue proxy usage event (async writer batches to usage_log)."""
         try:
             if proxy and proxy != "DIRECT":
+                # R24-GW5: strip socks5:// prefix — DB key = ip:port
+                if proxy.startswith("socks5://"):
+                    proxy = proxy[len("socks5://"):]
                 ip, _, port = proxy.rpartition(":")
                 _enqueue_usage(ip, int(port), success, duration_ms, error)
                 if not success:
@@ -395,6 +438,17 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 upstream = socket.create_connection(session_proxy.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
                 upstream.settimeout(UPSTREAM_PROXY_TIMEOUT)  # R10-4: recv ikut timeout — silent upstream ga hang 10s×3
                 upstream.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # R16-G1: matikan Nagle — hemat 1 RTT/burst di tunnel
+                # R24-GW5: SOCKS5 upstream — pool punya 466 socks5 yang mubazir
+                # (HTTP CONNECT cuma bisa ke proxy http). Deteksi protocol dari
+                # session_proxy 'socks5://' prefix atau protocol field.
+                if session_proxy.startswith("socks5://"):
+                    _socks5_connect(upstream, host, port)
+                    # handshake sukses = tunnel siap, langsung relay
+                    self.send_response(200, "Connection Established")
+                    self.end_headers()
+                    self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
+                    self._tunnel(self.connection, upstream)
+                    return
                 # T3: sebagian proxy publik reject CONNECT tanpa UA
                 upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\nUser-Agent: Gateway/1.0\r\nProxy-Connection: keep-alive\r\n\r\n".encode())
                 # R9-3: response can arrive in 2+ segments — loop until header end
@@ -514,7 +568,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
         tried = set()  # R21-GW3
         for _ in range(MAX_FAILOVER):  # R21-GW2: retry loop HTTP path (sama seperti CONNECT)
             try:
-                session_proxy = self._get_session_proxy(exclude=tried)
+                # R24-GW5: HTTP path tidak support socks5 (urllib ProxyHandler
+                # cuma http) — minta proxy http saja; socks5 untuk CONNECT path.
+                session_proxy = self._get_session_proxy(exclude=tried, protocol="http")
             except CountryUnavailable as e:
                 # R11-8: HTTP path — 503, bukan traceback/connection reset
                 self.send_error(503, f"No proxy available for country: {e.country}")
@@ -621,20 +677,26 @@ class GatewayHandler(BaseHTTPRequestHandler):
         if hit and now < hit[0] + 300:
             return hit[1]
         try:
-            ip, pport = session_proxy.split(":")
-            s = socket.create_connection((ip, int(pport)), timeout=UPSTREAM_PROXY_TIMEOUT)
-            s.settimeout(UPSTREAM_PROXY_TIMEOUT)
-            s.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\nUser-Agent: Gateway/1.0\r\n\r\n".encode())
-            resp = b""
-            while b"\r\n\r\n" not in resp and len(resp) < 8192:
-                chunk = s.recv(4096)
-                if not chunk:
-                    break
-                resp += chunk
-            if b"200" not in resp:
-                s.close()
-                cache[session_proxy] = (now, True)  # CONNECT gagal = anggap MITM/jelek
-                return True
+            # R24-GW5: socks5:// prefix — probe pakai SOCKS5 handshake, bukan HTTP CONNECT
+            if session_proxy.startswith("socks5://"):
+                s = socket.create_connection(session_proxy[len("socks5://"):].split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
+                s.settimeout(UPSTREAM_PROXY_TIMEOUT)
+                _socks5_connect(s, host, port)
+            else:
+                ip, pport = session_proxy.split(":")
+                s = socket.create_connection((ip, int(pport)), timeout=UPSTREAM_PROXY_TIMEOUT)
+                s.settimeout(UPSTREAM_PROXY_TIMEOUT)
+                s.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\nUser-Agent: Gateway/1.0\r\n\r\n".encode())
+                resp = b""
+                while b"\r\n\r\n" not in resp and len(resp) < 8192:
+                    chunk = s.recv(4096)
+                    if not chunk:
+                        break
+                    resp += chunk
+                if b"200" not in resp:
+                    s.close()
+                    cache[session_proxy] = (now, True)  # CONNECT gagal = anggap MITM/jelek
+                    return True
             ctx = ssl_mod.create_default_context()
             try:
                 tls = ctx.wrap_socket(s, server_hostname=host)
