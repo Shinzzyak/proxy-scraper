@@ -86,6 +86,7 @@ PROXY_SOURCES = [
     ("solispirit-socks4", "https://raw.githubusercontent.com/SoliSpirit/proxy-list/main/socks4.txt", "host:port"),
     ("solispirit-socks5", "https://raw.githubusercontent.com/SoliSpirit/proxy-list/main/socks5.txt", "host:port"),
     ("relayglass-all", "https://raw.githubusercontent.com/relayglass/free-proxy-list/main/all.txt", "host:port"),
+    ("themiralay-all", "https://raw.githubusercontent.com/themiralay/Proxy-List-World/master/data.txt", "host:port"),
     ("ahahaabas-st-http", "https://raw.githubusercontent.com/ahahaabas/proxies-st-http-socks/main/http.txt", "host:port"),
     ("geonode-http", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http", "geonode"),
     ("geonode-https", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https", "geonode"),
