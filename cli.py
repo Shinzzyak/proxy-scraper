@@ -48,7 +48,7 @@ def cmd_search(args):
     else:
         for p in results:
             print(f"{p['ip']}:{p['port']} [{p['protocol']}] score={p['score']} {p.get('country_code','')} {p.get('anonymity','')}")
-    print(f"\n{len(results)} proxies found")
+        print(f"\n{len(results)} proxies found")
 
 
 def cmd_best(args):
