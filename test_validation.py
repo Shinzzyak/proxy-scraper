@@ -90,6 +90,22 @@ class ConnectProbeTests(unittest.TestCase):
             mc.return_value = fake
             self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
 
+    def test_probe_connect_rejects_3xx(self):
+        """R20: 3xx = redirect aneh, bukan proxy hidup — harus False."""
+        with patch("socket.create_connection") as mc:
+            fake = Mock()
+            fake.recv.return_value = b"HTTP/1.1 302 Found\r\n\r\n"
+            mc.return_value = fake
+            self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
+
+    def test_probe_connect_rejects_non_http(self):
+        """R20: non-HTTP response = mati — harus False."""
+        with patch("socket.create_connection") as mc:
+            fake = Mock()
+            fake.recv.return_value = b"garbage not http\r\n\r\n"
+            mc.return_value = fake
+            self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
+
     def test_jsonlines_extract(self):
         """R19: fmt jsonlines (fate0/proxylist) — host/port per baris JSON."""
         txt = ('{"anonymity": "high", "host": "1.2.3.4", "port": 8080}\n'

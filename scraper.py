@@ -1170,6 +1170,24 @@ def main():
                 for src, (submitted, valid_count) in per_source.items():
                     update_reputation(src, submitted, valid_count)
                 print(f"✅ Reputation updated for {len(per_source)} sources")
+                # R20-P1-3: hapus proxy pool dari source yang banned (proxy mati
+                # yang masih nempel di pool — reputasi bilang source jelek)
+                from reputation import get_banned_sources
+                banned = get_banned_sources()
+                if banned:
+                    from proxy_pool import get_db
+                    conn = get_db()
+                    try:
+                        names = [b["source_name"] for b in banned]
+                        placeholders = ",".join("?" * len(names))
+                        cur = conn.execute(
+                            f"DELETE FROM proxies WHERE source_name IN ({placeholders})",
+                            names,
+                        )
+                        conn.commit()
+                        print(f"🧹 Pool cleanup: {cur.rowcount} proxies dari {len(names)} source banned dihapus")
+                    finally:
+                        conn.close()
             except Exception as e:
                 print(f"  ⚠ Reputation update skipped: {e}")
         if args.json and valid:
