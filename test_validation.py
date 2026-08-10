@@ -65,20 +65,22 @@ class ConnectProbeTests(unittest.TestCase):
             mc.return_value = fake
             self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
 
-    def test_probe_connect_rejects_proxy_with_403(self):
+    def test_probe_connect_accepts_proxy_with_403(self):
+        """R20: 4xx = proxy HIDUP (HTTP-only yang tolak CONNECT) — harus True."""
         with patch("socket.create_connection") as mc:
             fake = Mock()
             fake.recv.return_value = b"HTTP/1.1 403 Forbidden\r\n\r\n"
             mc.return_value = fake
-            self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
+            self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
 
-    def test_probe_connect_rejects_404_with_200_in_body(self):
-        """R18-T2: substring '200' di body 404 jangan lolos — parse status line."""
+    def test_probe_connect_accepts_404_with_200_in_body(self):
+        """R20: 404 status line + body '200' — proxy hidup (HTTP-only), True.
+        R18-T2 lama salah ekspektasi: 4xx = mati; padahal 4xx = proxy hidup."""
         with patch("socket.create_connection") as mc:
             fake = Mock()
             fake.recv.return_value = b"HTTP/1.1 404 Not Found\r\n\r\nstatus 200 OK page"
             mc.return_value = fake
-            self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
+            self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
 
     def test_probe_connect_accepts_200_then_silence(self):
         """R18-T1: proxy balas 200 lalu diam (tunnel mode) — harus True."""

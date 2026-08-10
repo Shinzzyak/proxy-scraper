@@ -701,7 +701,14 @@ def _probe_connect(host, port, timeout):
             data += chunk
         s.close()
         first_line = data.split(b"\r\n", 1)[0] if data else b""
-        return bool(_re.match(rb"^HTTP/\d\.\d 200\b", first_line))
+        # R20: accept 200 (tunnel OK) ATAU 4xx/5xx — proxy hidup yang menolak
+        # CONNECT (HTTP-only proxy) balas 400/403/405/500; yang mati = timeout/refused.
+        # Hanya 3xx (redirect aneh) dan non-HTTP yang dianggap mati.
+        m = _re.match(rb"^HTTP/\d\.\d (\d{3})\b", first_line)
+        if not m:
+            return False
+        code = int(m.group(1))
+        return 200 <= code < 300 or 400 <= code < 600
     except Exception:
         return False
 
