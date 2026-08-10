@@ -517,11 +517,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 # R16-N4: timeout hanya berlaku sampai header; body read bisa
                 # hang selamanya kalau proxy lambat — set socket timeout ulang.
                 # R17-T5: resp.fp = BufferedReader, socket di fp.raw._sock.
+                # R18-T3: jalur urllib kadang raw = SocketIO tanpa _sock —
+                # fallback ke settimeout langsung di raw.
                 fp = getattr(resp, "fp", None)
                 raw = getattr(fp, "raw", None)
                 sock = getattr(raw, "_sock", None)
                 if sock is not None:
                     sock.settimeout(UPSTREAM_PROXY_TIMEOUT)
+                elif raw is not None and hasattr(raw, "settimeout"):
+                    raw.settimeout(UPSTREAM_PROXY_TIMEOUT)
                 chunk = resp.read(65536)
                 while chunk:
                     self.wfile.write(chunk)

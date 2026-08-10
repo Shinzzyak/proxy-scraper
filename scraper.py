@@ -593,7 +593,11 @@ def validate_http_connect(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
 def _probe_connect(host, port, timeout):
     """R16-N1: probe CONNECT via socket BARU (R17-T1: socket lama sudah
     close setelah GET Connection: close — recv di socket closed = EOF).
-    Return True kalau dapat '200'."""
+    R18-T1/T2: baca HANYA sampai \\r\\n\\r\\n (header) — proxy nyata balas
+    200 lalu diam/tunnel; recv lanjutan = waste 2s + false-negative.
+    Parse status line regex (bukan substring '200' — body bisa mengandung 200).
+    Return True kalau status line = HTTP/x.y 200."""
+    import re as _re
     try:
         s = socket.create_connection((host, port), timeout=timeout)
         s.settimeout(timeout)
@@ -606,13 +610,14 @@ def _probe_connect(host, port, timeout):
         )
         s.sendall(req.encode())
         data = b""
-        while len(data) < 4096:
+        while b"\r\n\r\n" not in data and len(data) < 8192:
             chunk = s.recv(2048)
             if not chunk:
                 break
             data += chunk
         s.close()
-        return b"200" in data
+        first_line = data.split(b"\r\n", 1)[0] if data else b""
+        return bool(_re.match(rb"^HTTP/\d\.\d 200\b", first_line))
     except Exception:
         return False
 

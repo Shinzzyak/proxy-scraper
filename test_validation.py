@@ -72,6 +72,22 @@ class ConnectProbeTests(unittest.TestCase):
             mc.return_value = fake
             self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
 
+    def test_probe_connect_rejects_404_with_200_in_body(self):
+        """R18-T2: substring '200' di body 404 jangan lolos — parse status line."""
+        with patch("socket.create_connection") as mc:
+            fake = Mock()
+            fake.recv.return_value = b"HTTP/1.1 404 Not Found\r\n\r\nstatus 200 OK page"
+            mc.return_value = fake
+            self.assertFalse(scraper._probe_connect("1.2.3.4", 8080, 5))
+
+    def test_probe_connect_accepts_200_then_silence(self):
+        """R18-T1: proxy balas 200 lalu diam (tunnel mode) — harus True."""
+        with patch("socket.create_connection") as mc:
+            fake = Mock()
+            fake.recv.side_effect = [b"HTTP/1.1 200 Connection established\r\n\r\n", b""]
+            mc.return_value = fake
+            self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
+
     def test_probe_connect_uses_fresh_socket(self):
         """R17-T1: probe harus socket BARU — socket lama sudah close."""
         with patch("socket.create_connection") as mc:
