@@ -62,12 +62,16 @@ def release_lock():
 
 def pick_stale_first(budget: int, min_score: int = 1) -> list:
     """Pilih proxy stale-first: last_seen lama dulu, score tinggi prioritas.
-    Skip zombie (last_seen='') — sudah dianggap mati."""
+    Skip zombie (last_seen='') — sudah dianggap mati.
+    R24-P2-1: exclude proxy fresh <30m — baru di-validasi freshen,
+    revalidate budget tidak terbuang padanya."""
     conn = get_db()
     try:
         rows = conn.execute(
             """SELECT ip, port, protocol, score FROM proxies
-               WHERE last_seen != '' AND score >= ?
+               WHERE last_seen != ''
+                 AND julianday(last_seen) < julianday('now', '-30 minutes')
+                 AND score >= ?
                ORDER BY julianday(last_seen) ASC, score DESC, response_time_ms ASC
                LIMIT ?""",
             (min_score, budget),
@@ -106,7 +110,7 @@ def pick_failed_usage(budget: int) -> list:
                      WHERE success = 0 AND timestamp >= datetime('now', '-3 days')
                      GROUP BY ip, port HAVING fails >= 2) u
                  ON u.ip = p.ip AND u.port = p.port
-               WHERE p.last_seen != ''
+               WHERE p.last_seen != '' AND p.score > 0
                ORDER BY u.fails DESC LIMIT ?""",
             (budget,),
         ).fetchall()

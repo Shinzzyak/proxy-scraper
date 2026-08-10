@@ -558,12 +558,14 @@ BAN_MIN_USES = int(os.environ.get("PROXY_BAN_MIN_USES", "3"))
 
 def auto_ban_bad_proxies(limit: int = 200) -> int:
     """Ban proxies with <30% success rate across >=3 uses (score=0; not deleted —
-    next validation can revive them)."""
+    next validation can revive them). R24-P1-2: filter 7 hari terakhir —
+    zombie yang di-revive (baru hidup lagi) tidak dihukum history lama."""
     try:
         conn = get_db()
         try:
             rows = conn.execute(
                 "SELECT ip, port, COUNT(*) n, SUM(success) ok FROM usage_log "
+                "WHERE timestamp >= datetime('now', '-7 days') "
                 "GROUP BY ip, port HAVING n >= ? AND 1.0*ok/n < ? ORDER BY n DESC LIMIT ?",
                 (BAN_MIN_USES, BAN_RATE, limit),
             ).fetchall()

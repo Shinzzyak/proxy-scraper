@@ -213,11 +213,17 @@ def cmd_telegram(args):
 def cmd_revalidate(args):
     import time
     import revalidate_pool
-    revalidate_pool.revalidate(budget=args.budget, mode=args.mode)
-    if args.loop:
-        while True:
-            revalidate_pool.revalidate(budget=args.budget, mode=args.mode)
-            time.sleep(args.interval)
+    if not args.no_lock and not revalidate_pool.acquire_lock():
+        print("⚠ Revalidate sudah jalan (lock), skip")
+        return
+    try:
+        revalidate_pool.revalidate(budget=args.budget, mode=args.mode)
+        if args.loop:
+            while True:
+                revalidate_pool.revalidate(budget=args.budget, mode=args.mode)
+                time.sleep(args.interval)
+    finally:
+        revalidate_pool.release_lock()
 
 
 def cmd_freshen(args):
