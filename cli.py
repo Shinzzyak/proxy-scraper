@@ -211,8 +211,13 @@ def cmd_telegram(args):
 
 
 def cmd_revalidate(args):
+    import time
     import revalidate_pool
     revalidate_pool.revalidate(budget=args.budget, mode=args.mode)
+    if args.loop:
+        while True:
+            revalidate_pool.revalidate(budget=args.budget, mode=args.mode)
+            time.sleep(args.interval)
 
 
 def cmd_freshen(args):
@@ -351,9 +356,10 @@ def main():
 
     rv = sub.add_parser("revalidate", help="R23: revalidate pool proxies (stale-first, tanpa nunggu freshen)")
     rv.add_argument("--budget", type=int, default=300)
-    rv.add_argument("--mode", choices=["stale", "usage"], default="stale")
+    rv.add_argument("--mode", choices=["stale", "usage", "zombie", "mixed"], default="mixed")
     rv.add_argument("--loop", action="store_true", help="loop dengan interval")
     rv.add_argument("--interval", type=int, default=300)
+    rv.add_argument("--no-lock", action="store_true", help="skip lock file (debug)")
 
     args = ap.parse_args()
     if not args.command:

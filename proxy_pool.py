@@ -127,6 +127,14 @@ def log_usage(ip: str, port: int, success: bool, response_time_ms: int = 0, erro
             "INSERT INTO usage_log (ip, port, success, response_time_ms, error) VALUES (?, ?, ?, ?, ?)",
             (ip, port, int(success), response_time_ms, error)
         )
+        # R23-P2-3: proxy yang sukses dipakai gateway = terbukti hidup —
+        # bump last_seen supaya tidak kelihatan stale buat consumer
+        # (--max-age-minutes) dan revalidate tidak buang budget padanya.
+        if success:
+            conn.execute(
+                "UPDATE proxies SET last_seen = ? WHERE ip = ? AND port = ? AND last_seen != ''",
+                (datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), ip, port),
+            )
         conn.commit()
     finally:
         conn.close()

@@ -17,14 +17,47 @@ Alur:
 Budget default 300 per run — VPS 3GB, 200 workers parallel, ~30-60s.
 """
 import argparse
+import os
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 
 from proxy_pool import get_db
 from scraper import validate_single, is_confirmed_proxy
 
 REVALIDATE_WALL_TIMEOUT = 120  # detik
+DATA_DIR = Path(__file__).parent / "data"
+LOCK_FILE = DATA_DIR / "revalidate_pool.lock"
+
+
+def acquire_lock() -> bool:
+    """P0-2: lock file sendiri (bukan lock freshen) — PID + stale replacement.
+    Mencegah dua revalidate tick jalan bareng (double probe + double write)."""
+    DATA_DIR.mkdir(exist_ok=True)
+    try:
+        fd = os.open(LOCK_FILE, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        os.write(fd, f"{os.getpid()} {int(time.time())}".encode())
+        os.close(fd)
+        return True
+    except FileExistsError:
+        # stale lock (PID mati / >30 menit) → replace
+        try:
+            pid, ts = map(int, open(LOCK_FILE).read().split())
+            if not os.path.exists(f"/proc/{pid}") or time.time() - ts > 1800:
+                os.remove(LOCK_FILE)
+                return acquire_lock()
+        except (ValueError, OSError):
+            os.remove(LOCK_FILE)
+            return acquire_lock()
+        return False
+
+
+def release_lock():
+    try:
+        os.remove(LOCK_FILE)
+    except OSError:
+        pass
 
 
 def pick_stale_first(budget: int, min_score: int = 1) -> list:
@@ -62,12 +95,62 @@ def pick_usage_priority(budget: int) -> list:
         conn.close()
 
 
-def revalidate(budget: int = 300, mode: str = "stale", do_anonymity: bool = False) -> dict:
+def pick_failed_usage(budget: int) -> list:
+    """P2-1: proxy yang baru gagal di gateway (fail>=2, 3 hari) — probe ulang.
+    Revalidate 'kapan dibutuhkan' bukan 'kapan terjadwal' — gratis dari usage_log."""
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            """SELECT p.ip, p.port, p.protocol FROM proxies p
+               JOIN (SELECT ip, port, COUNT(*) as fails FROM usage_log
+                     WHERE success = 0 AND timestamp >= datetime('now', '-3 days')
+                     GROUP BY ip, port HAVING fails >= 2) u
+                 ON u.ip = p.ip AND u.port = p.port
+               WHERE p.last_seen != ''
+               ORDER BY u.fails DESC LIMIT ?""",
+            (budget,),
+        ).fetchall()
+        return [(r["ip"], r["port"], r["protocol"]) for r in rows]
+    finally:
+        conn.close()
+
+
+def pick_zombies(budget: int) -> list:
+    """P2-2: revive zombie (last_seen='') — satu-satunya cara proxy ke-ban balik."""
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            """SELECT ip, port, protocol FROM proxies
+               WHERE last_seen = ''
+               ORDER BY score DESC LIMIT ?""",
+            (budget,),
+        ).fetchall()
+        return [(r["ip"], r["port"], r["protocol"]) for r in rows]
+    finally:
+        conn.close()
+
+
+def revalidate(budget: int = 300, mode: str = "mixed", do_anonymity: bool = False) -> dict:
+    """P0-3/P2: probe + ban gagal + revive zombie + usage-fail priority.
+    mode: mixed (stale + failed-usage + zombie), stale, usage."""
     t0 = time.time()
-    if mode == "usage":
-        targets = pick_usage_priority(budget)
-    else:
+    if mode == "stale":
         targets = pick_stale_first(budget)
+    elif mode == "usage":
+        targets = pick_usage_priority(budget)
+    elif mode == "zombie":
+        targets = pick_zombies(budget)
+    else:  # mixed (default)
+        targets = []
+        # 1. failed di gateway (P2-1) — 'kapan dibutuhkan'
+        targets += pick_failed_usage(budget // 4)
+        # 2. zombie (P2-2) — biar bisa balik
+        targets += pick_zombies(budget // 4)
+        # 3. sisa: stale-first (P1-1)
+        targets += pick_stale_first(budget - len(targets))
+        # dedupe
+        seen = set()
+        targets = [t for t in targets if not (t[0], t[1]) in seen and not seen.add((t[0], t[1]))]
     if not targets:
         print("No proxies to revalidate (pool empty?)")
         return {"tested": 0, "alive": 0, "seconds": 0}
@@ -97,23 +180,21 @@ def revalidate(budget: int = 300, mode: str = "stale", do_anonymity: bool = Fals
     finally:
         pool.shutdown(wait=False, cancel_futures=True)
 
-    # Update DB
+    # Update DB — satu commit per batch (P1-1: jangan 1 commit/proxy,
+    # block request path gateway). P0-3: ban yang gagal (score=0 +
+    # last_seen='' → tak ter-pick), bukan cuma bump yang hidup.
     conn = get_db()
     try:
         now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        for ip, port in alive:
-            conn.execute(
-                """UPDATE proxies SET last_seen = ?, score = MIN(100, score + 5),
-                   response_time_ms = CASE WHEN response_time_ms = 0 THEN 100 ELSE response_time_ms END
-                   WHERE ip = ? AND port = ?""",
-                (now, ip, port),
-            )
-        for ip, port in dead:
-            # zombie: last_seen='' → tidak ter-pick gateway/search (F8-8)
-            conn.execute(
-                "UPDATE proxies SET last_seen = '' WHERE ip = ? AND port = ?",
-                (ip, port),
-            )
+        conn.executemany(
+            """UPDATE proxies SET last_seen = ?, score = MIN(100, score + 5)
+               WHERE ip = ? AND port = ?""",
+            [(now, ip, port) for ip, port in alive],
+        )
+        conn.executemany(
+            """UPDATE proxies SET last_seen = '', score = 0 WHERE ip = ? AND port = ?""",
+            [(ip, port) for ip, port in dead],
+        )
         conn.commit()
     finally:
         conn.close()
@@ -126,20 +207,28 @@ def revalidate(budget: int = 300, mode: str = "stale", do_anonymity: bool = Fals
 def main():
     p = argparse.ArgumentParser(description="Revalidate pool proxies (stale-first)")
     p.add_argument("--budget", type=int, default=300, help="max proxies per run")
-    p.add_argument("--mode", choices=["stale", "usage"], default="stale",
-                   help="stale: last_seen lama dulu; usage: proxy favorit gateway dulu")
+    p.add_argument("--mode", choices=["stale", "usage", "zombie", "mixed"], default="mixed",
+                   help="stale: last_seen lama dulu; usage: proxy favorit gateway dulu; "
+                        "zombie: revive proxy ke-ban; mixed (default): failed-usage + zombie + stale")
     p.add_argument("--min-score", type=int, default=1)
+    p.add_argument("--no-lock", action="store_true", help="skip lock file (debug)")
     p.add_argument("--loop", action="store_true", help="jalankan terus dengan interval")
     p.add_argument("--interval", type=int, default=300, help="detik antar run (dengan --loop)")
     args = p.parse_args()
 
-    if args.loop:
-        while True:
+    if not args.no_lock and not acquire_lock():
+        print("⚠ Revalidate sudah jalan (lock), skip", file=sys.stderr)
+        sys.exit(2)
+    try:
+        if args.loop:
+            while True:
+                revalidate(args.budget, args.mode)
+                print(f"💤 sleep {args.interval}s...")
+                time.sleep(args.interval)
+        else:
             revalidate(args.budget, args.mode)
-            print(f"💤 sleep {args.interval}s...")
-            time.sleep(args.interval)
-    else:
-        revalidate(args.budget, args.mode)
+    finally:
+        release_lock()
 
 
 if __name__ == "__main__":
