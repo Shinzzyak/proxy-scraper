@@ -207,7 +207,7 @@ def _pick_proxy(country=""):
     try:
         from proxy_pool import get_best_proxy
         # min_score=1: score 0 = auto-banned (R5-nit) — jangan pernah pilih
-        proxy = get_best_proxy(protocol="http", country_code=country, min_score=1, max_age_minutes=60)
+        proxy = get_best_proxy(protocol="http", country_code=country, min_score=1, max_age_minutes=180)  # R10-1: samakan dengan rotate (7aeaff5) — 60m bikin sticky 100% DIRECT di tengah siklus 6h
         if proxy:
             return f"{proxy['ip']}:{proxy['port']}"
         if country:
@@ -304,7 +304,12 @@ class GatewayHandler(BaseHTTPRequestHandler):
         # R9-1: IPv6 target "[2606:4700::1111]:443" — rpartition on ":" keeps host intact
         host, _, port = self.path.rpartition(":")
         host = host.strip("[]")
-        port = int(port) if port else 443
+        try:
+            port = int(port) if port else 443
+        except ValueError:
+            # R10-3: malformed CONNECT (no port / non-numeric) must 400, not crash
+            self.send_error(400, "Bad CONNECT target")
+            return
         # R9-2: open-relay guard — only allow standard TLS ports through CONNECT.
         # Arbitrary ports (22/25/3389/...) turn the gateway into a scanning relay.
         if port not in (80, 443, 8443):
@@ -313,6 +318,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
         country = self.headers.get("X-Country", "").upper()
         last_err = None
         for _ in range(MAX_FAILOVER):
+            upstream = None
             session_proxy = self._get_session_proxy(country=country)
             if session_proxy == "DIRECT":
                 self._connect_direct(host, port)
@@ -320,6 +326,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
             t0 = time.monotonic()
             try:
                 upstream = socket.create_connection(session_proxy.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
+                upstream.settimeout(UPSTREAM_PROXY_TIMEOUT)  # R10-4: recv ikut timeout — silent upstream ga hang 10s×3
                 upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n".encode())
                 # R9-3: response can arrive in 2+ segments — loop until header end
                 resp = b""
@@ -340,6 +347,13 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 self._tunnel(self.connection, upstream)
                 return
             except Exception as e:
+                # R10-2: close upstream on every error path — silent upstream
+                # (accept, no reply) leaked 1 fd per failover → EMFILE long-running
+                try:
+                    if upstream is not None:
+                        upstream.close()
+                except Exception:
+                    pass
                 self._log_usage(session_proxy, False, str(e), int((time.monotonic() - t0) * 1000))
                 self._blacklist_proxy(session_proxy, str(e))
                 last_err = str(e)
