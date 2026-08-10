@@ -77,25 +77,29 @@ def benchmark_batch(proxies: List[Dict], max_workers: int = MAX_WORKERS,
     total = len(proxies)
     print(f"\n🏎️ Benchmarking {total} proxies ({len(targets)} targets)...\n")
 
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futs = {}
-        for p in proxies:
-            for t in targets:
-                fut = pool.submit(benchmark_single, p, t)
-                futs[fut] = p
+    pool = ThreadPoolExecutor(max_workers=max_workers)
+    futs = {}
+    for p in proxies:
+        for t in targets:
+            fut = pool.submit(benchmark_single, p, t)
+            futs[fut] = p
 
-        done = 0
-        try:
-            for fut in as_completed(futs, timeout=BENCH_WALL_TIMEOUT):  # R11-2: wall cap
-                done += 1
-                result = fut.result()
-                results.append(result)
-                status = "✅" if result["status"] == "ok" else "❌"
-                print(f"  {status} {result['ip']}:{result['port']} → {result['latency_ms']}ms ({result['status']})")
-                if done % 50 == 0:
-                    print(f"  ... {done}/{total * len(targets)} tested")
-        except TimeoutError:
-            print(f"  ⏱️ wall timeout ({BENCH_WALL_TIMEOUT}s) — {done} tested, stopping")
+    done = 0
+    try:
+        for fut in as_completed(futs, timeout=BENCH_WALL_TIMEOUT):  # R11-2: wall cap
+            done += 1
+            result = fut.result()
+            results.append(result)
+            status = "✅" if result["status"] == "ok" else "❌"
+            print(f"  {status} {result['ip']}:{result['port']} → {result['latency_ms']}ms ({result['status']})")
+            if done % 50 == 0:
+                print(f"  ... {done}/{total * len(targets)} tested")
+    except TimeoutError:
+        print(f"  ⏱️ wall timeout ({BENCH_WALL_TIMEOUT}s) — {done} tested, stopping")
+    finally:
+        # R13-1: shutdown(wait=False) — kalau wait=True, timeout hanya
+        # berhenti collect tapi `with` tetap nunggu semua worker 10s
+        pool.shutdown(wait=False, cancel_futures=True)
 
     # Aggregate by proxy (best latency across targets)
     best = {}

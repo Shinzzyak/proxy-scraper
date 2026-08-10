@@ -5,6 +5,7 @@ heatmap.py — Geo-distribution heatmap visualization.
 Generates HTML page with proxy distribution by country.
 """
 import json
+import html  # R13-4
 from typing import Dict, List
 
 COUNTRY_NAMES = {
@@ -41,6 +42,8 @@ def generate_heatmap(proxies: List[Dict], output: str = "heatmap.html"):
         bar_width = round(100 * count / max_count, 1) if max_count else 0
         color = colors[i % len(colors)]
         name = COUNTRY_NAMES.get(cc, cc)
+        cc = html.escape(cc)  # R13-4: country_code dari data live — escape biar ga XSS
+        name = html.escape(name)
         bars_html += f"""
         <div class="bar-row">
             <span class="bar-label">{cc} {name}</span>
@@ -50,7 +53,7 @@ def generate_heatmap(proxies: List[Dict], output: str = "heatmap.html"):
             <span class="bar-value">{count} ({pct}%)</span>
         </div>"""
 
-    html = f"""<!DOCTYPE html>
+    page_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -85,7 +88,7 @@ h1{{font-size:1.5em;margin-bottom:16px;color:#00ff88}}
 </html>"""
 
     with open(output, "w") as f:
-        f.write(html)
+        f.write(page_html)
     print(f"✅ Heatmap → {output} ({len(by_country)} countries, {total} proxies)")
     return by_country
 

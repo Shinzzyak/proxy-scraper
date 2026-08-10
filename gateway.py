@@ -157,12 +157,16 @@ def _drain_usage(max_retries=3):
     Returns (flushed, failed) counts. Retry-capped so a dead DB cannot
     spin forever (T2)."""
     flushed = failed = 0
-    while not _usage_queue.empty():
+    # R13-3: jangan pakai empty() + get_nowait() — race dengan writer
+    # (writer bisa ambil antara empty() dan get). Pakai blocking get
+    # dengan timeout pendek; Empty = queue kosong → break.
+    while True:
         batch = []
         try:
-            batch.append(_usage_queue.get_nowait())
+            item = _usage_queue.get(timeout=0.2)
         except queue.Empty:
             break
+        batch.append(item)
         if _flush_usage(batch):
             flushed += 1
         else:

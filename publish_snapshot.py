@@ -206,7 +206,6 @@ def main() -> int:
     state = load_json(STATE_FILE, {})
     if not isinstance(state, dict):
         state = {}
-    state["last_attempt_at"] = utc_now()
 
     try:
         branch = (run(["git", "rev-parse", "--abbrev-ref", "HEAD"]).stdout or "").strip()
@@ -227,6 +226,9 @@ def main() -> int:
             return 0
 
         if args.dry_run:
+            # R13-2: dry-run harus evaluasi pool LIVE, bukan file basi —
+            # export ulang snapshot dulu (no commit), baru baca stats
+            export_snapshots(args.export_max_age_minutes)
             stats = load_stats()
             ok, reason = quality_gate(stats, args, state)
             changed = artifact_dirty(initial_dirty)
@@ -236,6 +238,8 @@ def main() -> int:
             print("publish:", publish, publish_reason)
             print("stats: total={} countries={}".format(stats.get("total"), len(stats.get("by_country") or {})))
             return 0
+
+        state["last_attempt_at"] = utc_now()  # R13-6: side-effect cuma di run nyata, bukan dry-run
 
         # Sync before generating/staging artifacts. Freshen may have already
         # changed artifacts, so stash those briefly to keep pull/rebase clean.

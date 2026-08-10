@@ -59,10 +59,24 @@ def acquire_lock(max_age_minutes: int = 180) -> bool:
             data = json.loads(LOCK_FILE.read_text())
             started = data.get("started_at_epoch", 0)
             age = time.time() - float(started)
-            if age < max_age_minutes * 60:
+            pid = data.get("pid")
+            if pid:
+                try:
+                    os.kill(pid, 0)  # R13-5: proses mati (SIGKILL/crash) = lock bisa di-replace
+                    alive = True
+                except ProcessLookupError:
+                    alive = False
+                except PermissionError:
+                    alive = True
+            else:
+                alive = True
+            if age < max_age_minutes * 60 and alive:
                 print(f"⚠️ Freshen already running (lock age {age/60:.1f}m): {LOCK_FILE}")
                 return False
-            print(f"⚠️ Stale lock found ({age/60:.1f}m), replacing")
+            if alive:
+                print(f"⚠️ Stale lock found ({age/60:.1f}m), replacing")
+            else:
+                print(f"⚠️ Lock owner PID {pid} dead, replacing (age {age/60:.1f}m)")
         except Exception:
             print("⚠️ Broken lock file, replacing")
     LOCK_FILE.write_text(json.dumps({
