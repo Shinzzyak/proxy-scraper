@@ -65,6 +65,7 @@ PROXY_SOURCES = [
     ("89ip-http", "http://www.89ip.cn/tqdl.html?num=500&format=txt&proxytype=01", "host:port"),
     ("zevtyardt-all", "https://raw.githubusercontent.com/zevtyardt/proxy-list/main/all.txt", "host:port"),
     ("shiftytr-http", "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt", "host:port"),
+    ("shiftytr-https", "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/https.txt", "host:port"),
     ("shiftytr-socks4", "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks4.txt", "host:port"),
     ("shiftytr-socks5", "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/socks5.txt", "host:port"),
     ("aliilapro-http", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/http.txt", "host:port"),
