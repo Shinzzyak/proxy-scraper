@@ -525,6 +525,19 @@ PROXY_SOURCES = [
     ("proxifly-country-ZA", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/ZA/data.txt", "host:port"),
     ("proxifly-country-NG", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/NG/data.txt", "host:port"),
     ("proxifly-country-EG", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/EG/data.txt", "host:port"),
+    # ── R29-AR1: hproxy-com by-country Arab ──
+    # (verified 2026-08-11 live: IL 394, AE 137, SY 27, IQ 19, PS 14, LB 5,
+    # YE 4, SA 3 raw — update tiap jam; QA/KW/BH/OM/JO 0 → skip)
+    ("hproxy-country-IL", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/IL.txt", "host:port"),
+    ("hproxy-country-AE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AE.txt", "host:port"),
+    ("hproxy-country-SY", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SY.txt", "host:port"),
+    ("hproxy-country-IQ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/IQ.txt", "host:port"),
+    ("hproxy-country-PS", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/PS.txt", "host:port"),
+    ("hproxy-country-LB", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/LB.txt", "host:port"),
+    ("hproxy-country-YE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/YE.txt", "host:port"),
+    ("hproxy-country-SA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SA.txt", "host:port"),
+    # geonode PS (verified 2026-08-11: 3 raw)
+    ("geonode-PS", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=PS", "geonode"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
