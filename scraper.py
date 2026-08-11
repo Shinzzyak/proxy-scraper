@@ -497,6 +497,18 @@ PROXY_SOURCES = [
     # hproxy JP/TW (verified 2026-08-11: JP 1476, TW 26 raw)
     ("hproxy-country-JP", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/JP.txt", "host:port"),
     ("hproxy-country-TW", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TW.txt", "host:port"),
+    # ── R29-EU1: hproxy-com by-country EU kecil ──
+    # (verified 2026-08-11 live: AL 18, RS 15, EE 9, CY 8, HR 6, BA 5, GR 4,
+    # NO 3, MK 3 raw — update tiap jam, format host:port; MT/IS/LU 0 → skip)
+    ("hproxy-country-AL", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AL.txt", "host:port"),
+    ("hproxy-country-RS", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/RS.txt", "host:port"),
+    ("hproxy-country-EE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/EE.txt", "host:port"),
+    ("hproxy-country-CY", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CY.txt", "host:port"),
+    ("hproxy-country-HR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/HR.txt", "host:port"),
+    ("hproxy-country-BA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/BA.txt", "host:port"),
+    ("hproxy-country-GR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/GR.txt", "host:port"),
+    ("hproxy-country-NO", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/NO.txt", "host:port"),
+    ("hproxy-country-MK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/MK.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
