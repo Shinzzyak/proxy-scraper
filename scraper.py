@@ -434,6 +434,24 @@ PROXY_SOURCES = [
     # CN 13, HK 16 raw; protocol=http untuk CN/HK kosong)
     ("psv4s5-country-CN", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=CN&timeout=5000", "protocolipport"),
     ("psv4s5-country-HK", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=HK&timeout=5000", "protocolipport"),
+    # ── R28-AS2: Asia Tenggara + Selatan ──
+    # hproxy-com by-country (verified 2026-08-11: VN 182, MY 258 / 50% alive,
+    # PH 401, IN 1904, BD 263, PK 37 raw)
+    ("hproxy-country-VN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/VN.txt", "host:port"),
+    ("hproxy-country-MY", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/MY.txt", "host:port"),
+    ("hproxy-country-PH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/PH.txt", "host:port"),
+    ("hproxy-country-IN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/IN.txt", "host:port"),
+    ("hproxy-country-BD", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/BD.txt", "host:port"),
+    ("hproxy-country-PK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/PK.txt", "host:port"),
+    # proxifly country files Asia Tenggara (verified 2026-08-11: ID 79,
+    # SG 51, KR 21, TH 16, KH 21 raw)
+    ("proxifly-country-ID", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/ID/data.txt", "host:port"),
+    ("proxifly-country-SG", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/SG/data.txt", "host:port"),
+    ("proxifly-country-KR", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/KR/data.txt", "host:port"),
+    ("proxifly-country-TH", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/TH/data.txt", "host:port"),
+    ("proxifly-country-KH", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/KH/data.txt", "host:port"),
+    # proxyscrape v4 http country filter ID (verified 2026-08-11: 258 raw)
+    ("psv4-country-ID", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=ID&timeout=5000", "protocolipport"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
