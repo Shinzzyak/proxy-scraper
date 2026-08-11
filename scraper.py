@@ -509,6 +509,22 @@ PROXY_SOURCES = [
     ("hproxy-country-GR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/GR.txt", "host:port"),
     ("hproxy-country-NO", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/NO.txt", "host:port"),
     ("hproxy-country-MK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/MK.txt", "host:port"),
+    # ── R29-AF1: hproxy-com by-country Afrika ──
+    # (verified 2026-08-11 live: ZA 720, MA 77, KE 34, EG 37, NG 26, GH 8,
+    # BW 8, TZ 7, SN 3 raw — update tiap jam; DZ/TN/ET/CI/CM/UG/ZW/NA 0-1 → skip)
+    ("hproxy-country-ZA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ZA.txt", "host:port"),
+    ("hproxy-country-MA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/MA.txt", "host:port"),
+    ("hproxy-country-KE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KE.txt", "host:port"),
+    ("hproxy-country-EG", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/EG.txt", "host:port"),
+    ("hproxy-country-NG", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/NG.txt", "host:port"),
+    ("hproxy-country-GH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/GH.txt", "host:port"),
+    ("hproxy-country-BW", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/BW.txt", "host:port"),
+    ("hproxy-country-TZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TZ.txt", "host:port"),
+    ("hproxy-country-SN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SN.txt", "host:port"),
+    # proxifly country files Afrika (verified 2026-08-11: ZA 22, NG 4, EG 3 raw)
+    ("proxifly-country-ZA", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/ZA/data.txt", "host:port"),
+    ("proxifly-country-NG", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/NG/data.txt", "host:port"),
+    ("proxifly-country-EG", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/EG/data.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
