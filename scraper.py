@@ -378,6 +378,18 @@ PROXY_SOURCES = [
     ("gem-proxygen-stable-socks5", "https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/Stable/socks5.txt", "host:port"),
     # TheLime1/Validity: 424 http alive-only
     ("gem-lime1-http", "https://raw.githubusercontent.com/TheLime1/Validity/main/data/http.txt", "host:port"),
+    # ── R27-AM3: proxyscrape v2 country filter Amerika (verified 2026-08-11:
+    # US 240, CA 6, MX 14, BR 30, AR 28, CL 9, CO 22, PE 9, VE 14, EC 22)
+    ("proxyscrape-am-US", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=US", "host:port"),
+    ("proxyscrape-am-CA", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=CA", "host:port"),
+    ("proxyscrape-am-MX", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=MX", "host:port"),
+    ("proxyscrape-am-BR", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=BR", "host:port"),
+    ("proxyscrape-am-AR", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=AR", "host:port"),
+    ("proxyscrape-am-CL", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=CL", "host:port"),
+    ("proxyscrape-am-CO", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=CO", "host:port"),
+    ("proxyscrape-am-PE", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=PE", "host:port"),
+    ("proxyscrape-am-VE", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=VE", "host:port"),
+    ("proxyscrape-am-EC", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=EC", "host:port"),
     # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
     # 100 UK proxy fresh)
     ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
