@@ -320,6 +320,23 @@ PROXY_SOURCES = [
     ("geonode-CA", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=CA", "geonode"),
     ("geonode-MX", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=MX", "geonode"),
     ("geonode-BR", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=BR", "geonode"),
+    # geonode Amerika Selatan (verified 2026-08-11: AR 21, CL 5, CO 37, PE 22,
+    # VE 22, EC 11, PY 3; UY 0, BO 1 → skip)
+    ("geonode-AR", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=AR", "geonode"),
+    ("geonode-CL", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=CL", "geonode"),
+    ("geonode-CO", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=CO", "geonode"),
+    ("geonode-PE", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=PE", "geonode"),
+    ("geonode-VE", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=VE", "geonode"),
+    ("geonode-EC", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=EC", "geonode"),
+    ("geonode-PY", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=PY", "geonode"),
+    # psv4 country filter Amerika (verified 2026-08-11: US 45, MX 7, CL 5,
+    # CO 6, VE 10, EC 5; CA 1, BR 2, AR 2, PE 1, UY/BO/PY 0 → skip)
+    ("psv4-country-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=US&timeout=5000", "protocolipport"),
+    ("psv4-country-MX", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=MX&timeout=5000", "protocolipport"),
+    ("psv4-country-CL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=CL&timeout=5000", "protocolipport"),
+    ("psv4-country-CO", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=CO&timeout=5000", "protocolipport"),
+    ("psv4-country-VE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=VE&timeout=5000", "protocolipport"),
+    ("psv4-country-EC", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=EC&timeout=5000", "protocolipport"),
     # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
     # 100 UK proxy fresh)
     ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
