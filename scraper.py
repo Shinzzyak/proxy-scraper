@@ -360,6 +360,24 @@ PROXY_SOURCES = [
     ("gem-ishan-https", "https://raw.githubusercontent.com/IshanSingla/ProxyLists/main/proxys/https.txt", "host:port"),
     ("gem-ishan-socks4", "https://raw.githubusercontent.com/IshanSingla/ProxyLists/main/proxys/socks4.txt", "host:port"),
     ("gem-ishan-all", "https://raw.githubusercontent.com/IshanSingla/ProxyLists/main/proxys/proxys.txt", "host:port"),
+    # rdavydov/proxy-list: update tiap 30 menit, 554 http + 630 socks4 + 247 socks5
+    ("gem-rdavydov-http", "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/http.txt", "host:port"),
+    ("gem-rdavydov-socks4", "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/socks4.txt", "host:port"),
+    ("gem-rdavydov-socks5", "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/socks5.txt", "host:port"),
+    # noarche/proxylist-socks5-sock4-exported-updates: 266 http + 266 socks4 + 655 socks5
+    ("gem-noarche-http", "https://raw.githubusercontent.com/noarche/proxylist-socks5-sock4-exported-updates/main/http-online.txt", "host:port"),
+    ("gem-noarche-socks4", "https://raw.githubusercontent.com/noarche/proxylist-socks5-sock4-exported-updates/main/socks4-online.txt", "host:port"),
+    ("gem-noarche-socks5", "https://raw.githubusercontent.com/noarche/proxylist-socks5-sock4-exported-updates/main/socks5-online.txt", "host:port"),
+    # Skiddle-ID/proxylist: 1960 raw
+    ("gem-skiddle", "https://raw.githubusercontent.com/Skiddle-ID/proxylist/master/proxies.txt", "host:port"),
+    # almroot/proxylist: 419 raw
+    ("gem-almroot", "https://raw.githubusercontent.com/almroot/proxylist/master/list.txt", "host:port"),
+    # proxygenerator1/ProxyGenerator: Stable 74 http + 444 socks4 + 557 socks5
+    ("gem-proxygen-stable-http", "https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/Stable/http.txt", "host:port"),
+    ("gem-proxygen-stable-socks4", "https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/Stable/socks4.txt", "host:port"),
+    ("gem-proxygen-stable-socks5", "https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/Stable/socks5.txt", "host:port"),
+    # TheLime1/Validity: 424 http alive-only
+    ("gem-lime1-http", "https://raw.githubusercontent.com/TheLime1/Validity/main/data/http.txt", "host:port"),
     # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
     # 100 UK proxy fresh)
     ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
