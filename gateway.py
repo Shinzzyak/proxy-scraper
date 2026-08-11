@@ -417,6 +417,10 @@ class GatewayHandler(BaseHTTPRequestHandler):
             country = self.headers.get("X-Country", "").upper()
         if not country and username_region:
             country = username_region
+        # R30-GW1: X-Protocol header — client pilih protocol upstream
+        # ("socks5" = no header leak, aman buat bulk automation akun)
+        if not protocol:
+            protocol = self.headers.get("X-Protocol", "").lower()
         if self.server.mode == "rotate":
             return _next_proxy_round_robin(self.server.rotate_state, country, exclude, protocol)
         session_id = sid or self.headers.get("X-Session-ID", "")
