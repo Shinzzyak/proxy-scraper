@@ -390,6 +390,14 @@ PROXY_SOURCES = [
     ("proxyscrape-am-PE", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=PE", "host:port"),
     ("proxyscrape-am-VE", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=VE", "host:port"),
     ("proxyscrape-am-EC", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=EC", "host:port"),
+    # ── R27-AM4: free-proxy-list.net family (verified 2026-08-11: us 200,
+    # us-proxy.org 200, sslproxies 100 — semua tabel HTML)
+    ("fpl-us", "https://free-proxy-list.net/us-proxy.html", "table"),
+    ("us-proxy-org", "https://www.us-proxy.org/", "table"),
+    ("sslproxies", "https://www.sslproxies.org/", "table"),
+    # ── R27-OB3: proxygenerator1 Unstable (5338 http) + Bes-js (1227) ──
+    ("gem-proxygen-unstable-http", "https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/Unstable/http.txt", "host:port"),
+    ("gem-besjs", "https://raw.githubusercontent.com/Bes-js/public-proxy-list/main/proxies.txt", "host:port"),
     # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
     # 100 UK proxy fresh)
     ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
