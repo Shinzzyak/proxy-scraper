@@ -695,7 +695,54 @@ class GatewayHandler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
         return True
 
+    def _do_freshen(self):
+        """R30-GW2: POST /freshen — trigger freshen_pool.py on-demand.
+
+        Spawn subprocess background (detached), guard concurrent: kalau
+        freshen lagi jalan (cron/agent lain), return 409 jangan dobel.
+        """
+        if not _auth_ok(self, self.server.auth_secret):
+            self.send_error(407, "Proxy Authentication Required")
+            return
+        lock = getattr(self.server, "freshen_lock", None)
+        if lock is None:
+            lock = self.server.freshen_lock = threading.Lock()
+        if not lock.acquire(blocking=False):
+            body = {"status": "busy", "detail": "freshen already running"}
+            self.send_response(409)
+        else:
+            def _run():
+                try:
+                    import subprocess
+                    env = dict(os.environ)
+                    env.setdefault("PROXY_DB", "data/proxies.db")
+                    env.setdefault("PROXY_VALIDATION_WALL_TIMEOUT", "300")
+                    env.setdefault("PROXY_SOURCE_MAX_BYTES", "2000000")
+                    env.setdefault("PROXY_MAX_PROXIES_PER_SOURCE", "15000")
+                    subprocess.run(
+                        [sys.executable, "freshen_pool.py", "--max-validate", "400"],
+                        cwd=os.path.dirname(os.path.abspath(__file__)),
+                        env=env, timeout=900,
+                    )
+                except Exception:
+                    pass
+                finally:
+                    lock.release()
+            threading.Thread(target=_run, daemon=True).start()
+            body = {"status": "started", "detail": "freshen_pool.py --max-validate 400"}
+            self.send_response(202)
+        payload = json.dumps(body).encode()
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
     def do_POST(self):
+        # R30-GW2: POST /freshen → trigger freshen_pool.py on-demand (background)
+        path = self.path.split("?", 1)[0]
+        if path == "/freshen":
+            self._do_freshen()
+            return
         self._forward_via_proxy("POST")
 
     def do_PUT(self):
