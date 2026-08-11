@@ -480,6 +480,23 @@ PROXY_SOURCES = [
     ("geonode-KH", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=KH", "geonode"),
     ("geonode-IQ", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=IQ", "geonode"),
     ("geonode-MM", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=MM", "geonode"),
+    # ── R28-AS5: psv4 tambahan + proxifly tipis + hproxy JP/TW ──
+    # psv4 http (verified 2026-08-11: TH 11, VN 26, KR 7, SG 12 raw)
+    ("psv4-country-TH", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=TH&timeout=5000", "protocolipport"),
+    ("psv4-country-VN", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=VN&timeout=5000", "protocolipport"),
+    ("psv4-country-KR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=KR&timeout=5000", "protocolipport"),
+    ("psv4-country-SG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=SG&timeout=5000", "protocolipport"),
+    # psv4 socks5 (verified 2026-08-11: SG 16, ID 6, KR 6 raw)
+    ("psv4s5-country-SG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=SG&timeout=5000", "protocolipport"),
+    ("psv4s5-country-ID", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=ID&timeout=5000", "protocolipport"),
+    ("psv4s5-country-KR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=KR&timeout=5000", "protocolipport"),
+    # proxifly negara tipis (verified 2026-08-11: IR 6, NP 4, IQ 4 raw)
+    ("proxifly-country-IR", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/IR/data.txt", "host:port"),
+    ("proxifly-country-NP", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/NP/data.txt", "host:port"),
+    ("proxifly-country-IQ", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/IQ/data.txt", "host:port"),
+    # hproxy JP/TW (verified 2026-08-11: JP 1476, TW 26 raw)
+    ("hproxy-country-JP", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/JP.txt", "host:port"),
+    ("hproxy-country-TW", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TW.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
