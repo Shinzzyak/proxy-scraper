@@ -436,11 +436,39 @@ class GatewayHandler(BaseHTTPRequestHandler):
             pass
         # R11-7: retry dengan exclude — proxy #1 flaky jangan bikin session DIRECT
         exclude = set()  # proxies already tried in this retry loop
+        # R26-Z3: sid baru → proxy BEDA dari session lain (rotation beneran).
+        # get_best_proxy selalu return #1 → semua sid dapat IP sama.
+        # Pakai search_proxies top-N + random, exclude proxy yang sudah di-pin.
+        used_proxies = set()
+        try:
+            from proxy_pool import search_proxies  # R26-Z3: lazy import (sama dgn _pick_proxy)
+            for s, entry in getattr(self.server.session_manager, "_sessions", {}).items():
+                p = entry[0] if isinstance(entry, tuple) else entry
+                if p and p != "DIRECT":
+                    used_proxies.add(p)
+        except Exception:
+            pass
         for attempt in range(3):
             try:
-                picked = _pick_proxy(country, exclude=exclude, protocol=protocol)
-                if picked is None:
-                    raise CountryUnavailable(country)
+                if used_proxies:
+                    rows = search_proxies(
+                        protocol=protocol, country_code=country, min_score=1,
+                        max_age_minutes=0, max_results=20,
+                    )
+                    picked = None
+                    for r in rows:
+                        cand = f"{r['ip']}:{r['port']}"
+                        if r.get("protocol") == "socks5":
+                            cand = "socks5://" + cand
+                        if cand not in used_proxies and cand not in exclude:
+                            picked = cand
+                            break
+                    if picked is None:
+                        raise CountryUnavailable(country)
+                else:
+                    picked = _pick_proxy(country, exclude=exclude, protocol=protocol)
+                    if picked is None:
+                        raise CountryUnavailable(country)
                 exclude.add(picked)
                 return self.server.session_manager.get_or_create(
                     session_id, lambda p=picked: p, ttl=ttl
