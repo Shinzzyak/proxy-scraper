@@ -413,6 +413,27 @@ PROXY_SOURCES = [
     ("proxyscrape-eu-IT", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=IT", "host:port"),
     ("proxyscrape-eu-SE", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=SE", "host:port"),
     ("proxyscrape-eu-CZ", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=CZ", "host:port"),
+    # ── R28-AS1: China (CN/HK) + hproxy-com by-country raksasa Asia ──
+    # hproxy-com/free-proxy-list by-country files (verified 2026-08-11 live:
+    # CN 1813 raw / 80% CONNECT-alive, HK 958 / 45%+refusing, ID 2449, SG 598,
+    # KR 1025, TH 853 — update tiap jam, format host:port)
+    ("hproxy-country-CN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CN.txt", "host:port"),
+    ("hproxy-country-HK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/HK.txt", "host:port"),
+    ("hproxy-country-ID", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ID.txt", "host:port"),
+    ("hproxy-country-SG", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SG.txt", "host:port"),
+    ("hproxy-country-KR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KR.txt", "host:port"),
+    ("hproxy-country-TH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TH.txt", "host:port"),
+    # proxifly country files China (verified 2026-08-11: CN 26, HK 29 raw)
+    ("proxifly-country-CN", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CN/data.txt", "host:port"),
+    ("proxifly-country-HK", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/HK/data.txt", "host:port"),
+    # geonode country filter China (verified 2026-08-11: CN 40, HK 49; API
+    # kadang 429 — grace period mencegah false-ban)
+    ("geonode-CN", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=CN", "geonode"),
+    ("geonode-HK", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=HK", "geonode"),
+    # proxyscrape v4 socks5 country filter China (verified 2026-08-11:
+    # CN 13, HK 16 raw; protocol=http untuk CN/HK kosong)
+    ("psv4s5-country-CN", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=CN&timeout=5000", "protocolipport"),
+    ("psv4s5-country-HK", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=HK&timeout=5000", "protocolipport"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
