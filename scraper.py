@@ -337,6 +337,29 @@ PROXY_SOURCES = [
     ("psv4-country-CO", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=CO&timeout=5000", "protocolipport"),
     ("psv4-country-VE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=VE&timeout=5000", "protocolipport"),
     ("psv4-country-EC", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=EC&timeout=5000", "protocolipport"),
+    # ── R27-OB1: repo terpencil (obscure, <100 stars, verified 2026-08-11) ──
+    # TuanMinPay/live-proxy: daily update, 11k+ raw (branch master!)
+    ("gem-tuanminpay-all", "https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/all.txt", "host:port"),
+    ("gem-tuanminpay-http", "https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/http.txt", "host:port"),
+    ("gem-tuanminpay-socks4", "https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/socks4.txt", "host:port"),
+    ("gem-tuanminpay-socks5", "https://raw.githubusercontent.com/TuanMinPay/live-proxy/master/socks5.txt", "host:port"),
+    # andigwandi/free-proxy: 740 raw
+    ("gem-andigwandi", "https://raw.githubusercontent.com/andigwandi/free-proxy/main/proxy_list.txt", "host:port"),
+    # im-razvan/proxy_list: update tiap 15 menit, 268 http + 443 socks5
+    ("gem-razvan-http", "https://raw.githubusercontent.com/im-razvan/proxy_list/main/http.txt", "host:port"),
+    ("gem-razvan-socks5", "https://raw.githubusercontent.com/im-razvan/proxy_list/main/socks5.txt", "host:port"),
+    # MrMarble/proxy-list: 461 raw all
+    ("gem-mrmarble-all", "https://raw.githubusercontent.com/MrMarble/proxy-list/main/all.txt", "host:port"),
+    # SevenworksDev/proxy-list: update tiap 15 menit, 148k http + 122k socks5
+    ("gem-sevenworks-http", "https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/http.txt", "host:port"),
+    ("gem-sevenworks-socks5", "https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/socks5.txt", "host:port"),
+    # Jakee8718/Free-Proxies: 5k+ raw
+    ("gem-jakee8718-http", "https://raw.githubusercontent.com/Jakee8718/Free-Proxies/main/proxy/http.txt", "host:port"),
+    # IshanSingla/ProxyLists: 52k http + 5.8k socks4 + 460 https
+    ("gem-ishan-http", "https://raw.githubusercontent.com/IshanSingla/ProxyLists/main/proxys/http.txt", "host:port"),
+    ("gem-ishan-https", "https://raw.githubusercontent.com/IshanSingla/ProxyLists/main/proxys/https.txt", "host:port"),
+    ("gem-ishan-socks4", "https://raw.githubusercontent.com/IshanSingla/ProxyLists/main/proxys/socks4.txt", "host:port"),
+    ("gem-ishan-all", "https://raw.githubusercontent.com/IshanSingla/ProxyLists/main/proxys/proxys.txt", "host:port"),
     # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
     # 100 UK proxy fresh)
     ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
