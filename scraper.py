@@ -452,6 +452,21 @@ PROXY_SOURCES = [
     ("proxifly-country-KH", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/KH/data.txt", "host:port"),
     # proxyscrape v4 http country filter ID (verified 2026-08-11: 258 raw)
     ("psv4-country-ID", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=ID&timeout=5000", "protocolipport"),
+    # ── R28-AS3: proxyscrape v2 country filter Asia ──
+    # (verified 2026-08-11: CN 53, ID 88, TH 36, IN 32, VN 24, TR 22, IR 20,
+    # SG 16, JP 17, HK 12, KR 8, KZ 4 raw — fresh, format host:port)
+    ("proxyscrape-as-CN", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=CN", "host:port"),
+    ("proxyscrape-as-HK", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=HK", "host:port"),
+    ("proxyscrape-as-ID", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=ID", "host:port"),
+    ("proxyscrape-as-SG", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=SG", "host:port"),
+    ("proxyscrape-as-KR", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=KR", "host:port"),
+    ("proxyscrape-as-TH", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=TH", "host:port"),
+    ("proxyscrape-as-VN", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=VN", "host:port"),
+    ("proxyscrape-as-IN", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=IN", "host:port"),
+    ("proxyscrape-as-TR", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=TR", "host:port"),
+    ("proxyscrape-as-IR", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=IR", "host:port"),
+    ("proxyscrape-as-JP", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=JP", "host:port"),
+    ("proxyscrape-as-KZ", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=KZ", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
