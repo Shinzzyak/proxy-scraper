@@ -587,7 +587,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 # R22-P2: log_usage sukses HANYA setelah probe MITM lolos —
                 # sebelumnya dicatat sebelum probe → sukses palsu masuk usage_log.
-                if not self.server.allow_mitm and self._probe_mitm(host, port, session_proxy):
+                # R30-GW4: X-No-MITM: 1 → paksa probe walau --allow-mitm
+                # (client verify ketat kayak tokenharbor — jangan kasih cert palsu)
+                if (not self.server.allow_mitm or self.headers.get("X-No-MITM")) and self._probe_mitm(host, port, session_proxy):
                     self._log_usage(session_proxy, False, "MITM cert", int((time.monotonic() - t0) * 1000))
                     tried.add(session_proxy)
                     self._blacklist_proxy(session_proxy, "mitm")
