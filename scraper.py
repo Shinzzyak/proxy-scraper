@@ -538,6 +538,17 @@ PROXY_SOURCES = [
     ("hproxy-country-SA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SA.txt", "host:port"),
     # geonode PS (verified 2026-08-11: 3 raw)
     ("geonode-PS", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=PS", "geonode"),
+    # ── R29-AF2: geonode + psv4 + proxifly Afrika ──
+    # geonode (verified 2026-08-11: ZA 12, NG 11, KE 8, EG 5 raw)
+    ("geonode-ZA", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=ZA", "geonode"),
+    ("geonode-NG", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=NG", "geonode"),
+    ("geonode-KE", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=KE", "geonode"),
+    ("geonode-EG", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=EG", "geonode"),
+    # psv4 http (verified 2026-08-11: KE 3, EG 4 raw)
+    ("psv4-country-KE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=KE&timeout=5000", "protocolipport"),
+    ("psv4-country-EG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=EG&timeout=5000", "protocolipport"),
+    # proxifly BW (verified 2026-08-11: 3 raw)
+    ("proxifly-country-BW", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/BW/data.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
