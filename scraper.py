@@ -300,6 +300,26 @@ PROXY_SOURCES = [
     ("psv4-country-AL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=AL&timeout=5000", "protocolipport"),
     ("psv4-country-JP", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=JP&timeout=5000", "protocolipport"),
     ("psv4-country-TW", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=TW&timeout=5000", "protocolipport"),
+    # ── R27-AM1: Amerika Utara+Selatan — proxifly country files (verified
+    # 2026-08-11 live: US 711, CA 37, MX 12, BR 55, AR 7, CL 3, CO 16, PE 3,
+    # VE 5, EC 6, PY 3 raw; BO 0 → skip). Pool lama dominasi EU/Asia.
+    ("proxifly-country-US", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/US/data.txt", "host:port"),
+    ("proxifly-country-CA", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CA/data.txt", "host:port"),
+    ("proxifly-country-MX", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/MX/data.txt", "host:port"),
+    ("proxifly-country-BR", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/BR/data.txt", "host:port"),
+    ("proxifly-country-AR", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/AR/data.txt", "host:port"),
+    ("proxifly-country-CL", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CL/data.txt", "host:port"),
+    ("proxifly-country-CO", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CO/data.txt", "host:port"),
+    ("proxifly-country-PE", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/PE/data.txt", "host:port"),
+    ("proxifly-country-VE", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/VE/data.txt", "host:port"),
+    ("proxifly-country-EC", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/EC/data.txt", "host:port"),
+    ("proxifly-country-PY", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/PY/data.txt", "host:port"),
+    # geonode country filter Amerika (verified 2026-08-11: US 237, CA 15,
+    # MX 35, BR 28; UY 0, BO 1 → skip)
+    ("geonode-US", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=US", "geonode"),
+    ("geonode-CA", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=CA", "geonode"),
+    ("geonode-MX", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=MX", "geonode"),
+    ("geonode-BR", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=BR", "geonode"),
     # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
     # 100 UK proxy fresh)
     ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
