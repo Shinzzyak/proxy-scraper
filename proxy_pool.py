@@ -299,8 +299,12 @@ def get_best_proxy(protocol: str = "", country_code: str = "", min_score: int = 
     """
     conn = get_db()
     try:
-        q = "SELECT * FROM proxies WHERE protocol = ? AND score >= ?"
-        params = [protocol, min_score]
+        q = "SELECT * FROM proxies WHERE score >= ?"
+        params = [min_score]
+        # R26-Z2: protocol kosong = semua protocol ('' = filter gak match apa pun → None → DIRECT)
+        if protocol:
+            q += " AND protocol = ?"
+            params.append(protocol)
         # never return invalid placeholder IPs (e.g. 0.0.0.0) — they pollute pools
         q += " AND ip NOT IN ('0.0.0.0', '127.0.0.1', '255.255.255.255')"
         q += " AND last_seen != ''"  # R16-N3: zombie (auto-ban) jangan ter-pick — konsisten dgn search_proxies
