@@ -467,6 +467,19 @@ PROXY_SOURCES = [
     ("proxyscrape-as-IR", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=IR", "host:port"),
     ("proxyscrape-as-JP", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=JP", "host:port"),
     ("proxyscrape-as-KZ", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=KZ", "host:port"),
+    # ── R28-AS4: geonode country filter Asia ──
+    # (verified 2026-08-11: ID 157, SG 43, IR 23, SY 23, TH 16, KR 13, NP 10,
+    # KH 7, IQ 5, MM 4 raw; API kadang 429 — grace period mencegah false-ban)
+    ("geonode-ID", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=ID", "geonode"),
+    ("geonode-SG", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=SG", "geonode"),
+    ("geonode-KR", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=KR", "geonode"),
+    ("geonode-TH", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=TH", "geonode"),
+    ("geonode-IR", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=IR", "geonode"),
+    ("geonode-SY", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=SY", "geonode"),
+    ("geonode-NP", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=NP", "geonode"),
+    ("geonode-KH", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=KH", "geonode"),
+    ("geonode-IQ", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=IQ", "geonode"),
+    ("geonode-MM", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=MM", "geonode"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
