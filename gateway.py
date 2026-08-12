@@ -818,7 +818,21 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 finally:
                     lock.release()
             threading.Thread(target=_run, daemon=True).start()
-            body = {"status": "started", "detail": "freshen_pool.py --max-validate 400"}
+            # R31-GW11: include pool stats biar agent tau baseline sebelum
+            # fresh (jangan query /health lagi — 1 request cukup).
+            try:
+                import sqlite3
+                db = sqlite3.connect("data/proxies.db", timeout=2)
+                before = {
+                    "total": db.execute("SELECT COUNT(*) FROM proxies").fetchone()[0],
+                    "fresh_1h": db.execute(
+                        "SELECT COUNT(*) FROM proxies WHERE last_seen > datetime('now','-1 hour')"
+                    ).fetchone()[0],
+                }
+                db.close()
+            except Exception:
+                before = {"total": -1, "fresh_1h": -1}
+            body = {"status": "started", "detail": "freshen_pool.py --max-validate 400", "pool_before": before}
             self.send_response(202)
         payload = json.dumps(body).encode()
         self.send_header("Content-Type", "application/json")
