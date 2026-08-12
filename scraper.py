@@ -782,6 +782,20 @@ PROXY_SOURCES = [
     ("kevinriverrrr-socks4", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/socks4.txt", "host:port"),
     ("kevinriverrrr-socks5", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/socks5.txt", "host:port"),
     ("hgbao209-http", "https://raw.githubusercontent.com/Hgbao209/Free-Proxylist/main/proxies_alive.txt", "host:port"),
+    # ── R37 batch 1: repo update harian CI + API JSON publik + socks5 (verified 2026-08-12)
+    # gnxD3RfTT2WE: feed harian ~500/source; azestkingscrown: JSON socks5 stats harian
+    ("gnx-feed-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/socks5-proxy-feed/main/http.txt", "host:port"),
+    ("gnx-feed-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/socks5-proxy-feed/main/socks5.txt", "host:port"),
+    ("gnx-feed-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/socks5-proxy-feed/main/socks4.txt", "host:port"),
+    ("gnx-feed2-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/http-proxy-feed/main/http.txt", "host:port"),
+    ("gnx-feed2-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/http-proxy-feed/main/socks5.txt", "host:port"),
+    ("gnx-feed2-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/http-proxy-feed/main/socks4.txt", "host:port"),
+    ("gnx-live-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/live-socks5-proxies/main/http.txt", "host:port"),
+    ("gnx-live-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/live-socks5-proxies/main/socks4.txt", "host:port"),
+    ("azest-json", "https://raw.githubusercontent.com/azestkingscrown/Free_Proxy_List/main/proxy_stats.json", "jsonaddr"),
+    ("jetkai-json", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/json/proxies.json", "host:port"),
+    ("hproxy-country-VE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/VE.txt", "host:port"),
+    ("hproxy-country-LY", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/LY.txt", "host:port"),
     # Telegram MTProto proxy (t.me/proxy?server=IP&port=... — parser mtproto-link)
 ]
 
