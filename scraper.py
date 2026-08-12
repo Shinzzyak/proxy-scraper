@@ -741,6 +741,103 @@ PROXY_SOURCES = [
     # worldpool by-country (verified live: FR 10/14, RU 16/23)
     ("worldpool-country-FR", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/FR.txt", "host:port"),
     ("worldpool-country-RU", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/RU.txt", "host:port"),
+    # R36-GH: batch A — hproxy multi-protocol + json (verified: 2229-2523 per file, json 24515)
+    ("hproxy-http", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/http.txt", "host:port"),
+    ("hproxy-https", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/https.txt", "host:port"),
+    ("hproxy-socks4", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks4.txt", "host:port"),
+    ("hproxy-socks5", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks5.txt", "host:port"),
+    ("hproxy-json", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/all.json", "jsonproxies"),
+    ("psv3-http", "https://api.proxyscrape.com/v3/?request=getproxies&protocol=http", "host:port"),
+    ("psv3-https", "https://api.proxyscrape.com/v3/?request=getproxies&protocol=https", "host:port"),
+    ("psv3-socks4", "https://api.proxyscrape.com/v3/?request=getproxies&protocol=socks4", "host:port"),
+    # batch B — repo besar 1000+
+    ("syscallh00k-http", "https://raw.githubusercontent.com/syscallh00k/proxylist/main/proxies/http.txt", "host:port"),
+    ("syscallh00k-socks4", "https://raw.githubusercontent.com/syscallh00k/proxylist/main/proxies/socks4.txt", "host:port"),
+    ("syscallh00k-socks5", "https://raw.githubusercontent.com/syscallh00k/proxylist/main/proxies/socks5.txt", "host:port"),
+    ("sevenworks-http", "https://raw.githubusercontent.com/sevenworks/proxy-list/main/proxies/http.txt", "host:port"),
+    ("sevenworks-socks4", "https://raw.githubusercontent.com/sevenworks/proxy-list/main/proxies/socks4.txt", "host:port"),
+    ("sevenworks-socks5", "https://raw.githubusercontent.com/sevenworks/proxy-list/main/proxies/socks5.txt", "host:port"),
+    ("tomjiu-all", "https://raw.githubusercontent.com/tomjiu/proxy-pipeline/main/dist/online/all.txt", "host:port"),
+    ("javadbazokar-http", "https://raw.githubusercontent.com/Javadbazokar/proxy-list/main/http.txt", "host:port"),
+    # batch C — r00tee + cyberh4ck3r + shubhamshendre
+    ("r00tee-Https", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Https.txt", "host:port"),
+    ("r00tee-Socks4", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks4.txt", "host:port"),
+    ("r00tee-Socks5", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt", "host:port"),
+    ("cyberh4ck3r-http", "https://raw.githubusercontent.com/cyberh4ck3r/Proxies/main/http.txt", "host:port"),
+    ("cyberh4ck3r-https", "https://raw.githubusercontent.com/cyberh4ck3r/Proxies/main/https.txt", "host:port"),
+    ("cyberh4ck3r-socks4", "https://raw.githubusercontent.com/cyberh4ck3r/Proxies/main/socks4.txt", "host:port"),
+    ("cyberh4ck3r-socks5", "https://raw.githubusercontent.com/cyberh4ck3r/Proxies/main/socks5.txt", "host:port"),
+    ("shubhamshendre-http", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/proxies/http.txt", "host:port"),
+    ("shubhamshendre-socks4", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/proxies/socks4.txt", "host:port"),
+    ("shubhamshendre-socks5", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/proxies/socks5.txt", "host:port"),
+    # batch D — komutan + proxmint + vakhov + clearproxy + ianlusule
+    ("komutan-http", "https://raw.githubusercontent.com/komutan/proxylist/main/proxies/http.txt", "host:port"),
+    ("komutan-socks4", "https://raw.githubusercontent.com/komutan/proxylist/main/proxies/socks4.txt", "host:port"),
+    ("komutan-socks5", "https://raw.githubusercontent.com/komutan/proxylist/main/proxies/socks5.txt", "host:port"),
+    ("proxmint-http", "https://raw.githubusercontent.com/proxmint/proxy-lists/main/proxies/http.txt", "host:port"),
+    ("proxmint-https", "https://raw.githubusercontent.com/proxmint/proxy-lists/main/proxies/https.txt", "host:port"),
+    ("proxmint-socks4", "https://raw.githubusercontent.com/proxmint/proxy-lists/main/proxies/socks4.txt", "host:port"),
+    ("proxmint-socks5", "https://raw.githubusercontent.com/proxmint/proxy-lists/main/proxies/socks5.txt", "host:port"),
+    ("vakhov-socks4", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxies/socks4.txt", "host:port"),
+    ("clearproxy-socks5", "https://raw.githubusercontent.com/ClearProxy/FreeProxyList/main/proxies/socks5.txt", "host:port"),
+    ("ianlusule-all", "https://raw.githubusercontent.com/Ian-Lusule/Proxy-List/main/proxies.txt", "host:port"),
+    # batch E — hproxy by-country (verified: ID 2341, JP 1354, KR 996, IN 1821, CN 1881, HK 928, TH 821, US 1885, DE 723, FR 899, GB 395, SE 731, AU 1276, CA 847, ZA 697)
+    ("hproxy-country-ID", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ID.txt", "host:port"),
+    ("hproxy-country-JP", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/JP.txt", "host:port"),
+    ("hproxy-country-KR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KR.txt", "host:port"),
+    ("hproxy-country-IN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/IN.txt", "host:port"),
+    ("hproxy-country-CN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CN.txt", "host:port"),
+    ("hproxy-country-HK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/HK.txt", "host:port"),
+    ("hproxy-country-TH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TH.txt", "host:port"),
+    ("hproxy-country-US", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/US.txt", "host:port"),
+    ("hproxy-country-DE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/DE.txt", "host:port"),
+    ("hproxy-country-FR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/FR.txt", "host:port"),
+    ("hproxy-country-GB", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/GB.txt", "host:port"),
+    ("hproxy-country-SE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SE.txt", "host:port"),
+    ("hproxy-country-AU", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AU.txt", "host:port"),
+    ("hproxy-country-CA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CA.txt", "host:port"),
+    ("hproxy-country-ZA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ZA.txt", "host:port"),
+    # batch F — pelengkap (verified)
+    ("ch4120n-US", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/US.txt", "host:port"),
+    ("ch4120n-ID", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/ID.txt", "host:port"),
+    ("ch4120n-CN", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/CN.txt", "host:port"),
+    ("ch4120n-JP", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/JP.txt", "host:port"),
+    ("ch4120n-KR", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/KR.txt", "host:port"),
+    ("ch4120n-IN", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/IN.txt", "host:port"),
+    ("ch4120n-DE", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/DE.txt", "host:port"),
+    ("ch4120n-GB", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/GB.txt", "host:port"),
+    ("ch4120n-FR", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/FR.txt", "host:port"),
+    ("ch4120n-SG", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/SG.txt", "host:port"),
+    ("ch4120n-TH", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/TH.txt", "host:port"),
+    ("ch4120n-VN", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/VN.txt", "host:port"),
+    ("ch4120n-BR", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/BR.txt", "host:port"),
+    ("ch4120n-RU", "https://raw.githubusercontent.com/ch4120n/proxy-list/main/RU.txt", "host:port"),
+    ("krokmazagaga-http", "https://raw.githubusercontent.com/Krokmazagaga/proxy-list/main/http.txt", "host:port"),
+    ("sage520-http", "https://raw.githubusercontent.com/sage520/proxylist/main/http.txt", "host:port"),
+    ("prestonator-http", "https://raw.githubusercontent.com/prestonator/proxy-list/main/http.txt", "host:port"),
+    ("prestonator-socks4", "https://raw.githubusercontent.com/prestonator/proxy-list/main/socks4.txt", "host:port"),
+    ("prestonator-socks5", "https://raw.githubusercontent.com/prestonator/proxy-list/main/socks5.txt", "host:port"),
+    ("amani-socks5", "https://raw.githubusercontent.com/amani-2001/socks5-proxies/main/socks5.txt", "host:port"),
+    ("wyattowalsh-http", "https://raw.githubusercontent.com/wyattowalsh/proxy-list/main/http.txt", "host:port"),
+    ("vann-http", "https://raw.githubusercontent.com/Vann-Dev/proxy-list/main/proxies/http.txt", "host:port"),
+    ("ciara-http", "https://raw.githubusercontent.com/ciara-proxies/proxy-list/main/http.txt", "host:port"),
+    ("ciara-socks4", "https://raw.githubusercontent.com/ciara-proxies/proxy-list/main/socks4.txt", "host:port"),
+    ("ciara-socks5", "https://raw.githubusercontent.com/ciara-proxies/proxy-list/main/socks5.txt", "host:port"),
+    ("accessat-http", "https://raw.githubusercontent.com/Accessat/proxy-list/main/http.txt", "host:port"),
+    ("accessat-socks5", "https://raw.githubusercontent.com/Accessat/proxy-list/main/socks5.txt", "host:port"),
+    ("kevinriverrrr-http", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/http.txt", "host:port"),
+    ("kevinriverrrr-socks4", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/socks4.txt", "host:port"),
+    ("kevinriverrrr-socks5", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/socks5.txt", "host:port"),
+    ("abobys228-http", "https://raw.githubusercontent.com/Abobys228/Proxy/main/http.txt", "host:port"),
+    ("hgbao209-http", "https://raw.githubusercontent.com/Hgbao209/Free-Proxylist/main/proxies_alive.txt", "host:port"),
+    ("naravid-http", "https://raw.githubusercontent.com/Naravid/proxy-list/main/http.txt", "host:port"),
+    ("seyedng-http", "https://raw.githubusercontent.com/seyedng/proxy-list/main/http.txt", "host:port"),
+    ("seyedng-socks5", "https://raw.githubusercontent.com/seyedng/proxy-list/main/socks5.txt", "host:port"),
+    ("momm403-all", "https://raw.githubusercontent.com/momm403/proxy-list/main/all.txt", "host:port"),
+    ("rhoniey1011-all", "https://raw.githubusercontent.com/Rhoniey1011/proxy-list/main/all.txt", "host:port"),
+    ("fir-proxy-http", "https://raw.githubusercontent.com/fir-proxy/free-proxy-list/main/http.txt", "host:port"),
+    # Telegram MTProto proxy (t.me/proxy?server=IP&port=... — parser mtproto-link)
+    ("tgproto-socks5", "https://raw.githubusercontent.com/Surfboardv2ray/TGProto/proxies.txt", "mtproto-link"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -929,6 +1026,13 @@ def extract_proxies(text, fmt="", max_items=None):
                         break
         except Exception:
             pass
+        return proxies
+    # R36-GH: Telegram MTProto proxy links — t.me/proxy?server=IP&port=PORT&secret=...
+    if fmt == "mtproto-link":
+        for m in re.finditer(r"server=(\d{1,3}(?:\.\d{1,3}){3})&port=(\d{1,5})", text):
+            proxies.append(f"{m.group(1)}:{m.group(2)}")
+            if limit and len(proxies) >= limit:
+                break
         return proxies
     # R19: fmt "jsonlines" — satu JSON object per baris (fate0/proxylist):
     # {"host": "1.2.3.4", "port": 8080, ...}
