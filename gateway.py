@@ -304,6 +304,9 @@ def _pick_proxy(country="", exclude=None, protocol=""):
                 candidate = f"{r['ip']}:{r['port']}"
                 if r.get("protocol") == "socks5":
                     candidate = "socks5://" + candidate
+                elif r.get("protocol") == "socks4":
+                    # R31-GW7: SOCKS4 upstream (no header leak, sama kyk socks5)
+                    candidate = "socks4://" + candidate
                 if candidate not in exclude:
                     return candidate
             if country:
@@ -313,6 +316,8 @@ def _pick_proxy(country="", exclude=None, protocol=""):
             cand = f"{proxy['ip']}:{proxy['port']}"
             if proxy.get("protocol") == "socks5":
                 cand = "socks5://" + cand
+            elif proxy.get("protocol") == "socks4":
+                cand = "socks4://" + cand  # R31-GW7
             return cand
         if country:
             return None  # requested country unavailable — no DIRECT leak
@@ -410,6 +415,26 @@ def _socks5_connect(sock, host, port):
         r2 += chunk
 
 
+def _socks4_connect(sock, host, port):
+    """R31-GW7: SOCKS4 CONNECT via upstream socket (no auth).
+
+    SOCKS4 = no header leak (sama seperti SOCKS5). Pool punya 28 SOCKS4
+    yang mubazir — sekarang bisa dipakai. Handshake:
+      VN=0x04, CD=0x01 (CONNECT), DSTPORT, DSTIP=0.0.0.1 (domain via
+      SOCKS4a: userid kosong + hostname setelah 4-byte IP).
+    Response 8 bytes: VN=0, CD (0x5A=granted).
+    """
+    import struct
+    host_b = host.encode()
+    # SOCKS4a: DSTIP 0.0.0.1 + hostname setelah userid (NULL-terminated)
+    req = b"\x04\x01" + struct.pack(">H", port) + b"\x00\x00\x00\x01" + b"\x00" + host_b + b"\x00"
+    sock.sendall(req)
+    r2 = sock.recv(8)
+    if len(r2) < 8 or r2[1] != 0x5A:
+        raise ConnectionError(f"SOCKS4 CONNECT failed: {r2.hex()}")
+    return
+
+
 class GatewayHandler(BaseHTTPRequestHandler):
     # R17-T6: slowloris header — client kirim header sebagian lalu diam →
     # rfile.readline blok selamanya, thread hang. Timeout global request-read.
@@ -470,6 +495,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
                         cand = f"{r['ip']}:{r['port']}"
                         if r.get("protocol") == "socks5":
                             cand = "socks5://" + cand
+                        elif r.get("protocol") == "socks4":
+                            cand = "socks4://" + cand  # R31-GW7
                         if cand not in used_proxies and cand not in exclude:
                             picked = cand
                             break
@@ -494,8 +521,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
         try:
             if proxy and proxy != "DIRECT":
                 # R24-GW5: strip socks5:// prefix — DB key = ip:port
-                if proxy.startswith("socks5://"):
-                    proxy = proxy[len("socks5://"):]
+                # R31-GW7: socks4:// juga
+                if proxy.startswith("socks5://") or proxy.startswith("socks4://"):
+                    proxy = proxy.split("://", 1)[-1]
                 ip, _, port = proxy.rpartition(":")
                 _enqueue_usage(ip, int(port), success, duration_ms, error)
                 if not success:
@@ -556,6 +584,14 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 if session_proxy.startswith("socks5://"):
                     _socks5_connect(upstream, host, port)
                     # handshake sukses = tunnel siap, langsung relay
+                    self.send_response(200, "Connection Established")
+                    self.end_headers()
+                    self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
+                    self._tunnel(self.connection, upstream)
+                    return
+                if session_proxy.startswith("socks4://"):
+                    # R31-GW7: SOCKS4 upstream (no auth, no header leak)
+                    _socks4_connect(upstream, host, port)
                     self.send_response(200, "Connection Established")
                     self.end_headers()
                     self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
