@@ -823,6 +823,14 @@ PROXY_SOURCES = [
     ("shub-http", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/http.txt", "host:port"),
     ("shub-socks4", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/socks4.txt", "host:port"),
     ("shub-socks5", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/socks5.txt", "host:port"),
+    # ── R38-S4: stabilitas batch 4 — anonymous + tested/alive + GUI (verified 2026-08-12)
+    ("gnxanon-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/anonymous-proxy-list-free/main/http.txt", "host:port"),
+    ("gnxanon-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/anonymous-proxy-list-free/main/socks4.txt", "host:port"),
+    ("gnxanon-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/anonymous-proxy-list-free/main/socks5.txt", "host:port"),
+    ("ianlusule-tested", "https://raw.githubusercontent.com/Ian-Lusule/Proxies-GUI/main/assets/tested_proxies.json", "host:port"),
+    ("nikolait-http", "https://raw.githubusercontent.com/NikolaiT/free-proxy-list/main/proxies/http_working.txt", "host:port"),
+    ("nikolait-https", "https://raw.githubusercontent.com/NikolaiT/free-proxy-list/main/proxies/https_working.txt", "host:port"),
+    ("nikolait-socks5", "https://raw.githubusercontent.com/NikolaiT/free-proxy-list/main/proxies/socks5_working.txt", "host:port"),
     # ── R37 batch 2: by-country niche (Afrika/AmLat/Kaukasus/Asia Tengah) + JSON (verified 2026-08-12)
     ("hproxy-country-AM", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AM.txt", "host:port"),
     ("hproxy-country-KZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KZ.txt", "host:port"),
