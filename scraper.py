@@ -920,6 +920,13 @@ PROXY_SOURCES = [
     # psv2-elite 2/10, gproxynet-socks5 1/5; gproxynet-socks4 0/8 → skip)
     ("psv2-elite", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=elite", "host:port"),
     ("gproxynet-socks5", "https://raw.githubusercontent.com/gproxynet/free-proxy-list/main/socks5.txt", "host:port"),
+    # ── R39-CC4: databay-labs by-country EU+JP (verified 2026-08-12 live:
+    # NL 3/6, JP 2/6, DE 1/6 (2x), FR 1/6 (2x), GB 1/4; IN sudah ada R33)
+    ("dlb-country-NL", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/nl/http.txt", "host:port"),
+    ("dlb-country-DE", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/de/http.txt", "host:port"),
+    ("dlb-country-FR", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/fr/http.txt", "host:port"),
+    ("dlb-country-JP", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/jp/http.txt", "host:port"),
+    ("dlb-country-GB", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/gb/http.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
