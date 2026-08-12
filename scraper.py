@@ -549,6 +549,35 @@ PROXY_SOURCES = [
     ("psv4-country-EG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=EG&timeout=5000", "protocolipport"),
     # proxifly BW (verified 2026-08-11: 3 raw)
     ("proxifly-country-BW", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/BW/data.txt", "host:port"),
+    # ── R33-GH1: GitHub baru (verified 2026-08-12 live: CN 3/6, HK 5/10, IN 2/15,
+    # VN 3/6, SG 4/7, DE 3/7, US 1/10, http 4/10, all 2/10, elite 2/10,
+    # KR 1/8, ID 1/5, JP 0/5, TH 1/4, BR 0/2, FR 0/6, GB 0, PH 0, RU 1/6)
+    ("worldpool-country-CN", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/CN.txt", "host:port"),
+    ("worldpool-country-HK", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/HK.txt", "host:port"),
+    ("worldpool-country-IN", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/IN.txt", "host:port"),
+    ("worldpool-country-VN", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/VN.txt", "host:port"),
+    ("worldpool-country-SG", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/SG.txt", "host:port"),
+    ("worldpool-country-DE", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/DE.txt", "host:port"),
+    ("worldpool-country-US", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/US.txt", "host:port"),
+    ("worldpool-http", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/http.txt", "host:port"),
+    ("worldpool-all", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/all.txt", "host:port"),
+    ("worldpool-elite", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/elite.txt", "host:port"),
+    ("worldpool-country-KR", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/KR.txt", "host:port"),
+    ("worldpool-country-ID", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/ID.txt", "host:port"),
+    # (verified 2026-08-12 live: 100 raw, 10/15)
+    ("claude89757-https", "https://raw.githubusercontent.com/claude89757/free_https_proxies/main/https_proxies.txt", "host:port"),
+    # (verified 2026-08-12 live: 19 raw, 4/10)
+    ("HankNovic-socks5", "https://raw.githubusercontent.com/HankNovic/ProxyClean/main/SOCKS5_RAW.txt", "host:port"),
+    # (verified 2026-08-12 live: 180 raw, 6/15)
+    ("morawski-youtube", "https://raw.githubusercontent.com/morawskidotmy/youtube-proxies/main/youtube-proxies.txt", "host:port"),
+    # (verified 2026-08-12 live: 243 raw, 6/15)
+    ("anutmagang-http", "https://raw.githubusercontent.com/anutmagang/Free-HighQuality-Proxy-Socks/main/results/http.txt", "host:port"),
+    # psv4 EC (verified 2026-08-12: 8-9 raw, 4/8) + proxyscrape v2 EC (14 raw, 3/8)
+    ("psv4-country-EC", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=EC&timeout=5000", "protocolipport"),
+    ("proxyscrape-v2-EC", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=EC&ssl=all&anonymity=all", "host:port"),
+    # (verified 2026-08-12: 6 raw, 4/6 host:port; scheme 4/6)
+    ("Xnuvers007-proxy-active", "https://raw.githubusercontent.com/Xnuvers007/free-proxy/main/proxy_active.txt", "host:port"),
+    ("Xnuvers007-proxy-scheme", "https://raw.githubusercontent.com/Xnuvers007/free-proxy/main/proxy_scheme_active.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
