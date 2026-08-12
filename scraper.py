@@ -578,6 +578,19 @@ PROXY_SOURCES = [
     # (verified 2026-08-12: 6 raw, 4/6 host:port; scheme 4/6)
     ("Xnuvers007-proxy-active", "https://raw.githubusercontent.com/Xnuvers007/free-proxy/main/proxy_active.txt", "host:port"),
     ("Xnuvers007-proxy-scheme", "https://raw.githubusercontent.com/Xnuvers007/free-proxy/main/proxy_scheme_active.txt", "host:port"),
+    # ── R33-GH2: GitHub batch 2 (verified 2026-08-12 live: thordata https 4/10,
+    # socks4 3/10, socks5 2/10, http 2/10; snehkr 9/15; pwnx0 http 5/8, mixed 4/8;
+    # TazaProxy 12/15; Breno socks 4/10)
+    ("thordata-http", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxies/http.txt", "host:port"),
+    ("thordata-https", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxies/https.txt", "host:port"),
+    ("thordata-socks4", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxies/socks4.txt", "host:port"),
+    ("thordata-socks5", "https://raw.githubusercontent.com/Thordata/awesome-free-proxy-list/main/proxies/socks5.txt", "host:port"),
+    ("snehkr-gfp", "https://minify.snehkr.in/gfp_proxy.json", "jsonproxies"),
+    ("pwnx0-http", "https://raw.githubusercontent.com/pwnx0/proxy/main/proxies/http.txt", "host:port"),
+    ("pwnx0-mixed", "https://raw.githubusercontent.com/pwnx0/proxy/main/proxies/mixed.txt", "host:port"),
+    ("TazaProxy-troxy", "https://raw.githubusercontent.com/abusaeeidx/TazaProxy-Troxy/main/working_proxies.txt", "protocolipport"),
+    ("BrenoFariasdaSilva-socks", "https://raw.githubusercontent.com/BrenoFariasdaSilva/Proxy-List-Generator/main/Proxies_List/socks_proxy_proxies.txt", "host:port"),
+    ("BrenoFariasdaSilva-free", "https://raw.githubusercontent.com/BrenoFariasdaSilva/Proxy-List-Generator/main/Proxies_List/free_proxy_list_proxies.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -746,6 +759,19 @@ def extract_proxies(text, fmt="", max_items=None):
         try:
             data = json.loads(text)
             for item in data.get("data", []):
+                ip, port = item.get("ip", ""), item.get("port", "")
+                if ip and port and is_valid_proxy_port(int(port)):
+                    proxies.append(f"{ip}:{port}")
+                    if limit and len(proxies) >= limit:
+                        break
+        except Exception:
+            pass
+        return proxies
+    # R33-GH1: fmt "jsonproxies" — dict {"proxies": [{"ip":..., "port":...}, ...]}
+    if fmt == "jsonproxies" and text.strip().startswith("{"):
+        try:
+            data = json.loads(text)
+            for item in data.get("proxies", []):
                 ip, port = item.get("ip", ""), item.get("port", "")
                 if ip and port and is_valid_proxy_port(int(port)):
                     proxies.append(f"{ip}:{port}")
