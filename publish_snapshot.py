@@ -195,7 +195,7 @@ def main() -> int:
     ap.add_argument("--remote", default="origin")
     ap.add_argument("--branch", default="main")
     ap.add_argument("--export-max-age-minutes", type=int, default=1440)
-    ap.add_argument("--min-total", type=int, default=200)  # R7-3: real pool size (was 1000 — never publishable)
+    ap.add_argument("--min-total", type=int, default=30)  # R36-P7: free pool jujur 42-66 — 200 gak pernah ke-publish (was 200)
     ap.add_argument("--min-countries", type=int, default=30)  # R7-3: real country count (was 50)
     ap.add_argument("--min-interval-hours", type=float, default=6.0)
     ap.add_argument("--min-change-pct", type=float, default=5.0)
