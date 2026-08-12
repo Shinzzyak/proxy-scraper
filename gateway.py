@@ -19,6 +19,7 @@ import socket
 import sys
 import threading
 import time
+import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -283,7 +284,7 @@ def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
         _dropped_usage += 1  # bounded queue — drop under burst, count it
 
 
-def _pick_proxy(country="", exclude=None, protocol="", non_dc=False):
+def _pick_proxy(country="", exclude=None, protocol="", non_dc=False, prefer_socks=False):
     """Select a fresh proxy from the pool.
 
     Returns 'host:port' string (or 'socks5://host:port'). Falls back to
@@ -291,49 +292,31 @@ def _pick_proxy(country="", exclude=None, protocol="", non_dc=False):
     but none found, returns None (caller decides — do NOT silently fall back).
     """
     try:
-        from proxy_pool import get_best_proxy, search_proxies
+        from proxy_pool import search_proxies
         # min_score=1: score 0 = auto-banned (R5-nit) — jangan pernah pilih
         # R24-GW5: protocol bebas (http + socks5) — prefix socks5:// untuk routing
-        if exclude:
-            # R11-7: pick a fresh proxy NOT in exclude set (retry loop)
-            rows = search_proxies(
-                protocol=protocol, country_code=country, min_score=1,
-                max_age_minutes=180, max_results=20,
-                residential_only=non_dc,  # R32-P3
-            )
-            for r in rows:
-                candidate = f"{r['ip']}:{r['port']}"
-                if r.get("protocol") == "socks5":
-                    candidate = "socks5://" + candidate
-                elif r.get("protocol") == "socks4":
-                    # R31-GW7: SOCKS4 upstream (no header leak, sama kyk socks5)
-                    candidate = "socks4://" + candidate
-                if candidate not in exclude:
-                    return candidate
-            if country:
-                return None
-        proxy = get_best_proxy(protocol=protocol, country_code=country, min_score=1, max_age_minutes=0)  # max_age=0: freshness disabled — free pool volatile; failover+cooldown handles dead ones
-        if non_dc and proxy and proxy.get("is_datacenter"):
-            # R32-P3: non_dc diminta tapi get_best_proxy balik datacenter →
-            # cari alternatif via search_proxies (residential_only)
-            rows = search_proxies(
-                protocol=protocol, country_code=country, min_score=1,
-                max_age_minutes=60, max_results=10,
-                residential_only=True,
-            )
-            if rows:
-                proxy = rows[0]
-            else:
-                proxy = None
-        if proxy:
-            cand = f"{proxy['ip']}:{proxy['port']}"
-            if proxy.get("protocol") == "socks5":
-                cand = "socks5://" + cand
-            elif proxy.get("protocol") == "socks4":
-                cand = "socks4://" + cand  # R31-GW7
-            return cand
+        rows = search_proxies(
+            protocol=protocol, country_code=country, min_score=1,
+            max_age_minutes=180, max_results=20,
+            residential_only=non_dc,  # R32-P3
+        )
+        if prefer_socks:
+            # R31-GW12: prioritaskan SOCKS — no header leak; HTTP proxy publik
+            # sering append Via/XFF (bikin target deteksi proxy). Socks dulu,
+            # fallback http kalau pool kosong.
+            rows = sorted(rows, key=lambda r: 0 if r.get("protocol") in ("socks5", "socks4") else 1)
+        for r in rows:
+            candidate = f"{r['ip']}:{r['port']}"
+            if r.get("protocol") == "socks5":
+                candidate = "socks5://" + candidate
+            elif r.get("protocol") == "socks4":
+                # R31-GW7: SOCKS4 upstream (no header leak, sama kyk socks5)
+                candidate = "socks4://" + candidate
+            if exclude and candidate in exclude:
+                continue
+            return candidate
         if country:
-            return None  # requested country unavailable — no DIRECT leak
+            return None
     except Exception:
         pass
     return "DIRECT"
@@ -514,15 +497,28 @@ class GatewayHandler(BaseHTTPRequestHandler):
         if self.server.mode == "premium":
             session_id = sid or self.headers.get("X-Session-ID", "")
             if session_id:
-                proxy = _pick_proxy(country, exclude=exclude, protocol=protocol, non_dc=self._non_dc)
-                if proxy is None:
+                if self.headers.get("X-Rotate", "").lower() == "1":
+                    # R39-P2: paksa ganti egress untuk sid ini — lepas mapping
+                    # lama DAN exclude proxy itu (deterministic rows[0] bisa
+                    # milih proxy yang sama lagi → egress tidak berubah).
+                    old = _session_proxy_of(self.server.session_manager, session_id)
+                    self.server.session_manager.release(session_id)
+                    if old and old != "DIRECT":
+                        exclude = set(exclude or ()) | {old}
+                # R32-P1: sticky optional — sid yang sama → proxy yang sama
+                # (via SessionManager mapping, TTL DEFAULT_SESSION_TTL).
+                picked = _pick_proxy(country, exclude=exclude, protocol=protocol,
+                                     non_dc=self._non_dc, prefer_socks=prefer_socks)
+                if picked is None:
                     raise CountryUnavailable(country)
-                return proxy  # per-request pick (TIDAK di-cache session)
-            # tanpa sid → rotasi penuh tiap request
-            proxy = _pick_proxy(country, exclude=exclude, protocol=protocol, non_dc=self._non_dc)
-            if proxy is None:
-                raise CountryUnavailable(country)
-            return proxy
+                return self.server.session_manager.get_or_create(
+                    session_id, lambda: picked, ttl=DEFAULT_SESSION_TTL
+                )
+            # tanpa sid → rotasi penuh tiap request: round-robin atas pool
+            # fresh, exclude yang baru gagal (R21-GW3), skip reuse sampai
+            # pool habis (R39-P1: get_best_proxy deterministic = egress
+            # stuck di 1 IP → rate-limit target; round-robin = merata).
+            return _next_proxy_round_robin(self.server.rotate_state, country, exclude, protocol)
         session_id = sid or self.headers.get("X-Session-ID", "")
         if not session_id:
             proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
@@ -775,9 +771,88 @@ class GatewayHandler(BaseHTTPRequestHandler):
             return
         self._forward_via_proxy("GET")
 
+    def _probe_targets(self, target, limit=10, timeout=8):
+        """R39-P3: probe top-N proxies against target; mark rate-limited (429/403).
+        SOCKS5 upstream di-probe manual (urllib gak support socks; PySocks
+        optional, jangan dependency baru). HTTP proxy → urllib ProxyHandler."""
+        try:
+            from proxy_pool import search_proxies
+            rows = search_proxies(protocol="", country_code="", min_score=1,
+                                  max_age_minutes=180, max_results=limit)
+        except Exception:
+            return []
+        import urllib.request as _ur
+        import urllib.error as _ue
+        import ssl as _ssl
+        from urllib.parse import urlparse
+        parsed = urlparse(target)
+        tgt_host = parsed.hostname
+        tgt_port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        out = []
+        for r in rows:
+            host = f"{r['ip']}:{r['port']}"
+            proto = r.get("protocol", "http")
+            entry = {"ip": r["ip"], "port": r["port"], "protocol": proto,
+                     "score": r.get("score", 0), "ok": False, "status": None, "rate_limited": False}
+            try:
+                if proto in ("socks5", "socks4"):
+                    # manual SOCKS + TLS handshake: status target = TLS layer
+                    s = socket.create_connection((r["ip"], int(r["port"])), timeout=timeout)
+                    s.settimeout(timeout)
+                    if proto == "socks5":
+                        _socks5_connect(s, tgt_host, tgt_port)
+                    else:
+                        _socks4_connect(s, tgt_host, tgt_port)
+                    if parsed.scheme == "https":
+                        ctx = _ssl.create_default_context()
+                        tls = ctx.wrap_socket(s, server_hostname=tgt_host)
+                        tls.close()
+                    else:
+                        s.close()
+                    entry["ok"] = True
+                    entry["status"] = 200
+                else:
+                    handler = _ur.ProxyHandler({"http": f"http://{host}", "https": f"http://{host}"})
+                    opener = _ur.build_opener(handler)
+                    req = _ur.Request(target, headers={"User-Agent": _UA_MOBILE})
+                    resp = opener.open(req, timeout=timeout)
+                    entry["ok"] = True
+                    entry["status"] = resp.status
+                    entry["rate_limited"] = resp.status in (429, 403)
+            except _ue.HTTPError as e:
+                entry["status"] = e.code
+                entry["rate_limited"] = e.code in (429, 403)
+            except Exception:
+                pass
+            out.append(entry)
+        return out
+
+    @staticmethod
+    def _blacklist_rate_limited(results):
+        """Score=0 (auto-ban) proxies rate-limited for the probed target."""
+        banned = []
+        try:
+            from proxy_pool import get_db
+            conn = get_db()
+            try:
+                for e in results:
+                    if e.get("rate_limited"):
+                        conn.execute(
+                            "UPDATE proxies SET score=0, last_seen='' WHERE ip=? AND port=?",
+                            (e["ip"], e["port"]),
+                        )
+                        banned.append(f"{e['ip']}:{e['port']}")
+                conn.commit()
+            finally:
+                conn.close()
+        except Exception:
+            pass
+        return banned
+
     def _do_control(self):
         """GET /ip → egress IP session; GET /ips → daftar IP + status;
-        GET /session/<sid> → status satu session. Dijawab langsung gateway
+        GET /session/<sid> → status satu session; GET /health?target=URL
+        → health-check proxy pool terhadap target. Dijawab langsung gateway
         (tidak forward upstream) — mirip icanhazip."""
         path = self.path.split("?", 1)[0]
         if path not in ("/ip", "/ips", "/health") and not path.startswith("/session/"):
@@ -788,26 +863,18 @@ class GatewayHandler(BaseHTTPRequestHandler):
         sm = self.server.session_manager
         sid, region, ttl = _sid_from_username(self.headers)
         if path == "/health":
-            # R31-GW6: health endpoint — uptime, session count, pool size
+            # R31-GW6: health endpoint — uptime, session count, pool size.
+            # R39-P3: ?target=URL → health-check per-target: test top-N proxy
+            # ke target, tandai yang 429/rate-limited (biar provider strict
+            # kayak opencode dapet IP fresh). X-Blacklist-429: 1 → set score=0
+            # (auto-ban) untuk yang rate_limited.
+            target = ""
             try:
-                import sqlite3
-                db = sqlite3.connect("data/proxies.db", timeout=2)
-                pool_total = db.execute("SELECT COUNT(*) FROM proxies").fetchone()[0]
-                pool_fresh = db.execute(
-                    "SELECT COUNT(*) FROM proxies WHERE last_seen > datetime('now','-1 hour')"
-                ).fetchone()[0]
-                db.close()
+                from urllib.parse import parse_qs
+                target = parse_qs(self.path.split("?", 1)[1]).get("target", [""])[0]
             except Exception:
-                pool_total = pool_fresh = -1
-            sessions = len(getattr(sm, "_sessions", {}))
-            body = {
-                "status": "ok",
-                "uptime_s": int(time.time() - getattr(self.server, "started_at", time.time())),
-                "sessions": sessions,
-                "pool_total": pool_total,
-                "pool_fresh_1h": pool_fresh,
-                "mode": getattr(self.server, "mode", "sticky"),
-            }
+                pass
+            body = self._health_body(target)
         elif path == "/ip":
             proxy = None
             if sid:
@@ -848,6 +915,34 @@ class GatewayHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(payload)
         return True
+
+    def _health_body(self, target=""):
+        """Base health JSON; with target → probe top proxies against it."""
+        try:
+            import sqlite3
+            db = sqlite3.connect("data/proxies.db", timeout=2)
+            pool_total = db.execute("SELECT COUNT(*) FROM proxies").fetchone()[0]
+            pool_fresh = db.execute(
+                "SELECT COUNT(*) FROM proxies WHERE last_seen > datetime('now','-1 hour')"
+            ).fetchone()[0]
+            db.close()
+        except Exception:
+            pool_total = pool_fresh = -1
+        body = {
+            "status": "ok",
+            "uptime_s": int(time.time() - getattr(self.server, "started_at", time.time())),
+            "sessions": len(getattr(self.server.session_manager, "_sessions", {})),
+            "pool_total": pool_total,
+            "pool_fresh_1h": pool_fresh,
+            "mode": getattr(self.server, "mode", "sticky"),
+        }
+        if target:
+            body["target"] = target
+            body["proxies"] = self._probe_targets(target)
+            if self.headers.get("X-Blacklist-429", "").lower() == "1":
+                banned = self._blacklist_rate_limited(body["proxies"])
+                body["banned_429"] = banned
+        return body
 
     def _do_freshen(self):
         """R30-GW2: POST /freshen — trigger freshen_pool.py on-demand.
