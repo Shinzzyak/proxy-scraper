@@ -630,6 +630,13 @@ PROXY_SOURCES = [
     ("tianndev-https", "https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/https.txt", "host:port"),
     ("tianndev-socks4", "https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/socks4.txt", "host:port"),
     ("tianndev-socks5", "https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/socks5.txt", "host:port"),
+    # ── R34-GH3: GitHub batch 3 (verified 2026-08-12 live) ──
+    # Tsprnay/Proxy-lists — master, update harian, host:port per protokol
+    ("tsprnay-all", "https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/all.txt", "host:port"),
+    ("tsprnay-http", "https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/http.txt", "host:port"),
+    ("tsprnay-socks5", "https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/socks5.txt", "host:port"),
+    # krokmazagaga/http-proxy-list — auto-update tiap 5 menit, ~9KB
+    ("krokmaz-http", "https://raw.githubusercontent.com/krokmazagaga/http-proxy-list/main/http.txt", "host:port"),
     # ── R33-GH3: databay-labs by-country + proxy-free + nguywnben
     # (verified 2026-08-12 live: EC 3/5, ID 3/6, RU 4/6, SG 4/6, TR 4/6, US 4/6,
     # VN 3/6, TH 3/6, IR 2/3, KZ 2/3, BD 2/6, KR 2/4, MY 2/3, PH 2/6, IN 2/6,
