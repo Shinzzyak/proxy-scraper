@@ -173,6 +173,10 @@ def export_pool_snapshots(max_age_minutes: int = 1440) -> int:
         print("⚠️ No fresh confirmed proxies; preserving the last published snapshot", file=sys.stderr)
         return 0
 
+    # R39-PRIO: proxy manual dari user (source_name='manual-light') TIDAK boleh
+    # ke-publish ke GitHub — itu private, cuma buat gateway internal.
+    proxies = [p for p in proxies if (p.get("source_name") or "") != "manual-light"]
+
     proxies.sort(
         key=lambda p: (-int(p.get("score") or 0), int(p.get("response_time_ms") or 999999), p.get("ip", "")),
     )
