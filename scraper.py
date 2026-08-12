@@ -647,6 +647,18 @@ PROXY_SOURCES = [
     ("gnx-live-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/live-socks5-proxies/main/socks5.txt", "host:port"),
     ("gnx-pool-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/free-proxy-pool-2026/main/socks4.txt", "host:port"),
     ("gnx-mixed-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/mixed-proxy-list/main/http.txt", "host:port"),
+    # ── R34-GH5: GitHub batch 5 (verified 2026-08-12 live) ──
+    # dinoz0rg/proxy-list — checked json {address: ip:port}, update harian
+    ("dinoz0rg-http", "https://raw.githubusercontent.com/dinoz0rg/proxy-list/main/checked_proxies/http.json", "jsonaddr"),
+    ("dinoz0rg-socks4", "https://raw.githubusercontent.com/dinoz0rg/proxy-list/main/checked_proxies/socks4.json", "jsonaddr"),
+    ("dinoz0rg-socks5", "https://raw.githubusercontent.com/dinoz0rg/proxy-list/main/checked_proxies/socks5.json", "jsonaddr"),
+    # snove999/emby-proxy-list — output/all.json {data:[{address,ip,port}]}
+    ("emby-json", "https://raw.githubusercontent.com/snove999/emby-proxy-list/main/output/all.json", "jsonaddr"),
+    # Tsprnay socks4/https + gnx bulk feeds
+    ("tsprnay-socks4", "https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/socks4.txt", "host:port"),
+    ("tsprnay-https", "https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/https.txt", "host:port"),
+    ("gnx-bulk-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/bulk-http-proxy-list/main/http.txt", "host:port"),
+    ("gnx-bulk-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/bulk-socks-proxy-list/main/socks5.txt", "host:port"),
     # ── R33-GH3: databay-labs by-country + proxy-free + nguywnben
     # (verified 2026-08-12 live: EC 3/5, ID 3/6, RU 4/6, SG 4/6, TR 4/6, US 4/6,
     # VN 3/6, TH 3/6, IR 2/3, KZ 2/3, BD 2/6, KR 2/4, MY 2/3, PH 2/6, IN 2/6,
@@ -946,6 +958,33 @@ def extract_proxies(text, fmt="", max_items=None):
                 m = re.match(r"^[a-z0-9]+://([\d.]+):(\d+)$", p)
                 if m and _is_valid_ipv4(m.group(1)) and is_valid_proxy_port(int(m.group(2))) and not is_blocked_ip(m.group(1)):
                     proxies.append(f"{m.group(1)}:{m.group(2)}")
+                    if limit and len(proxies) >= limit:
+                        return proxies
+        except Exception:
+            pass
+        return proxies
+    # R34-GH5: fmt "jsonaddr" — JSON list [{address: "ip:port", ...}] atau
+    # dict {data: [{address/ip+port, ...}]} (dinoz0rg, snove999)
+    if fmt == "jsonaddr" and text.strip().startswith(("{", "[")):
+        try:
+            data = json.loads(text)
+            items = data.get("data", data) if isinstance(data, dict) else data
+            if isinstance(items, dict):
+                items = [items]
+            for item in items:
+                ip, port = "", ""
+                addr = item.get("address", "")
+                if addr and ":" in addr:
+                    ip, port = addr.rsplit(":", 1)
+                else:
+                    ip, port = item.get("ip", ""), item.get("port", "")
+                if (
+                    _is_valid_ipv4(ip)
+                    and str(port).isdigit()
+                    and is_valid_proxy_port(int(port))
+                    and not is_blocked_ip(ip)
+                ):
+                    proxies.append(f"{ip}:{port}")
                     if limit and len(proxies) >= limit:
                         return proxies
         except Exception:
