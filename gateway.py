@@ -742,7 +742,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 if session_id:
                     self.server.session_manager.release(session_id)
                 last_err = str(e)
-        self.send_error(502, f"Upstream error: {last_err}")
+        # R39-BP: client putus koneksi duluan — jangan spam traceback BrokenPipe
+        try:
+            self.send_error(502, f"Upstream error: {last_err}")
+        except (BrokenPipeError, ConnectionResetError):
+            pass
 
     def _blacklist_proxy(self, proxy, error=""):
         """Blacklist a failing proxy in both session manager and rotate pool."""
@@ -763,7 +767,10 @@ class GatewayHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self._tunnel(self.connection, remote)
         except Exception as e:
-            self.send_error(502, f"Direct connection failed: {e}")
+            try:
+                self.send_error(502, f"Direct connection failed: {e}")
+            except (BrokenPipeError, ConnectionResetError):
+                pass
 
     def do_GET(self):
         # R26-Z1 (proxy rotation): endpoint kontrol — /ip, /ips, /session/<sid>
@@ -1115,7 +1122,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 except Exception:
                     pass
                 last_err = str(e)
-        self.send_error(502, f"Upstream error: {last_err}")
+        # R39-BP: client putus koneksi duluan — jangan spam traceback BrokenPipe
+        try:
+            self.send_error(502, f"Upstream error: {last_err}")
+        except (BrokenPipeError, ConnectionResetError):
+            pass
 
     def _forward_direct(self, method, url, body=None):
         """Forward without upstream proxy.
@@ -1156,10 +1167,16 @@ class GatewayHandler(BaseHTTPRequestHandler):
         except urllib.error.HTTPError as e:
             self.send_response(e.code)
             self.end_headers()
-            if e.readable():
-                self.wfile.write(e.read(65536))
+            try:
+                if e.readable():
+                    self.wfile.write(e.read(65536))
+            except (BrokenPipeError, ConnectionResetError):
+                pass
         except Exception as e:
-            self.send_error(502, f"Direct error: {e}")
+            try:
+                self.send_error(502, f"Direct error: {e}")
+            except (BrokenPipeError, ConnectionResetError):
+                pass
 
     def _forward_ja3(self, method, url, body=None):
         """R32-J1: forward via curl_cffi (JA3 Chrome impersonation).
