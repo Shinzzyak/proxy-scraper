@@ -47,6 +47,12 @@ ROTATE_MIN_SCORE = 30   # tolerate lower score for rotation variety
 MAX_FAILOVER = 3        # ProxyGate parity: try up to 3 proxies per request (B3)
 AUTH_WINDOW = 300       # HMAC auth timestamp window (seconds) — replay-safe (B4)
 
+# R31-GW5: UA default browser mobile — Python-urllib/3.x = sinyal bot gede;
+# target (Z.ai, tokenharbor, ds-limit) sering filter UA proxy/datacenter.
+_UA_MOBILE = ("Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/UD1A.231105.004) "
+              "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.165 "
+              "Mobile Safari/537.36")
+
 # Cooldown mapping per failure type (farukbagci/proxy-pool — 3M records @48req/s):
 # timeout/refused = transient → short; 429/403 = site-level ban → long (R5)
 COOLDOWN_MAP = {
@@ -654,14 +660,35 @@ class GatewayHandler(BaseHTTPRequestHandler):
         GET /session/<sid> → status satu session. Dijawab langsung gateway
         (tidak forward upstream) — mirip icanhazip."""
         path = self.path.split("?", 1)[0]
-        if path not in ("/ip", "/ips") and not path.startswith("/session/"):
+        if path not in ("/ip", "/ips", "/health") and not path.startswith("/session/"):
             return False
         if not _auth_ok(self, self.server.auth_secret):
             self.send_error(407, "Proxy Authentication Required")
             return True
         sm = self.server.session_manager
         sid, region, ttl = _sid_from_username(self.headers)
-        if path == "/ip":
+        if path == "/health":
+            # R31-GW6: health endpoint — uptime, session count, pool size
+            try:
+                import sqlite3
+                db = sqlite3.connect("data/proxies.db", timeout=2)
+                pool_total = db.execute("SELECT COUNT(*) FROM proxies").fetchone()[0]
+                pool_fresh = db.execute(
+                    "SELECT COUNT(*) FROM proxies WHERE last_seen > datetime('now','-1 hour')"
+                ).fetchone()[0]
+                db.close()
+            except Exception:
+                pool_total = pool_fresh = -1
+            sessions = len(getattr(sm, "_sessions", {}))
+            body = {
+                "status": "ok",
+                "uptime_s": int(time.time() - getattr(self.server, "started_at", time.time())),
+                "sessions": sessions,
+                "pool_total": pool_total,
+                "pool_fresh_1h": pool_fresh,
+                "mode": getattr(self.server, "mode", "sticky"),
+            }
+        elif path == "/ip":
             proxy = None
             if sid:
                 proxy = _session_proxy_of(sm, sid)
@@ -796,11 +823,28 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 })
                 opener = urllib.request.build_opener(handler)
                 req = urllib.request.Request(url, data=body, method=method)
+                # R31-GW5: header hygiene — jangan forward header yang bocorin
+                # asal koneksi (Via/XFF/Forwarded/X-Real-IP dari client bisa
+                # kontradiksi sama egress proxy → target deteksi). X-Spoof-IP
+                # opsional: set XFF palsu (efektif dgn elite proxy yang gak append).
+                has_ua = False
                 for key, val in self.headers.items():
+                    kl = key.lower()
                     # R7-1: NEVER forward Proxy-Authorization (HMAC client creds)
                     # to a public upstream — replay within AUTH_WINDOW.
-                    if key.lower() not in ("proxy-connection", "host", "x-session-id", "proxy-authorization"):
-                        req.add_header(key, val)
+                    if kl in ("proxy-connection", "host", "x-session-id", "proxy-authorization",
+                              "via", "forwarded", "x-forwarded-for", "x-real-ip", "x-spoof-ip"):
+                        continue
+                    if kl == "user-agent":
+                        has_ua = True
+                    req.add_header(key, val)
+                # R31-GW5: UA default browser mobile — Python-urllib/3.x = sinyal
+                # bot gede; target sering filter UA proxy/datacenter.
+                if not has_ua:
+                    req.add_header("User-Agent", _UA_MOBILE)
+                spoof = self.headers.get("X-Spoof-IP", "").strip()
+                if spoof:
+                    req.add_header("X-Forwarded-For", spoof)
                 resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
                 self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
                 self.send_response(resp.status)
