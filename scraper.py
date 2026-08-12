@@ -877,6 +877,24 @@ PROXY_SOURCES = [
     ("gnx-free-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/socks5-proxies-free/main/socks4.txt", "host:port"),
     ("gnx-rotating-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/rotating-socks5-proxies/main/socks4.txt", "host:port"),
     # Telegram MTProto proxy (t.me/proxy?server=IP&port=... — parser mtproto-link)
+    # ── R39-LOC1: source bahasa lokal (non-English, verified 2026-08-12) ──
+    # CN: socks5-proxy.github.io — zh-CN site, allproxy.html = riwayat 795 proxy,
+    # index.html = live 16 (update 2026-08-11)
+    ("s5proxy-cn-all", "https://raw.githubusercontent.com/socks5-proxy/socks5-proxy.github.io/main/allproxy.html", "host:port"),
+    ("s5proxy-cn-live", "https://raw.githubusercontent.com/socks5-proxy/socks5-proxy.github.io/main/index.html", "host:port"),
+    # CN: Sage520/Proxy-List — README "免费代理列表定时更新", update harian
+    # (verified live: socks5 4/4 via --socks5-hostname, MITM cert — pakai -k)
+    ("sage520-cn-http", "https://raw.githubusercontent.com/Sage520/Proxy-List/main/http.txt", "host:port"),
+    ("sage520-cn-socks4", "https://raw.githubusercontent.com/Sage520/Proxy-List/main/socks4.txt", "host:port"),
+    ("sage520-cn-socks5", "https://raw.githubusercontent.com/Sage520/Proxy-List/main/socks5.txt", "host:port"),
+    # RU: HUZAKI-PROJECT/proxy_list — "Прокси лист/по возможностю буду пополнять"
+    ("huzaki-ru-all", "https://raw.githubusercontent.com/HUZAKI-PROJECT/proxy_list/main/proxies.txt", "host:port"),
+    # CN: HankNovic/ProxyClean — "专注国内可用的免费 Socks5 代理池" — SOCKS5.txt
+    # format socks5://host:port (beda dari SOCKS5_RAW.txt host:port yg sudah ada)
+    ("hanknovic-cn-socks5url", "https://raw.githubusercontent.com/HankNovic/ProxyClean/main/SOCKS5.txt", "protocolipport"),
+    # KR: 0verfl0w767/kr-proxy-list-parser — "업타임이 높은 한국 프록시 5개를 하루마다 갱신"
+    # JSON [{ip, port, fullAddress, ...}]
+    ("krproxy-kr-json", "https://raw.githubusercontent.com/0verfl0w767/kr-proxy-list-parser/main/proxy.json", "jsonaddr"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
