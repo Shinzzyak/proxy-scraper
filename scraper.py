@@ -820,6 +820,19 @@ PROXY_SOURCES = [
     ("proxifly-country-LY", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/LY/data.txt", "host:port"),
     ("psalm01-json", "https://raw.githubusercontent.com/Psalm01-bot/Proxy-list-json-file/main/Proxy-list-1.json", "jsonlines"),
     ("debro-json", "https://raw.githubusercontent.com/DeBrosDAO/anyone-proxy-list/main/anonproxies.json", "jsonlines"),
+    # ── R37 batch 4: gnxD3RfTT2WE socks5 feeds lain (verified 2026-08-12)
+    ("gnx-free-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/socks5-proxies-free/main/socks5.txt", "host:port"),
+    ("gnx-public-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/public-socks5-proxies/main/socks5.txt", "host:port"),
+    ("gnx-rotating-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/rotating-socks5-proxies/main/socks5.txt", "host:port"),
+    ("gnx-mix-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/http-socks4-socks5-proxies/main/http.txt", "host:port"),
+    ("gnx-mix-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/http-socks4-socks5-proxies/main/socks5.txt", "host:port"),
+    ("gnx-mix-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/http-socks4-socks5-proxies/main/socks4.txt", "host:port"),
+    ("gnx-rotating-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/rotating-socks5-proxies/main/http.txt", "host:port"),
+    ("gnx-public-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/public-socks5-proxies/main/http.txt", "host:port"),
+    ("gnx-public-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/public-socks5-proxies/main/socks4.txt", "host:port"),
+    ("gnx-free-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/socks5-proxies-free/main/http.txt", "host:port"),
+    ("gnx-free-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/socks5-proxies-free/main/socks4.txt", "host:port"),
+    ("gnx-rotating-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/rotating-socks5-proxies/main/socks4.txt", "host:port"),
     # Telegram MTProto proxy (t.me/proxy?server=IP&port=... — parser mtproto-link)
 ]
 
