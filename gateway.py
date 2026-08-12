@@ -466,6 +466,12 @@ class GatewayHandler(BaseHTTPRequestHandler):
         # ("socks5" = no header leak, aman buat bulk automation akun)
         if not protocol:
             protocol = self.headers.get("X-Protocol", "").lower()
+        # R31-GW12: X-Prefer: socks — prioritaskan SOCKS5/4 di atas HTTP
+        # (socks = no header leak; HTTP proxy publik sering append Via/XFF).
+        # Implementasi: coba socks dulu; kalau pool kosong, fallback http.
+        prefer_socks = self.headers.get("X-Prefer", "").lower() == "socks"
+        if prefer_socks and not protocol:
+            protocol = "socks5"
         if self.server.mode == "rotate":
             return _next_proxy_round_robin(self.server.rotate_state, country, exclude, protocol)
         session_id = sid or self.headers.get("X-Session-ID", "")
