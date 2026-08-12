@@ -3,29 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Free proxy scraper — 400+ sources, 100+ countries. Live dashboard + GitHub repo.">
+<meta name="description" content="Proxy Scraper — open-source free proxy pool. 400+ sources, 100+ countries, SQLite-backed, GitHub snapshot exports.">
 <title>Proxy Scraper — Free Proxy Pool</title>
-<meta http-equiv="refresh" content="0; url=https://github.com/Shinzzyak/proxy-scraper">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+:root{
+--black:#171717;--white:#ffffff;--gray-600:#4d4d4d;--gray-400:#808080;
+--gray-100:#ebebeb;--gray-50:#fafafa;
+--ring:rgba(0,0,0,0.08) 0px 0px 0px 1px;
+--card:rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, rgba(0,0,0,0.04) 0px 8px 8px -8px, #fafafa 0px 0px 0px 1px;
+--focus:hsla(212,100%,48%,1);
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#e0e0e0;display:flex;align-items:center;justify-content:center;min-height:100vh}
-.card{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:16px;padding:48px;max-width:520px;text-align:center}
-h1{color:#00ff88;font-size:1.8em;margin-bottom:8px}
-p{color:#888;margin-bottom:24px;line-height:1.5}
-a.btn{display:inline-block;background:#00ff88;color:#0a0a0a;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:1.1em}
-a.btn:hover{background:#00cc6a}
-.alt{margin-top:16px;font-size:.85em}
-.alt a{color:#00ccff;text-decoration:none}
-.alt a:hover{text-decoration:underline}
+html{scroll-behavior:smooth}
+body{font-family:'Geist',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased}
+.mono{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--black);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Nav */
+nav{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px;z-index:10}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+.logo{font-weight:600;font-size:16px;letter-spacing:-0.32px}
+.logo span{color:var(--gray-400)}
+.nav-links{display:flex;gap:28px;align-items:center;font-size:14px;font-weight:500}
+.nav-links a{color:var(--gray-600)}
+.nav-links a:hover{color:var(--black)}
+.cta{background:var(--black);color:var(--white)!important;padding:8px 16px;border-radius:6px;font-weight:500}
+.cta:hover{background:#000;text-decoration:none}
+
+/* Hero */
+.hero{max-width:1100px;margin:0 auto;padding:120px 24px 80px;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#ebf5ff;color:#0068d6;font-size:12px;font-weight:500;padding:4px 12px;border-radius:9999px;margin-bottom:24px}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:#0068d6;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:64px;font-weight:600;line-height:1.0;letter-spacing:-2.88px;margin-bottom:24px}
+.hero p{font-size:20px;font-weight:400;line-height:1.8;color:var(--gray-600);max-width:640px;margin:0 auto 40px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-dark{background:var(--black);color:var(--white);padding:12px 24px;border-radius:6px;font-size:14px;font-weight:500}
+.btn-dark:hover{background:#000;text-decoration:none}
+.btn-ghost{background:var(--white);color:var(--black);padding:12px 24px;border-radius:6px;font-size:14px;font-weight:500;box-shadow:var(--ring)}
+.btn-ghost:hover{text-decoration:none;box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px}
+
+/* Stats */
+.stats{max-width:1100px;margin:0 auto;padding:0 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.stat{background:var(--white);box-shadow:var(--card);border-radius:8px;padding:32px 24px;text-align:center}
+.stat .num{font-size:48px;font-weight:600;letter-spacing:-2.4px;line-height:1}
+.stat .label{font-size:13px;font-weight:500;color:var(--gray-400);margin-top:12px;letter-spacing:-0.32px}
+.stat .sub{font-size:12px;font-family:'Geist Mono',monospace;color:var(--gray-400);margin-top:4px}
+
+/* Features */
+.features{max-width:1100px;margin:0 auto;padding:0 24px 96px}
+.features h2{font-size:40px;font-weight:600;letter-spacing:-2.4px;line-height:1.2;margin-bottom:48px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.feat{background:var(--white);box-shadow:var(--card);border-radius:8px;padding:32px}
+.feat .mono{font-size:12px;font-weight:500;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.feat h3{font-size:24px;font-weight:600;letter-spacing:-0.96px;margin-bottom:8px}
+.feat p{font-size:16px;line-height:1.5;color:var(--gray-600)}
+
+/* Pipeline */
+.pipeline{max-width:1100px;margin:0 auto;padding:0 24px 96px}
+.pipe{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{background:var(--white);box-shadow:var(--card);border-radius:8px;padding:32px}
+.step .mono{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.step h3{font-size:24px;font-weight:600;letter-spacing:-0.96px;margin-bottom:8px}
+.step p{font-size:16px;line-height:1.5;color:var(--gray-600)}
+.step-1 .mono{color:#0a72ef}.step-2 .mono{color:#de1d8d}.step-3 .mono{color:#ff5b4f}
+
+/* Footer */
+footer{border-top:1px solid var(--gray-100);padding:32px 24px;text-align:center}
+footer .mono{font-size:12px;color:var(--gray-400)}
+
+@media(max-width:768px){
+.hero{padding:80px 20px 56px}
+.hero h1{font-size:40px;letter-spacing:-1.6px}
+.hero p{font-size:17px}
+.pipe{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div class="card">
-<h1>🔄 Proxy Scraper</h1>
-<p>Free proxy scraper with validation, scoring, geolocation, SQLite pool, and GitHub snapshot exports. 400+ sources, 100+ countries.</p>
-<a class="btn" href="https://github.com/Shinzzyak/proxy-scraper">Open Repository →</a>
-<div class="alt"><a href="dashboard.html">Live Dashboard →</a></div>
+<nav>
+<div class="nav-inner">
+<div class="logo">Proxy<span>Scraper</span></div>
+<div class="nav-links">
+<a href="#features">Features</a>
+<a href="dashboard.html">Dashboard</a>
+<a class="cta" href="https://github.com/Shinzzyak/proxy-scraper">View Repository</a>
 </div>
-<script>setTimeout(function(){location.href='https://github.com/Shinzzyak/proxy-scraper'},5000);</script>
+</div>
+</nav>
+
+<section class="hero">
+<div class="badge"><span class="dot"></span>Open source · Free · Self-hosted</div>
+<h1>Free proxy pool,<br>engineered like infrastructure.</h1>
+<p>Proxy Scraper is an open-source proxy pool manager — 400+ sources, live validation, SQLite-backed, geolocation scoring, and a rotating gateway for automation. Built to be deployed, not rented.</p>
+<div class="hero-btns">
+<a class="btn-dark" href="https://github.com/Shinzzyak/proxy-scraper">Get Started →</a>
+<a class="btn-ghost" href="dashboard.html">Live Dashboard</a>
+</div>
+</section>
+
+<section class="stats" id="stats">
+<div class="stat"><div class="num" id="statSources">400+</div><div class="label">Proxy Sources</div><div class="sub">SCALING CONTINUOUSLY</div></div>
+<div class="stat"><div class="num" id="statCountries">100+</div><div class="label">Countries</div><div class="sub">GEO-TAGGED POOL</div></div>
+<div class="stat"><div class="num" id="statProxies">2.4k</div><div class="label">Live Proxies</div><div class="sub">VALIDATED POOL</div></div>
+<div class="stat"><div class="num" id="statFresh">99</div><div class="label">Fresh &lt; 1h</div><div class="sub">REFRESHED EVERY 2H</div></div>
+</section>
+
+<section class="features" id="features">
+<h2>Everything you need.<br>Nothing you don't.</h2>
+<div class="grid">
+<div class="feat"><div class="mono">Validation</div><h3>TLS-certified pool</h3><p>Every proxy passes real TLS relay checks — MITM and dead proxies are pruned automatically.</p></div>
+<div class="feat"><div class="mono">Gateway</div><h3>Sticky &amp; rotating</h3><p>Session-sticky or per-request rotation, region pinning, SOCKS4/5 + HTTP upstreams.</p></div>
+<div class="feat"><div class="mono">Anti-Detection</div><h3>Fingerprint aware</h3><p>Header hygiene, mobile UA, JA3 Chrome impersonation, residential-only filtering.</p></div>
+<div class="feat"><div class="mono">Operations</div><h3>Auto-refresh</h3><p>2-hour pool refresh, 30-minute revalidation, source health monitoring, usage logs.</p></div>
+<div class="feat"><div class="mono">Data</div><h3>SQLite + snapshots</h3><p>Local SQLite pool with JSON/text snapshot exports pushed straight to GitHub.</p></div>
+<div class="feat"><div class="mono">Deploy</div><h3>Single file</h3><p>One Python gateway, systemd-ready, no dependencies beyond the standard library.</p></div>
+</div>
+</section>
+
+<section class="pipeline">
+<div class="grid">
+<div class="step step-1"><div class="mono">Scrape</div><h3>400+ sources</h3><p>GitHub, APIs, Telegram channels — countries from Andorra to Zimbabwe.</p></div>
+<div class="step step-2"><div class="mono">Validate</div><h3>TLS relay tests</h3><p>Real CONNECT + certificate verification. Fake certs get blacklisted.</p></div>
+<div class="step step-3"><div class="mono">Serve</div><h3>Gateway API</h3><p>Sticky sessions, region pinning, health endpoint, on-demand refresh.</p></div>
+</div>
+</section>
+
+<footer>
+<div class="mono">PROXY-SCRAPER · OPEN SOURCE · MIT</div>
+</footer>
+
+<script>
+// Live stats from proxies-stats.json (GitHub Actions updates every 2h)
+fetch('proxies-stats.json').then(r=>r.json()).then(d=>{
+const s=document.getElementById('statSources'),c=document.getElementById('statCountries'),
+p=document.getElementById('statProxies'),f=document.getElementById('statFresh');
+if(d.sources){s.textContent=d.sources;c.textContent=d.countries}
+if(d.proxies){p.textContent=d.proxies.toLocaleString()}
+if(d.fresh_1h){f.textContent=d.fresh_1h}
+}).catch(()=>{});
+</script>
 </body>
 </html>
