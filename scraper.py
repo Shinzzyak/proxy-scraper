@@ -923,6 +923,10 @@ PROXY_SOURCES = [
     ("potnse-cn-http", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/China/http.txt", "host:port"),
     ("potnse-bd-http", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/Bangladesh/http.txt", "host:port"),
     ("potnse-pk-http", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/Pakistan/http.txt", "host:port"),
+    # ID: darkterminal/proxy-list-id — "kumpulan proxy indonesia yang bisa
+    # digunakan secara gratis" — PHP array proto://ip:port (stale 2019 tapi
+    # satu-satunya ID bahasa lokal selain danton887 yang ternyata spam redirect)
+    ("darkterminal-id-php", "https://raw.githubusercontent.com/darkterminal/proxy-list-id/master/proxy-list-id.php", "protocolipport"),
     # ── R39-CC1: ProxyScrape mirror by-country (verified 2026-08-12 live: ID 3/6,
     # NL 3/6, JP 2/6, US 2/6, SG 2/6, KR 2/6, GB 2/6, DE 1/6, IN 1/6; BR 0/15,
     # FR 0/15 → skip). Format proto://ip:port campur — PROXY_RE tangkap ip:port,
