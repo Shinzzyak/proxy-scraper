@@ -809,6 +809,17 @@ PROXY_SOURCES = [
     ("proxifly-country-AZ", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/countries/AZ/data.txt", "host:port"),
     ("proxifly-country-LY", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/countries/LY/data.txt", "host:port"),
     ("accessat-all", "https://raw.githubusercontent.com/Access-At/proxy-list/main/proxies.txt", "host:port"),
+    # ── R37 batch 3: update 20-menit CI + socks5 all-country (verified 2026-08-12)
+    ("ch4120n-all", "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/main/proxies/all.txt", "host:port"),
+    ("ch4120n-http", "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/main/proxies/http.txt", "host:port"),
+    ("ch4120n-socks5", "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/main/proxies/socks5.txt", "host:port"),
+    ("ch4120n-socks4", "https://raw.githubusercontent.com/Ch4120N/Ch4120N-Proxy-List/main/proxies/socks4.txt", "host:port"),
+    ("proxifly-country-DO", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/DO/data.txt", "host:port"),
+    ("proxifly-country-GE", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/GE/data.txt", "host:port"),
+    ("proxifly-country-AZ", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/AZ/data.txt", "host:port"),
+    ("proxifly-country-LY", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/LY/data.txt", "host:port"),
+    ("psalm01-json", "https://raw.githubusercontent.com/Psalm01-bot/Proxy-list-json-file/main/Proxy-list-1.json", "jsonlines"),
+    ("debro-json", "https://raw.githubusercontent.com/DeBrosDAO/anyone-proxy-list/main/anonproxies.json", "jsonlines"),
     # Telegram MTProto proxy (t.me/proxy?server=IP&port=... — parser mtproto-link)
 ]
 
