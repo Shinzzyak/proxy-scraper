@@ -716,6 +716,25 @@ PROXY_SOURCES = [
     ("proxifly-country-JM", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/JM/data.txt", "host:port"),
     ("proxifly-country-RU", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/RU/data.txt", "host:port"),
     ("proxifly-country-SC", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/SC/data.txt", "host:port"),
+    # ── R35-N2: niche countries batch 2 (verified 2026-08-12 live) ──
+    # databay-labs by-country (verified live: CO 12/34, MX 11/31, AR 5/13, EG 3/7,
+    # UA 3/3, ZA 3/7)
+    ("dlb-country-CO", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/co/http.txt", "host:port"),
+    ("dlb-country-MX", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/mx/http.txt", "host:port"),
+    ("dlb-country-AR", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/ar/http.txt", "host:port"),
+    ("dlb-country-EG", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/eg/http.txt", "host:port"),
+    ("dlb-country-UA", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/ua/http.txt", "host:port"),
+    ("dlb-country-ZA", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/za/http.txt", "host:port"),
+    # proxyscrape v2 displayproxies (verified live: EC 5/25, ZA 5/15) — beda
+    # endpoint dari proxyscrape-am-* (getproxies)
+    ("psv3d-country-EC", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=EC", "host:port"),
+    ("psv3d-country-ZA", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&country=ZA", "host:port"),
+    # psv4 PY (verified live: 4/8)
+    ("psv4-country-PY", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=PY&timeout=5000", "protocolipport"),
+    # iplocate country files (verified live: ZA 3/3) — beda dari iplocate-all
+    ("iplocate-country-ZA", "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/countries/ZA/proxies.txt", "host:port"),
+    # spys.me proxy.txt sebagai host:port (beda dari spys-cred yang butuh user:pass)
+    ("spys-me-http", "https://spys.me/proxy.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
