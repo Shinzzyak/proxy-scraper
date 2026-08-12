@@ -400,7 +400,21 @@ def _socks5_connect(sock, host, port):
     sock.sendall(req)
     r2 = sock.recv(10)
     if len(r2) < 2 or r2[1] != 0:
-        raise ConnectionError(f"SOCKS5 CONNECT failed: {r2.hex()}")
+        # R31-GW9: banyak SOCKS5 free GAK bisa resolve domain (ATYP 0x03
+        # gagal dengan 0x04 host unreachable). Fallback: resolve lokal +
+        # retry ATYP 0x01 (IPv4). Kalau masih gagal, propagate.
+        try:
+            import socket as _s
+            ip = _s.gethostbyname(host)
+            req4 = b"\x05\x01\x00\x01" + _s.inet_aton(ip) + struct.pack(">H", port)
+            sock.sendall(req4)
+            r2 = sock.recv(10)
+            if len(r2) < 2 or r2[1] != 0:
+                raise ConnectionError(f"SOCKS5 CONNECT failed: {r2.hex()}")
+        except ConnectionError:
+            raise
+        except Exception:
+            raise ConnectionError(f"SOCKS5 CONNECT failed: {r2.hex()}")
     # consume remaining BND.ADDR/BND.PORT (variable length)
     if r2[3] == 0x01:  # IPv4
         need = 4 + 2
