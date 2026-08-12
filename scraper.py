@@ -911,6 +911,18 @@ PROXY_SOURCES = [
     # FR: BreakingTechFr/Proxy_Free — "Liste des proxys gratuits" — auto-update
     # (proxies/all.txt 89k baris host:port, update otomatis)
     ("breakingtechfr-fr-all", "https://raw.githubusercontent.com/BreakingTechFr/Proxy_Free/main/proxies/all.txt", "host:port"),
+    # ── R39-LOC3: batch 3 bahasa lokal (verified 2026-08-12) ──
+    # BR: Lucas-Muto/proxy-list — "Lista de Proxies Grátis" (Portuguese)
+    # PROXIES PAGOS.txt 40735 baris host:port
+    ("lucasmuto-br-txt", "https://raw.githubusercontent.com/Lucas-Muto/proxy-list/main/PROXIES%20PAGOS.txt", "host:port"),
+    # IN: parimalkumarsen/Potnse — proxy by-country (Hindi/IN)
+    # Proxies/India/*.txt host:port (stale 2023 tapi coverage IN satu-satunya)
+    ("potnse-in-http", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/India/http.txt", "host:port"),
+    ("potnse-in-socks4", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/India/socks4.txt", "host:port"),
+    ("potnse-in-socks5", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/India/socks5.txt", "host:port"),
+    ("potnse-cn-http", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/China/http.txt", "host:port"),
+    ("potnse-bd-http", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/Bangladesh/http.txt", "host:port"),
+    ("potnse-pk-http", "https://raw.githubusercontent.com/parimalkumarsen/Potnse/master/Proxies/Pakistan/http.txt", "host:port"),
     # ── R39-CC1: ProxyScrape mirror by-country (verified 2026-08-12 live: ID 3/6,
     # NL 3/6, JP 2/6, US 2/6, SG 2/6, KR 2/6, GB 2/6, DE 1/6, IN 1/6; BR 0/15,
     # FR 0/15 → skip). Format proto://ip:port campur — PROXY_RE tangkap ip:port,
