@@ -3,67 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proxy Scraper Dashboard</title>
+<title>Proxy Scraper — Live Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+:root{
+--black:#171717;--white:#ffffff;--gray-600:#4d4d4d;--gray-400:#808080;--gray-300:#a3a3a3;
+--gray-100:#ebebeb;--gray-50:#fafafa;
+--ring:rgba(0,0,0,0.08) 0px 0px 0px 1px;
+--card:rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, rgba(0,0,0,0.04) 0px 8px 8px -8px, #fafafa 0px 0px 0px 1px;
+--focus:hsla(212,100%,48%,1);
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#e0e0e0;padding:20px}
-h1{font-size:1.8em;margin-bottom:8px;color:#00ff88}
-h2{font-size:1.2em;margin:16px 0 8px;color:#00ccff}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-.stat{background:#1a1a2e;border-radius:10px;padding:16px;text-align:center;border:1px solid #2a2a4a}
-.stat .num{font-size:2em;font-weight:700;color:#00ff88}
-.stat .label{font-size:.85em;color:#888;margin-top:4px}
-table{width:100%;border-collapse:collapse;background:#1a1a2e;border-radius:10px;overflow:hidden;margin-bottom:20px}
-th{background:#16213e;padding:10px 12px;text-align:left;font-size:.85em;color:#aaa;position:sticky;top:0}
-td{padding:8px 12px;border-top:1px solid #222;font-size:.85em}
-tr:hover{background:#1e2a4a}
-.badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.75em;font-weight:600}
-.badge-http{background:#1a3a2e;color:#00ff88}
-.badge-socks5{background:#2e1a3a;color:#cc88ff}
-.badge-elite{background:#3a2e1a;color:#ffcc00}
-.badge-transparent{background:#3a1a1a;color:#ff6644}
-.score{font-weight:700;font-size:1.1em}
-.score-high{color:#00ff88}
-.score-mid{color:#ffcc00}
-.score-low{color:#ff4444}
-.filters{margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap}
-.filters input,.filters select{background:#16213e;border:1px solid #333;color:#e0e0e0;padding:6px 12px;border-radius:6px;font-size:.85em}
-.filters input{width:200px}
-.badge-country{background:#16213e;color:#00ccff;font-size:.75em;padding:2px 6px;border-radius:4px}
-footer{text-align:center;color:#555;font-size:.8em;margin-top:20px;padding:16px}
+body{font-family:'Geist',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased;min-height:100vh}
+.mono{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* Nav */
+nav{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px;z-index:10}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+.logo{font-weight:600;font-size:16px;letter-spacing:-0.32px}
+.logo span{color:var(--gray-400)}
+.nav-links{display:flex;gap:24px;align-items:center;font-size:14px;font-weight:500}
+.nav-links a{color:var(--gray-600);text-decoration:none}
+.nav-links a:hover{color:var(--black)}
+.nav-links a.active{color:var(--black);font-weight:600}
+.cta{background:var(--black);color:var(--white)!important;padding:8px 16px;border-radius:6px;font-weight:500}
+.cta:hover{background:#000;text-decoration:none}
+
+/* Container */
+.wrap{max-width:1200px;margin:0 auto;padding:40px 24px 80px}
+.page-title{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.page-title h1{font-size:32px;font-weight:600;letter-spacing:-1.28px}
+.page-title .sub{font-size:13px;color:var(--gray-400);font-weight:400}
+.updated{font-size:13px;color:var(--gray-400);margin-bottom:32px}
+.updated span{color:var(--black);font-weight:500}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.stat{background:var(--white);box-shadow:var(--card);border-radius:8px;padding:28px 20px;text-align:center;transition:transform .3s ease,box-shadow .3s ease;opacity:0;transform:translateY(16px)}
+.stat.in{opacity:1;transform:none}
+.stat:hover{transform:translateY(-2px);box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 4px 8px, rgba(0,0,0,0.04) 0px 12px 16px -8px, #fafafa 0px 0px 0px 1px}
+.stat .num{font-size:40px;font-weight:600;letter-spacing:-1.6px;line-height:1}
+.stat .label{font-size:13px;font-weight:500;color:var(--gray-400);margin-top:10px;letter-spacing:-0.32px}
+
+/* Filters */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filters input,.filters select{font-family:'Geist',sans-serif;background:var(--white);box-shadow:var(--ring);border:none;color:var(--black);padding:8px 12px;border-radius:6px;font-size:13px;outline:none;transition:box-shadow .2s}
+.filters input:focus,.filters select:focus{box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px, 0 0 0 2px var(--focus)}
+.filters input{width:220px}
+.filters label{font-size:13px;font-weight:500;color:var(--gray-400)}
+.count-label{font-size:13px;font-weight:500;color:var(--gray-600);margin:0 0 12px}
+.count-label span{color:var(--black);font-weight:600}
+
+/* Table */
+.table-wrap{box-shadow:var(--card);border-radius:8px;overflow:auto;max-height:70vh}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{position:sticky;top:0;background:#fff;box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px;padding:12px 14px;text-align:left;font-weight:500;color:var(--gray-400);font-size:12px;letter-spacing:0.3px;white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--black)}
+tbody td{padding:10px 14px;border-top:1px solid var(--gray-100);white-space:nowrap}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:var(--gray-50)}
+.score{font-weight:600;font-variant-numeric:tabular-nums}
+.score-high{color:#0a72ef}
+.score-mid{color:#b45309}
+.score-low{color:#dc2626}
+.badge{display:inline-block;padding:2px 10px;border-radius:9999px;font-size:11px;font-weight:500;font-family:'Geist Mono',monospace}
+.badge-http{background:#ebf5ff;color:#0068d6}
+.badge-socks5{background:#f3ebff;color:#7c3aed}
+.badge-socks4{background:#fdf2f8;color:#db2777}
+.badge-elite{background:#ecfdf5;color:#059669}
+.badge-anonymous{background:#fffbeb;color:#d97706}
+.badge-transparent{background:#fef2f2;color:#dc2626}
+.country-tag{display:inline-block;background:var(--gray-50);box-shadow:var(--ring);border-radius:4px;padding:1px 6px;font-size:11px;font-weight:600;font-family:'Geist Mono',monospace;margin-right:4px}
+.isp{color:var(--gray-400);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.empty{padding:48px;text-align:center;color:var(--gray-400);font-size:14px}
+
+/* Footer */
+footer{border-top:1px solid var(--gray-100);padding:24px;text-align:center}
+footer .mono{font-size:12px;color:var(--gray-400)}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:768px){
+.wrap{padding:24px 16px 48px}
+.page-title h1{font-size:24px;letter-spacing:-0.96px}
+.stats{grid-template-columns:repeat(2,1fr);gap:12px}
+.stat .num{font-size:28px}
+.filters input{width:100%}
+.nav-links a:not(.cta){display:none}
+}
 </style>
 </head>
 <body>
-<h1>🔄 Proxy Scraper Dashboard</h1>
-<p style="color:#888;margin-bottom:16px">Last updated: <span id="lastUpdate">loading...</span></p>
+<nav>
+<div class="nav-inner">
+<div class="logo">Proxy<span>Scraper</span></div>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="#" class="active">Dashboard</a>
+<a class="cta" href="https://github.com/Shinzzyak/proxy-scraper">View Repository</a>
+</div>
+</div>
+</nav>
+
+<div class="wrap">
+<div class="page-title">
+<h1>Live Dashboard</h1>
+<span class="sub mono">PROXY POOL · REAL-TIME</span>
+</div>
+<p class="updated">Last updated: <span id="lastUpdate">loading...</span></p>
 
 <div class="stats" id="statsGrid"></div>
 
-<h2>Filters</h2>
 <div class="filters">
 <input type="text" id="searchIP" placeholder="Search IP...">
-<select id="filterProtocol"><option value="">All Protocols</option><option value="http">HTTP</option><option value="socks5">SOCKS5</option></select>
+<select id="filterProtocol"><option value="">All Protocols</option><option value="http">HTTP</option><option value="socks5">SOCKS5</option><option value="socks4">SOCKS4</option></select>
 <select id="filterCountry"><option value="">All Countries</option></select>
-<select id="filterAnonymity"><option value="">All Anonymity</option><option value="elite">Elite</option><option value="transparent">Transparent</option></select>
+<select id="filterAnonymity"><option value="">All Anonymity</option><option value="elite">Elite</option><option value="anonymous">Anonymous</option><option value="transparent">Transparent</option></select>
 <select id="sortBy"><option value="score">Sort: Score</option><option value="speed">Sort: Speed</option><option value="country">Sort: Country</option></select>
 </div>
 
-<h2>Proxies (<span id="proxyCount">0</span>)</h2>
-<div style="overflow-x:auto;max-height:70vh;overflow-y:auto">
+<p class="count-label">Showing <span id="proxyCount">0</span> proxies</p>
+
+<div class="table-wrap">
 <table>
 <thead><tr><th>Score</th><th>IP</th><th>Port</th><th>Protocol</th><th>Speed</th><th>Anonymity</th><th>Country</th><th>City</th><th>ISP</th><th>Last Seen</th></tr></thead>
 <tbody id="proxyTable"></tbody>
 </table>
 </div>
+</div>
 
-<footer>Free Proxy Scraper v5 — Auto-updated every 3 hours via GitHub Actions</footer>
+<footer><span class="mono">PROXY-SCRAPER · AUTO-UPDATED EVERY 2H · GITHUB ACTIONS</span></footer>
 
 <script>
+function countUp(el,target,dur=1000){
+  const t0=performance.now();
+  function tick(t){
+    const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(target*e).toLocaleString();
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+
 async function load(){
 const r=await fetch('proxies.json');
 const proxies=await r.json();
 document.getElementById('lastUpdate').textContent=proxies.length?proxies[0].last_seen:'N/A';
-document.getElementById('proxyCount').textContent=proxies.length;
 
 // Stats
 const protocols={},anonymities={},countries={};
@@ -76,12 +163,15 @@ totalSpeed+=p.response_time_ms||0;
 });
 const avgSpeed=Math.round(totalSpeed/proxies.length);
 const grid=document.getElementById('statsGrid');
-grid.innerHTML=`
-<div class="stat"><div class="num">${proxies.length}</div><div class="label">Total Proxies</div></div>
-<div class="stat"><div class="num">${Object.keys(countries).length}</div><div class="label">Countries</div></div>
-<div class="stat"><div class="num">${avgSpeed}ms</div><div class="label">Avg Response</div></div>
-${Object.entries(protocols).map(([k,v])=>`<div class="stat"><div class="num">${v}</div><div class="label">${k.toUpperCase()}</div></div>`).join('')}
-`;
+const statCards=[
+{num:proxies.length,label:'Total Proxies'},
+{num:Object.keys(countries).length,label:'Countries'},
+{num:avgSpeed,label:'Avg Response (ms)'},
+...Object.entries(protocols).map(([k,v])=>({num:v,label:k.toUpperCase()}))
+];
+grid.innerHTML=statCards.map((s,i)=>`<div class="stat" style="transition-delay:${i*60}ms"><div class="num" data-count="${s.num}">0</div><div class="label">${s.label}</div></div>`).join('');
+grid.querySelectorAll('.stat').forEach(el=>io.observe(el));
+grid.querySelectorAll('.num[data-count]').forEach(el=>countUp(el,+el.dataset.count));
 
 // Country filter
 const cs=document.getElementById('filterCountry');
@@ -124,9 +214,10 @@ tb.innerHTML=f.slice(0,500).map(p=>`<tr>
 <td><span class="badge badge-${p.protocol}">${p.protocol}</span></td>
 <td>${p.response_time_ms}ms</td>
 <td><span class="badge badge-${p.anonymity}">${p.anonymity}</span></td>
-<td><span class="badge-country">${p.country_code||'??'}</span> ${p.country||''}</td>
-<td>${p.city||''}</td><td>${p.isp||''}</td>
-<td>${p.last_seen||''}</td></tr>`).join('');
+<td><span class="country-tag">${p.country_code||'??'}</span>${p.country||''}</td>
+<td>${p.city||''}</td>
+<td class="isp" title="${p.isp||''}">${p.isp||''}</td>
+<td>${p.last_seen||''}</td></tr>`).join('') || '<tr><td colspan="10" class="empty">No proxies match your filters</td></tr>';
 }
 load();
 </script>
