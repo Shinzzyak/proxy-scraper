@@ -608,6 +608,28 @@ PROXY_SOURCES = [
     ("aQuiner-http", "https://raw.githubusercontent.com/aQuiner/free-proxy-list/main/http.txt", "host:port"),
     # afrcloud-net/ProxyList-Scaner — csv ip,port,country,org (~1MB, update harian)
     ("afrcloud-scaner", "https://raw.githubusercontent.com/afrcloud-net/ProxyList-Scaner/main/rawProxyList.txt", "csv"),
+    # ── R34-GH2: GitHub batch 2 (verified 2026-08-12 live) ──
+    # proxy-free/free-proxy-list — update harian, host:port + jsonproxies
+    ("proxyfree-all", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/all.txt", "host:port"),
+    ("proxyfree-http", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/http.txt", "host:port"),
+    ("proxyfree-socks4", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/socks4.txt", "host:port"),
+    ("proxyfree-socks5", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/socks5.txt", "host:port"),
+    ("proxyfree-json", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/proxies.json", "jsonproxies"),
+    # snove999/emby-proxy-list — output/all.txt: tabel hasil cek, ip:port valid ~463
+    ("emby-all", "https://raw.githubusercontent.com/snove999/emby-proxy-list/main/output/all.txt", "host:port"),
+    # Jamshed-Dev/public-proxy-list — harian, host:port per negara + ALL
+    ("jamshed-all", "https://raw.githubusercontent.com/Jamshed-Dev/public-proxy-list/main/proxies/ALL.txt", "host:port"),
+    # Cheagjihvg/simple-proxylist — update harian, host:port (ada 0.0.0.0 junk, validator filter)
+    ("cheagjihvg-http", "https://raw.githubusercontent.com/Cheagjihvg/simple-proxylist/main/http.txt", "host:port"),
+    ("cheagjihvg-socks4", "https://raw.githubusercontent.com/Cheagjihvg/simple-proxylist/main/socks4.txt", "host:port"),
+    ("cheagjihvg-socks5", "https://raw.githubusercontent.com/Cheagjihvg/simple-proxylist/main/socks5.txt", "host:port"),
+    # VolkanSah/Auto-Proxy-Fetcher — GH Actions harian, 500 proxy, header # komentar
+    ("volkansah-auto", "https://raw.githubusercontent.com/VolkanSah/Auto-Proxy-Fetcher/main/proxies.txt", "host:port"),
+    # Tianndev/free-proxy — update harian, host:port per protokol
+    ("tianndev-http", "https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/http.txt", "host:port"),
+    ("tianndev-https", "https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/https.txt", "host:port"),
+    ("tianndev-socks4", "https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/socks4.txt", "host:port"),
+    ("tianndev-socks5", "https://raw.githubusercontent.com/Tianndev/free-proxy/main/proxy/socks5.txt", "host:port"),
     # ── R33-GH3: databay-labs by-country + proxy-free + nguywnben
     # (verified 2026-08-12 live: EC 3/5, ID 3/6, RU 4/6, SG 4/6, TR 4/6, US 4/6,
     # VN 3/6, TH 3/6, IR 2/3, KZ 2/3, BD 2/6, KR 2/4, MY 2/3, PH 2/6, IN 2/6,
