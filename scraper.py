@@ -813,6 +813,16 @@ PROXY_SOURCES = [
     ("gnxbulk-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-bulk-list/main/http.txt", "host:port"),
     ("gnxbulk-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-bulk-list/main/socks4.txt", "host:port"),
     ("gnxbulk-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-bulk-list/main/socks5.txt", "host:port"),
+    # ── R38-S3: stabilitas batch 3 — mauricegift + gnx global + shubhamshendre (verified 2026-08-12)
+    ("maurice-http", "https://raw.githubusercontent.com/mauricegift/free-proxies/main/files/http.json", "host:port"),
+    ("maurice-socks4", "https://raw.githubusercontent.com/mauricegift/free-proxies/main/files/socks4.json", "host:port"),
+    ("maurice-socks5", "https://raw.githubusercontent.com/mauricegift/free-proxies/main/files/socks5.json", "host:port"),
+    ("gnxglobal-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/free-global-proxies/main/http.txt", "host:port"),
+    ("gnxglobal-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/free-global-proxies/main/socks4.txt", "host:port"),
+    ("gnxglobal-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/free-global-proxies/main/socks5.txt", "host:port"),
+    ("shub-http", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/http.txt", "host:port"),
+    ("shub-socks4", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/socks4.txt", "host:port"),
+    ("shub-socks5", "https://raw.githubusercontent.com/shubhamshendre/Free-Proxies/main/socks5.txt", "host:port"),
     # ── R37 batch 2: by-country niche (Afrika/AmLat/Kaukasus/Asia Tengah) + JSON (verified 2026-08-12)
     ("hproxy-country-AM", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AM.txt", "host:port"),
     ("hproxy-country-KZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KZ.txt", "host:port"),
