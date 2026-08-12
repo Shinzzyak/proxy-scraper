@@ -1006,7 +1006,18 @@ class GatewayHandler(BaseHTTPRequestHandler):
         self.send_error(502, f"Upstream error: {last_err}")
 
     def _forward_direct(self, method, url, body=None):
-        """Forward without upstream proxy."""
+        """Forward without upstream proxy.
+
+        R32-J1: X-JA3: chrome → pakai curl_cffi (JA3 fingerprint Chrome
+        asli) bukan urllib (JA3 Python = sinyal bot). Jatuh balik ke
+        urllib kalau curl_cffi gak ada.
+        """
+        if self.headers.get("X-JA3", "").lower() == "chrome":
+            try:
+                self._forward_ja3(method, url, body)
+                return
+            except Exception:
+                pass  # fallback urllib di bawah
         try:
             if body is None:
                 content_length = int(self.headers.get("Content-Length", 0))
@@ -1037,6 +1048,35 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 self.wfile.write(e.read(65536))
         except Exception as e:
             self.send_error(502, f"Direct error: {e}")
+
+    def _forward_ja3(self, method, url, body=None):
+        """R32-J1: forward via curl_cffi (JA3 Chrome impersonation).
+
+        Web besar deteksi proxy dari TLS fingerprint (JA3). urllib/curl
+        punya JA3 beda dari Chrome → ketahuan. curl_cffi = libcurl patch
+        impersonate → JA3 PERSIS Chrome. Lazy import: gateway jalan normal
+        kalau curl_cffi gak terinstall (fallback urllib di caller).
+        """
+        from curl_cffi import requests as cffi
+        if body is None:
+            content_length = int(self.headers.get("Content-Length", 0))
+            if content_length > 0:
+                body = self.rfile.read(content_length)
+        headers = {}
+        for key, val in self.headers.items():
+            kl = key.lower()
+            if kl not in ("proxy-connection", "host", "x-session-id",
+                          "proxy-authorization", "x-ja3", "connection"):
+                headers[key] = val
+        resp = cffi.request(method, url, data=body, headers=headers,
+                            impersonate="chrome124", timeout=GATEWAY_TIMEOUT)
+        self.send_response(resp.status_code)
+        for key, val in resp.headers.items():
+            if key.lower() not in ("transfer-encoding", "connection", "content-length"):
+                self.send_header(key, val)
+        self.send_header("Content-Length", str(len(resp.content)))
+        self.end_headers()
+        self.wfile.write(resp.content)
 
     def _probe_mitm(self, host, port, session_proxy):
         """R22-GW4: TLS probe via upstream proxy — verify cert asli target.
