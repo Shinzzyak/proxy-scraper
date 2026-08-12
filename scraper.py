@@ -805,6 +805,14 @@ PROXY_SOURCES = [
     ("trio666-https", "https://raw.githubusercontent.com/trio666/proxy-checker/main/https.txt", "host:port"),
     ("trio666-socks4", "https://raw.githubusercontent.com/trio666/proxy-checker/main/socks4.txt", "host:port"),
     ("trio666-socks5", "https://raw.githubusercontent.com/trio666/proxy-checker/main/socks5.txt", "host:port"),
+    # ── R38-S2: stabilitas batch 2 — RioMMO + gnx bulk (verified 2026-08-12)
+    ("riommo-all", "https://raw.githubusercontent.com/RioMMO/ProxyFree/main/ALL_PROXY.txt", "host:port"),
+    ("riommo-http", "https://raw.githubusercontent.com/RioMMO/ProxyFree/main/HTTP.txt", "host:port"),
+    ("riommo-socks4", "https://raw.githubusercontent.com/RioMMO/ProxyFree/main/SOCKS4.txt", "host:port"),
+    ("riommo-socks5", "https://raw.githubusercontent.com/RioMMO/ProxyFree/main/SOCKS5.txt", "host:port"),
+    ("gnxbulk-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-bulk-list/main/http.txt", "host:port"),
+    ("gnxbulk-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-bulk-list/main/socks4.txt", "host:port"),
+    ("gnxbulk-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/proxies-st-bulk-list/main/socks5.txt", "host:port"),
     # ── R37 batch 2: by-country niche (Afrika/AmLat/Kaukasus/Asia Tengah) + JSON (verified 2026-08-12)
     ("hproxy-country-AM", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AM.txt", "host:port"),
     ("hproxy-country-KZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KZ.txt", "host:port"),
