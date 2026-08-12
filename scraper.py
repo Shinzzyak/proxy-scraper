@@ -2037,6 +2037,19 @@ def main():
                         conn.close()
             except Exception as e:
                 print(f"  ⚠ Reputation update skipped: {e}")
+        # R36-P5: prune proxy stale — mati > 7 hari & gak pernah hidup lagi.
+        # Pool 2505 tapi cuma 64 fresh = 2441 mayat nempel (angka palsu di /health).
+        from proxy_pool import get_db
+        conn = get_db()
+        try:
+            cur = conn.execute(
+                "DELETE FROM proxies WHERE last_seen < datetime('now', '-7 days')"
+            )
+            conn.commit()
+            if cur.rowcount:
+                print(f"🧹 Stale prune: {cur.rowcount} proxy mati (>7 hari) dihapus")
+        finally:
+            conn.close()
         if args.json and valid:
             save_json_output(valid)
         if args.grouped and valid:
