@@ -29,6 +29,15 @@ nav{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(
 .nav-links{display:flex;gap:28px;align-items:center;font-size:14px;font-weight:500}
 .nav-links a{color:var(--gray-600)}
 .nav-links a:hover{color:var(--black)}
+.mobile-menu{display:none;background:none;border:none;cursor:pointer;padding:4px}
+.mobile-menu span{display:block;width:20px;height:2px;background:var(--black);margin:4px 0}
+@media(max-width:768px){
+.mobile-menu{display:block}
+.nav-links{display:none;position:absolute;top:62px;left:0;right:0;background:#fff;flex-direction:column;padding:16px 24px;gap:16px;box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px}
+.nav-links.open{display:flex}
+.logo{font-size:15px}
+.nav-inner{padding:12px 16px}
+}
 .cta{background:var(--black);color:var(--white)!important;padding:8px 16px;border-radius:6px;font-weight:500}
 .cta:hover{background:#000;text-decoration:none}
 
@@ -79,6 +88,9 @@ footer .mono{font-size:12px;color:var(--gray-400)}
 .hero h1{font-size:40px;letter-spacing:-1.6px}
 .hero p{font-size:17px}
 .pipe{grid-template-columns:1fr}
+.nav-links{display:none}
+.logo{font-size:15px}
+.nav-inner{padding:12px 16px}
 }
 </style>
 </head>
@@ -86,6 +98,7 @@ footer .mono{font-size:12px;color:var(--gray-400)}
 <nav>
 <div class="nav-inner">
 <div class="logo">Proxy<span>Scraper</span></div>
+<button class="mobile-menu" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')"><span></span><span></span><span></span></button>
 <div class="nav-links">
 <a href="#features">Features</a>
 <a href="dashboard.html">Dashboard</a>
