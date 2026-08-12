@@ -976,6 +976,21 @@ PROXY_SOURCES = [
     ("webtoolkits-tr", "https://webtoolkits.net/tr/ucretsiz-proxy-listesi", "table"),
     ("litport-it", "https://litport.net/free-proxy", "litport"),
     ("dufrasne-tr", "https://raw.githubusercontent.com/Dufrasne4242/dufrasne-proxy-list/main/proxies.txt", "host:port"),
+    # ── R39-GH1: GitHub batch 1 (verified 2026-08-12 live: daisymashiro 3/15,
+    # naravid-http 3/5, ianlusule-http 3/5, ciara-http 3/7, xigma 3/9) ──
+    ("daisymashiro-alive", "https://raw.githubusercontent.com/daisymashiro/proxy-free/main/proxy_alive.txt", "host:port"),
+    ("naravid19-http", "https://raw.githubusercontent.com/naravid19/checked-proxies/main/proxies/http.txt", "host:port"),
+    ("ianlusule-http", "https://raw.githubusercontent.com/Ian-Lusule/Proxies/main/proxies/http.txt", "host:port"),
+    ("xigmadev-all", "https://raw.githubusercontent.com/XigmaDev/proxy/main/proxies.txt", "host:port"),
+    ("parserpp-txt", "https://raw.githubusercontent.com/parserpp/ip_ports/main/proxyinfo.txt", "host:port"),
+    # parserpp JSON nested {http_high_anonymous: [{host, port}]} — regex host:port
+    ("parserpp-json", "https://raw.githubusercontent.com/parserpp/ip_ports/main/proxyinfo.json", "host:port"),
+    ("naravid19-all", "https://raw.githubusercontent.com/naravid19/checked-proxies/main/proxies/all.txt", "host:port"),
+    # naravid19 JSON array [{host, port}] — regex host:port
+    ("naravid19-json", "https://raw.githubusercontent.com/naravid19/checked-proxies/main/proxies.json", "host:port"),
+    ("iparrot-https", "https://raw.githubusercontent.com/IPParrot/proxy_ips/main/proxies/https.txt", "host:port"),
+    # ── R39-GH2: GitHub batch 2 (verified 2026-08-12 live: naravid-all 3/4,
+    # naravid-json 3/6, iparrot-https 3/12, relayglass-all 3/11, parserpp-txt 3/10) ──
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
