@@ -315,7 +315,12 @@ def get_best_proxy(protocol: str = "", country_code: str = "", min_score: int = 
             cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
             q += " AND julianday(last_seen) >= julianday(?)"
             params.append(cutoff)
-        q += " ORDER BY score DESC, response_time_ms ASC LIMIT 1"
+        # R39-FIX: rotasi merata — score sama → pilih yang PALING LAMA
+        # last_seen (proxy yang jarang ke-pick diprioritasin, bukan selalu #1).
+        # Sebelumnya ORDER BY score, rt → satu proxy rt 1ms nge-dominasi semua
+        # request, sisanya (216.22.13.244 dll) gak pernah ke-pick.
+        # pakai last_seen ASC: lama (kecil) dulu → semua proxy kebagian.
+        q += " ORDER BY score DESC, julianday(last_seen) ASC, response_time_ms ASC LIMIT 1"
         row = conn.execute(q, params).fetchone()
         return dict(row) if row else None
     finally:
