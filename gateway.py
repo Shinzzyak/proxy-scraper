@@ -474,6 +474,21 @@ class GatewayHandler(BaseHTTPRequestHandler):
             protocol = "socks5"
         if self.server.mode == "rotate":
             return _next_proxy_round_robin(self.server.rotate_state, country, exclude, protocol)
+        # R32-P1 (premium mode): rotasi per request — sesi TIDAK sticky,
+        # tiap request dapat proxy fresh (OXylabs/BrightData style). Kalau
+        # client kirim X-Session-ID / sid, tetap hormati (sticky optional).
+        if self.server.mode == "premium":
+            session_id = sid or self.headers.get("X-Session-ID", "")
+            if session_id:
+                proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
+                if proxy is None:
+                    raise CountryUnavailable(country)
+                return proxy  # per-request pick (TIDAK di-cache session)
+            # tanpa sid → rotasi penuh tiap request
+            proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
+            if proxy is None:
+                raise CountryUnavailable(country)
+            return proxy
         session_id = sid or self.headers.get("X-Session-ID", "")
         if not session_id:
             proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
@@ -577,6 +592,16 @@ class GatewayHandler(BaseHTTPRequestHandler):
         country = self.headers.get("X-Country", "").upper()
         last_err = None
         tried = set()  # R21-GW3: proxy yang sudah dicoba request ini
+        # R32-P2 (premium): X-Bypass-Domains — daftar domain yang LANGSUNG
+        # DIRECT (tanpa proxy). Fitur OXylabs/BrightData: domain internal
+        # / whitelisted gak perlu egress proxy.
+        bypass = self.headers.get("X-Bypass-Domains", "").strip()
+        if bypass:
+            for d in bypass.split(","):
+                d = d.strip().lower()
+                if d and (host.lower() == d or host.lower().endswith("." + d)):
+                    self._connect_direct(host, port)
+                    return
         for _ in range(MAX_FAILOVER):
             upstream = None
             try:
@@ -1143,8 +1168,9 @@ def main():
     parser.add_argument("--bind", default=DEFAULT_BIND)
     parser.add_argument("--port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--session-ttl", type=int, default=DEFAULT_SESSION_TTL)
-    parser.add_argument("--mode", choices=["sticky", "rotate"], default="sticky",
-                        help="sticky: same session → same proxy (default); rotate: round-robin per request")
+    parser.add_argument("--mode", choices=["sticky", "rotate", "premium"], default="sticky",
+                        help="sticky: same session → same proxy (default); rotate: round-robin per request; "
+                             "premium: rotasi per request + sticky optional (OXylabs/BrightData style)")
     parser.add_argument("--auth-secret", default=os.environ.get("GATEWAY_AUTH_SECRET", ""),
                         help="HMAC-SHA256 auth secret (empty = auth off)")
     parser.add_argument("--allow-mitm", action="store_true",
