@@ -895,6 +895,22 @@ PROXY_SOURCES = [
     # KR: 0verfl0w767/kr-proxy-list-parser — "업타임이 높은 한국 프록시 5개를 하루마다 갱신"
     # JSON [{ip, port, fullAddress, ...}]
     ("krproxy-kr-json", "https://raw.githubusercontent.com/0verfl0w767/kr-proxy-list-parser/main/proxy.json", "jsonaddr"),
+    # ── R39-LOC2: batch 2 bahasa lokal (verified 2026-08-12) ──
+    # CN: CharlesPikachu/freeproxy — "全球海量高质量免费代理...每日更新" — GH Actions
+    # proxies.json {updated_at, count, data:[{ip, port, protocol, country}]}
+    # (verified live: 3/30 socks5 MITM, fresh hari ini 2026-08-12)
+    ("cpfreeproxy-cn-json", "https://raw.githubusercontent.com/CharlesPikachu/freeproxy/master/proxies.json", "geonode"),
+    # CN: duma520/crawl_proxies — script crawl proxy Cina (update 2026-07-25)
+    ("duma520-cn-raw", "https://raw.githubusercontent.com/duma520/crawl_proxies/main/proxy_list.txt", "host:port"),
+    ("duma520-cn-ok", "https://raw.githubusercontent.com/duma520/crawl_proxies/main/successful_proxies.txt", "protocolipport"),
+    # RU: kort0881/telegram-proxy-collector — MTProto proxy, update tiap jam
+    # (file proxy_ru.txt: "Updated: 2026-08-12", tg://proxy?server=IP&port=)
+    ("kort0881-ru-mtproto", "https://raw.githubusercontent.com/kort0881/telegram-proxy-collector/main/proxy_ru.txt", "mtproto-link"),
+    # RU: aviamastersgh/mtproto-free-russia — 231 MTProto proxies, fresh 2026-08-12
+    ("aviamasters-ru-mtproto", "https://raw.githubusercontent.com/aviamastersgh/mtproto-free-russia/main/all_proxies.txt", "mtproto-link"),
+    # FR: BreakingTechFr/Proxy_Free — "Liste des proxys gratuits" — auto-update
+    # (proxies/all.txt 89k baris host:port, update otomatis)
+    ("breakingtechfr-fr-all", "https://raw.githubusercontent.com/BreakingTechFr/Proxy_Free/main/proxies/all.txt", "host:port"),
     # ── R39-CC1: ProxyScrape mirror by-country (verified 2026-08-12 live: ID 3/6,
     # NL 3/6, JP 2/6, US 2/6, SG 2/6, KR 2/6, GB 2/6, DE 1/6, IN 1/6; BR 0/15,
     # FR 0/15 → skip). Format proto://ip:port campur — PROXY_RE tangkap ip:port,
