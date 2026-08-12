@@ -796,6 +796,19 @@ PROXY_SOURCES = [
     ("jetkai-json", "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/json/proxies.json", "host:port"),
     ("hproxy-country-VE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/VE.txt", "host:port"),
     ("hproxy-country-LY", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/LY.txt", "host:port"),
+    # ── R37 batch 2: by-country niche (Afrika/AmLat/Kaukasus/Asia Tengah) + JSON (verified 2026-08-12)
+    ("hproxy-country-AM", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AM.txt", "host:port"),
+    ("hproxy-country-KZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KZ.txt", "host:port"),
+    ("hproxy-country-UZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/UZ.txt", "host:port"),
+    ("hproxy-country-AZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AZ.txt", "host:port"),
+    ("geonode-country-AM", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=AM", "geonode"),
+    ("geonode-country-AZ", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=AZ", "geonode"),
+    ("geonode-country-GE", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=GE", "geonode"),
+    ("geonode-country-GT", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=GT", "geonode"),
+    ("geonode-country-DO", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http,socks4,socks5&country=DO", "geonode"),
+    ("proxifly-country-AZ", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/countries/AZ/data.txt", "host:port"),
+    ("proxifly-country-LY", "https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/countries/LY/data.txt", "host:port"),
+    ("accessat-all", "https://raw.githubusercontent.com/Access-At/proxy-list/main/proxies.txt", "host:port"),
     # Telegram MTProto proxy (t.me/proxy?server=IP&port=... — parser mtproto-link)
 ]
 
