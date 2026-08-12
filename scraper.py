@@ -831,6 +831,15 @@ PROXY_SOURCES = [
     ("nikolait-http", "https://raw.githubusercontent.com/NikolaiT/free-proxy-list/main/proxies/http_working.txt", "host:port"),
     ("nikolait-https", "https://raw.githubusercontent.com/NikolaiT/free-proxy-list/main/proxies/https_working.txt", "host:port"),
     ("nikolait-socks5", "https://raw.githubusercontent.com/NikolaiT/free-proxy-list/main/proxies/socks5_working.txt", "host:port"),
+    # ── R38-S5: stabilitas batch 5 — scraper CI aktif tiap jam (verified 2026-08-12)
+    ("akbarali-http", "https://raw.githubusercontent.com/akbarali123A/proxy_scraper/main/http_proxies.txt", "host:port"),
+    ("akbarali-https", "https://raw.githubusercontent.com/akbarali123A/proxy_scraper/main/https_proxies.txt", "host:port"),
+    ("akbarali-socks4", "https://raw.githubusercontent.com/akbarali123A/proxy_scraper/main/socks4_proxies.txt", "host:port"),
+    ("akbarali-socks5", "https://raw.githubusercontent.com/akbarali123A/proxy_scraper/main/socks5_proxies.txt", "host:port"),
+    ("berkay-all", "https://raw.githubusercontent.com/berkay-digital/Proxy-Scraper/main/proxies.txt", "host:port"),
+    ("mkshah-all", "https://raw.githubusercontent.com/MohammadKobirShah/ProxyScraper-Pro/main/output/proxies_all.txt", "host:port"),
+    ("mkshah-https", "https://raw.githubusercontent.com/MohammadKobirShah/ProxyScraper-Pro/main/output/proxies_https.txt", "host:port"),
+    ("mkshah-elite", "https://raw.githubusercontent.com/MohammadKobirShah/ProxyScraper-Pro/main/output/proxies_elite.txt", "host:port"),
     # ── R37 batch 2: by-country niche (Afrika/AmLat/Kaukasus/Asia Tengah) + JSON (verified 2026-08-12)
     ("hproxy-country-AM", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AM.txt", "host:port"),
     ("hproxy-country-KZ", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KZ.txt", "host:port"),
