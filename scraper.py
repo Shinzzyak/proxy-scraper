@@ -1214,6 +1214,7 @@ def validate_socks4(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
             ctx = _ssl.create_default_context()
             tls = ctx.wrap_socket(s, server_hostname="httpbin.org")
             tls.close()
+            s.close()
             return True
         except Exception:
             s.close()

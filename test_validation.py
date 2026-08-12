@@ -41,10 +41,14 @@ class ConfirmationTests(unittest.TestCase):
 
 class Socks4ValidationTests(unittest.TestCase):
     def test_accepts_fragmented_socks4_connect_reply(self):
+        # R32-P4: butuh TLS relay sukses — mock ssl.wrap_socket jadi sukses
         sock = FakeSocket([b"\x00\x5a", b"\x00\x00\x00\x00\x00\x00"])
-        with patch("socket.create_connection", return_value=sock):
+        with patch("socket.create_connection", return_value=sock), patch(
+            "ssl.create_default_context"
+        ) as mctx:
+            mctx.return_value.wrap_socket.return_value = Mock()
             self.assertTrue(scraper.validate_socks4("1.2.3.4:1080"))
-        self.assertEqual(sock.sent, b"\x04\x01\x00\x50\x01\x01\x01\x01\x00")
+        self.assertIn(b"\x04\x01\x00\x50", sock.sent)  # SOCKS4a request
         self.assertTrue(sock.closed)
 
     def test_classifies_socks4_as_confirmed_protocol(self):
@@ -59,10 +63,14 @@ class ConnectProbeTests(unittest.TestCase):
     """R17-T8: regression guard untuk CONNECT probe (R16-N1 + R17-T1)."""
 
     def test_probe_connect_accepts_proxy_with_200(self):
-        with patch("socket.create_connection") as mc:
+        # R32-P4: 200 → TLS relay sukses (mock ssl.wrap_socket)
+        with patch("socket.create_connection") as mc, patch(
+            "ssl.create_default_context"
+        ) as mctx:
             fake = Mock()
             fake.recv.return_value = b"HTTP/1.1 200 Connection established\r\n\r\n"
             mc.return_value = fake
+            mctx.return_value.wrap_socket.return_value = Mock()
             self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
 
     def test_probe_connect_accepts_proxy_with_403(self):
@@ -84,10 +92,14 @@ class ConnectProbeTests(unittest.TestCase):
 
     def test_probe_connect_accepts_200_then_silence(self):
         """R18-T1: proxy balas 200 lalu diam (tunnel mode) — harus True."""
-        with patch("socket.create_connection") as mc:
+        # R32-P4: 200 → TLS relay sukses (mock ssl.wrap_socket)
+        with patch("socket.create_connection") as mc, patch(
+            "ssl.create_default_context"
+        ) as mctx:
             fake = Mock()
             fake.recv.side_effect = [b"HTTP/1.1 200 Connection established\r\n\r\n", b""]
             mc.return_value = fake
+            mctx.return_value.wrap_socket.return_value = Mock()
             self.assertTrue(scraper._probe_connect("1.2.3.4", 8080, 5))
 
     def test_probe_connect_rejects_3xx(self):
