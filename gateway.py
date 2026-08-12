@@ -615,7 +615,9 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     self._tunnel(self.connection, upstream)
                     return
                 # T3: sebagian proxy publik reject CONNECT tanpa UA
-                upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\nUser-Agent: Gateway/1.0\r\nProxy-Connection: keep-alive\r\n\r\n".encode())
+                # R31-GW10: UA 'Gateway/1.0' = sinyal bot di log upstream —
+                # pakai browser UA (proxy publik bisa logging/ngintip header).
+                upstream.sendall(f"CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\nUser-Agent: {_UA_MOBILE}\r\nProxy-Connection: keep-alive\r\n\r\n".encode())
                 # R9-3: response can arrive in 2+ segments — loop until header end
                 resp = b""
                 while b"\r\n\r\n" not in resp and len(resp) < 8192:
