@@ -140,9 +140,9 @@ footer .mono{font-size:12px;color:var(--gray-400)}
 fetch('proxies-stats.json').then(r=>r.json()).then(d=>{
 const s=document.getElementById('statSources'),c=document.getElementById('statCountries'),
 p=document.getElementById('statProxies'),f=document.getElementById('statFresh');
-if(d.sources){s.textContent=d.sources;c.textContent=d.countries}
-if(d.proxies){p.textContent=d.proxies.toLocaleString()}
-if(d.fresh_1h){f.textContent=d.fresh_1h}
+// Format: {total, by_country, by_protocol, generated_at}
+if(d.by_country){c.textContent=Object.keys(d.by_country).length}
+if(d.total){p.textContent=d.total.toLocaleString()}
 }).catch(()=>{});
 </script>
 </body>
