@@ -895,6 +895,31 @@ PROXY_SOURCES = [
     # KR: 0verfl0w767/kr-proxy-list-parser — "업타임이 높은 한국 프록시 5개를 하루마다 갱신"
     # JSON [{ip, port, fullAddress, ...}]
     ("krproxy-kr-json", "https://raw.githubusercontent.com/0verfl0w767/kr-proxy-list-parser/main/proxy.json", "jsonaddr"),
+    # ── R39-CC1: ProxyScrape mirror by-country (verified 2026-08-12 live: ID 3/6,
+    # NL 3/6, JP 2/6, US 2/6, SG 2/6, KR 2/6, GB 2/6, DE 1/6, IN 1/6; BR 0/15,
+    # FR 0/15 → skip). Format proto://ip:port campur — PROXY_RE tangkap ip:port,
+    # validator deteksi protokol otomatis. Update tiap jam (CI).
+    ("ps-country-ID", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/id/data.txt", "host:port"),
+    ("ps-country-JP", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/jp/data.txt", "host:port"),
+    ("ps-country-US", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/us/data.txt", "host:port"),
+    ("ps-country-DE", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/de/data.txt", "host:port"),
+    ("ps-country-SG", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/sg/data.txt", "host:port"),
+    ("ps-country-KR", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/kr/data.txt", "host:port"),
+    ("ps-country-IN", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/in/data.txt", "host:port"),
+    ("ps-country-GB", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/gb/data.txt", "host:port"),
+    ("ps-country-NL", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/countries/nl/data.txt", "host:port"),
+    # ── R39-CC2: proxyscrape v4 socks5 per negara (verified 2026-08-12 live:
+    # KR 3/6, FR 2/6, GB 2/6, DE 1/6, SG 1/6, NL 1/6, IN 1/3; psv4s5 ID/KR/SG
+    # sudah ada di R28). API intermittent 429 → grace period handle.
+    ("psv4s5-country-FR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=FR&timeout=5000", "protocolipport"),
+    ("psv4s5-country-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=DE&timeout=5000", "protocolipport"),
+    ("psv4s5-country-NL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=NL&timeout=5000", "protocolipport"),
+    ("psv4s5-country-GB", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=GB&timeout=5000", "protocolipport"),
+    ("psv4s5-country-IN", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=IN&timeout=5000", "protocolipport"),
+    # ── R39-CC3: niche elite/anon + socks5 (verified 2026-08-12 live:
+    # psv2-elite 2/10, gproxynet-socks5 1/5; gproxynet-socks4 0/8 → skip)
+    ("psv2-elite", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=elite", "host:port"),
+    ("gproxynet-socks5", "https://raw.githubusercontent.com/gproxynet/free-proxy-list/main/socks5.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
