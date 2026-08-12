@@ -1099,50 +1099,134 @@ def _probe_connect(host, port, timeout):
             if not chunk:
                 break
             data += chunk
-        s.close()
         first_line = data.split(b"\r\n", 1)[0] if data else b""
         # R20: accept 200 (tunnel OK) ATAU 4xx/5xx — proxy hidup yang menolak
         # CONNECT (HTTP-only proxy) balas 400/403/405/500; yang mati = timeout/refused.
         # Hanya 3xx (redirect aneh) dan non-HTTP yang dianggap mati.
         m = _re.match(rb"^HTTP/\d\.\d (\d{3})\b", first_line)
         if not m:
+            s.close()
             return False
         code = int(m.group(1))
-        return 200 <= code < 300 or 400 <= code < 600
+        if not (200 <= code < 300 or 400 <= code < 600):
+            s.close()
+            return False
+        # R32-P4: kalau 200 (tunnel OK) → TLS handshake + cert valid.
+        # Proxy MITM (fake cert) / strip-chain → DIBUANG.
+        if 200 <= code < 300:
+            import ssl as _ssl
+            try:
+                ctx = _ssl.create_default_context()
+                tls = ctx.wrap_socket(s, server_hostname="httpbin.org")
+                tls.close()
+                return True
+            except Exception:
+                s.close()
+                return False
+        s.close()
+        return True
     except Exception:
+        try:
+            s.close()
+        except Exception:
+            pass
         return False
 
 
 def validate_socks4(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
-    """SOCKS4 CONNECT handshake test."""
+    """SOCKS4 CONNECT + TLS relay test (R32-P4)."""
     ip, port = proxy.split(":")
     try:
-        with socket.create_connection((ip, int(port)), timeout=timeout) as s:
-            s.settimeout(timeout)
-            s.sendall(b"\x04\x01\x00\x50\x01\x01\x01\x01\x00")
-            response = b""
-            while len(response) < 8:
-                chunk = s.recv(8 - len(response))
-                if not chunk:
-                    return False
-                response += chunk
-        return response[:2] == b"\x00\x5a"
+        s = socket.create_connection((ip, int(port)), timeout=timeout)
+        s.settimeout(timeout)
+        # SOCKS4a: DSTIP 0.0.0.1 + hostname
+        host_b = b"httpbin.org"
+        req = b"\x04\x01\x00\x50\x00\x00\x00\x01\x00" + host_b + b"\x00"
+        s.sendall(req)
+        response = b""
+        while len(response) < 8:
+            chunk = s.recv(8 - len(response))
+            if not chunk:
+                s.close()
+                return False
+            response += chunk
+        if response[:2] != b"\x00\x5a":
+            s.close()
+            return False
+        # TLS handshake — cert harus VALID (bukan MITM fake)
+        import ssl as _ssl
+        try:
+            ctx = _ssl.create_default_context()
+            tls = ctx.wrap_socket(s, server_hostname="httpbin.org")
+            tls.close()
+            return True
+        except Exception:
+            s.close()
+            return False
     except (OSError, ValueError):
         return False
 
 
 def validate_socks5(proxy, timeout=VALIDATE_PROTOCOL_TIMEOUT):
-    """SOCKS5 handshake test."""
+    """SOCKS5 handshake + CONNECT + TLS relay test (R32-P4).
+
+    Old: cuma greeting (\\x05\\x01\\x00 → \\x05\\x00) — proxy MITM/mati lolos
+    (mereka jawab greeting tapi gak bisa relay TLS). New: handshake →
+    CONNECT httpbin.org:443 → TLS handshake → cert valid. Kalau cert
+    invalid (MITM fake cert / strip-chain), proxy DIBUANG (bukan cuma
+    di-score). Ini yang bikin pool cuma berisi proxy yang beneran
+    bisa relay TLS — "setara premium"."""
+
+    import ssl as _ssl
+
+    def _tls_ok(sock, host="httpbin.org", port=443):
+        """Return True kalau TLS handshake sukses + cert valid."""
+        ctx = _ssl.create_default_context()
+        try:
+            tls = ctx.wrap_socket(sock, server_hostname=host)
+            tls.close()
+            return True
+        except Exception:
+            return False
+
     ip, port = proxy.split(":")
     try:
         s = socket.create_connection((ip, int(port)), timeout=timeout)
-        # SOCKS5 greeting: version 5, 1 auth method (no auth)
+        s.settimeout(timeout)
+        # 1) greeting
         s.sendall(b"\x05\x01\x00")
         resp = s.recv(2)
+        if len(resp) != 2 or resp[0] != 0x05 or resp[1] != 0x00:
+            s.close()
+            return False
+        # 2) CONNECT httpbin.org:443 (ATYP domain)
+        import struct
+        host_b = b"httpbin.org"
+        req = b"\x05\x01\x00\x03" + bytes([len(host_b)]) + host_b + struct.pack(">H", 443)
+        s.sendall(req)
+        r2 = s.recv(10)
+        if len(r2) < 2 or r2[1] != 0:
+            # 2b) DNS fallback: resolve lokal + retry IPv4
+            try:
+                ip4 = socket.gethostbyname("httpbin.org")
+                req4 = b"\x05\x01\x00\x01" + socket.inet_aton(ip4) + struct.pack(">H", 443)
+                s.sendall(req4)
+                r2 = s.recv(10)
+                if len(r2) < 2 or r2[1] != 0:
+                    s.close()
+                    return False
+            except Exception:
+                s.close()
+                return False
+        # 3) TLS handshake — cert harus VALID (bukan MITM fake)
+        ok = _tls_ok(s)
         s.close()
-        # Response should be: version 5, method 0 (no auth)
-        return len(resp) == 2 and resp[0] == 0x05 and resp[1] == 0x00
+        return ok
     except Exception:
+        try:
+            s.close()
+        except Exception:
+            pass
         return False
 
 
