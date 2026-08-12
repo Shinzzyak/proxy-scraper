@@ -637,6 +637,16 @@ PROXY_SOURCES = [
     ("tsprnay-socks5", "https://raw.githubusercontent.com/Tsprnay/Proxy-lists/master/proxies/socks5.txt", "host:port"),
     # krokmazagaga/http-proxy-list — auto-update tiap 5 menit, ~9KB
     ("krokmaz-http", "https://raw.githubusercontent.com/krokmazagaga/http-proxy-list/main/http.txt", "host:port"),
+    # ── R34-GH4: GitHub batch 4 (verified 2026-08-12 live) ──
+    # EDT-Pages/Proxy-List — json list [{proxy, protocol, ip, port}], update harian
+    ("edt-http", "https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/http.json", "jsonproxy"),
+    ("edt-https", "https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/https.json", "jsonproxy"),
+    ("edt-socks5", "https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/socks5.json", "jsonproxy"),
+    # gnxD3RfTT2WE/* — feed proxies.st, update tiap jam (GH Actions)
+    ("gnx-live-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/live-http-proxies/main/http.txt", "host:port"),
+    ("gnx-live-socks5", "https://raw.githubusercontent.com/gnxD3RfTT2WE/live-socks5-proxies/main/socks5.txt", "host:port"),
+    ("gnx-pool-socks4", "https://raw.githubusercontent.com/gnxD3RfTT2WE/free-proxy-pool-2026/main/socks4.txt", "host:port"),
+    ("gnx-mixed-http", "https://raw.githubusercontent.com/gnxD3RfTT2WE/mixed-proxy-list/main/http.txt", "host:port"),
     # ── R33-GH3: databay-labs by-country + proxy-free + nguywnben
     # (verified 2026-08-12 live: EC 3/5, ID 3/6, RU 4/6, SG 4/6, TR 4/6, US 4/6,
     # VN 3/6, TH 3/6, IR 2/3, KZ 2/3, BD 2/6, KR 2/4, MY 2/3, PH 2/6, IN 2/6,
@@ -926,6 +936,20 @@ def extract_proxies(text, fmt="", max_items=None):
                 proxies.append(f"{parts[0]}:{parts[1]}")
                 if limit and len(proxies) >= limit:
                     return proxies
+        return proxies
+    # R34-GH4: fmt "jsonproxy" — JSON list [{proxy: "http://ip:port", ...}] (EDT-Pages)
+    if fmt == "jsonproxy" and text.strip().startswith("["):
+        try:
+            data = json.loads(text)
+            for item in data:
+                p = item.get("proxy", "")
+                m = re.match(r"^[a-z0-9]+://([\d.]+):(\d+)$", p)
+                if m and _is_valid_ipv4(m.group(1)) and is_valid_proxy_port(int(m.group(2))) and not is_blocked_ip(m.group(1)):
+                    proxies.append(f"{m.group(1)}:{m.group(2)}")
+                    if limit and len(proxies) >= limit:
+                        return proxies
+        except Exception:
+            pass
         return proxies
     for line in text.splitlines():
         line = line.strip()
