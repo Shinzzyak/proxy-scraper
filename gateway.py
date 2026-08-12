@@ -469,6 +469,23 @@ class GatewayHandler(BaseHTTPRequestHandler):
     """HTTP forward proxy that routes via session→proxy mapping."""
 
     def _get_session_proxy(self, country="", exclude=None, protocol=""):
+        # R37-B1: X-Rate header — throttle per client (req/s). Anti-ban bulk:
+        # 1000 request langsung = pattern bot gede. OXylabs/BrightData punya
+        # rate limit per user; kita kasih opsional via header.
+        rate = self.headers.get("X-Rate", "")
+        if rate:
+            try:
+                rps = float(rate)
+                if 0 < rps <= 100:
+                    self.server._last_req.setdefault(self.client_address[0], 0.0)
+                    last = self.server._last_req[self.client_address[0]]
+                    now = time.time()
+                    wait = (1.0 / rps) - (now - last)
+                    if wait > 0:
+                        time.sleep(min(wait, 10))
+                    self.server._last_req[self.client_address[0]] = time.time()
+            except ValueError:
+                pass  # invalid header — ignore, no throttle
         # R26-Z1 (proxy rotation): sid dari username cliproxy-style dulu
         sid, username_region, username_ttl = _sid_from_username(self.headers)
         if not country:
@@ -1241,6 +1258,7 @@ def main():
     server.session_manager = sm
     server.mode = args.mode
     server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": {}}
+    server._last_req = {}  # R37-B1: per-client throttle state (X-Rate)
     server.mitm_cache = {}  # R22-GW4: proxy → (ts, is_mitm) cache 300s
     server.allow_mitm = args.allow_mitm
     server.auth_secret = args.auth_secret
