@@ -575,8 +575,11 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 # ValueError 'too many values to unpack' (502). Bug pre-existing
                 # R24-GW5, baru kelihatan pas X-Protocol socks5 dipakai.
                 upstream_addr = session_proxy.split("://", 1)[-1]
-                upstream = socket.create_connection(upstream_addr.split(":"), timeout=UPSTREAM_PROXY_TIMEOUT)
-                upstream.settimeout(UPSTREAM_PROXY_TIMEOUT)  # R10-4: recv ikut timeout — silent upstream ga hang 10s×3
+                # R31-GW8: connect timeout 5s (bukan 10) — free pool 58% mati;
+                # request hang 30s (3×10s) = sinyal bot. Fail-fast: cepet gagal,
+                # cepet pindah proxy lain. Total failover ≤15s.
+                upstream = socket.create_connection(upstream_addr.split(":"), timeout=5)
+                upstream.settimeout(5)
                 upstream.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # R16-G1: matikan Nagle — hemat 1 RTT/burst di tunnel
                 # R24-GW5: SOCKS5 upstream — pool punya 466 socks5 yang mubazir
                 # (HTTP CONNECT cuma bisa ke proxy http). Deteksi protocol dari
