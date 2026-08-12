@@ -947,6 +947,19 @@ PROXY_SOURCES = [
     # NL 4/6, DE 2/6; FR 0/6, JP 0/4 → skip; IN/JP http sudah ada di psv4-country-*)
     ("psv4-country-NL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=NL&timeout=5000", "protocolipport"),
     ("psv4-country-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=DE&timeout=5000", "protocolipport"),
+    # ── R39-LOC1: source bahasa lokal non-utama (verified 2026-08-12:
+    # ciara-http 3+ live, ciara-s5 4+ live, fpl-th 30/300 live; proxyhub/
+    # hide-mn/helodata/webtoolkits/litport/dufrasne format valid, pool flaky)
+    ("ciara12-http", "https://raw.githubusercontent.com/Ciara-12/PROXY-free/refs/heads/main/http.txt", "host:port"),
+    ("ciara12-socks4", "https://raw.githubusercontent.com/Ciara-12/PROXY-free/refs/heads/main/socks4.txt", "host:port"),
+    ("ciara12-socks5", "https://raw.githubusercontent.com/Ciara-12/PROXY-free/refs/heads/main/socks5.txt", "host:port"),
+    ("fpl-th", "https://free-proxy-list.net/th/", "table"),
+    ("proxyhub-tr", "https://proxyhub.me/tr/all-free-proxy-list.html", "proxyhub"),
+    ("hide-mn-tr", "https://hide.mn/tr/proxy-list/", "table"),
+    ("helodata-vi", "https://helodata.com/vi/free-proxies", "table"),
+    ("webtoolkits-tr", "https://webtoolkits.net/tr/ucretsiz-proxy-listesi", "table"),
+    ("litport-it", "https://litport.net/free-proxy", "litport"),
+    ("dufrasne-tr", "https://raw.githubusercontent.com/Dufrasne4242/dufrasne-proxy-list/main/proxies.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -1245,6 +1258,27 @@ def extract_proxies(text, fmt="", max_items=None):
                         return proxies
         except Exception:
             pass
+        return proxies
+    # R39-LOC: fmt "proxyhub" — <span class="ip-text" title="IP">IP</span> +
+    # <span class="port-text">PORT</span> (proxyhub.me halaman bahasa lokal)
+    if fmt == "proxyhub":
+        ips = re.findall(r'ip-text" title="(\d{1,3}(?:\.\d{1,3}){3})"', text)
+        ports = re.findall(r'port-text">(\d{1,5})<', text)
+        for ip, port in zip(ips, ports):
+            if _is_valid_ipv4(ip) and port.isdigit() and is_valid_proxy_port(int(port)) and not is_blocked_ip(ip):
+                proxies.append(f"{ip}:{port}")
+                if limit and len(proxies) >= limit:
+                    return proxies
+        return proxies
+    # R39-LOC: fmt "litport" — <tr class="proxy-row"><td>PROTO</td><td>IP<div>...
+    # <span>IP</span>...</td><td>PORT</td> (litport.net/free-proxy)
+    if fmt == "litport":
+        for m in re.finditer(r'<tr class="proxy-row"><td>\w+</td><td>(\d{1,3}(?:\.\d{1,3}){3})<div.*?</td><td>(\d{1,5})</td>', text, re.S):
+            ip, port = m.group(1), m.group(2)
+            if _is_valid_ipv4(ip) and port.isdigit() and is_valid_proxy_port(int(port)) and not is_blocked_ip(ip):
+                proxies.append(f"{ip}:{port}")
+                if limit and len(proxies) >= limit:
+                    return proxies
         return proxies
     for line in text.splitlines():
         line = line.strip()
