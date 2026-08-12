@@ -735,6 +735,12 @@ PROXY_SOURCES = [
     ("iplocate-country-ZA", "https://raw.githubusercontent.com/iplocate/free-proxy-list/main/countries/ZA/proxies.txt", "host:port"),
     # spys.me proxy.txt sebagai host:port (beda dari spys-cred yang butuh user:pass)
     ("spys-me-http", "https://spys.me/proxy.txt", "host:port"),
+    # ── R35-N3: niche countries batch 3 (verified 2026-08-12 live) ──
+    # hideip.me connect.txt (verified live: 8/50) — beda dari gem-zloiuser http/socks
+    ("hideip-connect", "https://raw.githubusercontent.com/zloi-user/hideip.me/main/connect.txt", "host:port"),
+    # worldpool by-country (verified live: FR 10/14, RU 16/23)
+    ("worldpool-country-FR", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/FR.txt", "host:port"),
+    ("worldpool-country-RU", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/RU.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
