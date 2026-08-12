@@ -42,7 +42,9 @@ nav{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(
 .cta:hover{background:#000;text-decoration:none}
 
 /* Hero */
-.hero{max-width:1100px;margin:0 auto;padding:120px 24px 80px;text-align:center}
+.hero{max-width:1100px;margin:0 auto;padding:120px 24px 80px;text-align:center;position:relative}
+#net{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:900px;height:420px;z-index:0;pointer-events:none;opacity:.55}
+.hero>*{position:relative;z-index:1}
 .badge{display:inline-flex;align-items:center;gap:8px;background:#ebf5ff;color:#0068d6;font-size:12px;font-weight:500;padding:4px 12px;border-radius:9999px;margin-bottom:24px}
 .badge .dot{width:6px;height:6px;border-radius:50%;background:#0068d6;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
@@ -60,6 +62,15 @@ nav{position:sticky;top:0;background:rgba(255,255,255,.85);backdrop-filter:blur(
 .stat .num{font-size:48px;font-weight:600;letter-spacing:-2.4px;line-height:1}
 .stat .label{font-size:13px;font-weight:500;color:var(--gray-400);margin-top:12px;letter-spacing:-0.32px}
 .stat .sub{font-size:12px;font-family:'Geist Mono',monospace;color:var(--gray-400);margin-top:4px}
+
+/* Animations */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+.stat{transition:box-shadow .3s ease,transform .3s ease}
+.stat:hover{transform:translateY(-2px);box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 4px 8px, rgba(0,0,0,0.04) 0px 12px 16px -8px, #fafafa 0px 0px 0px 1px}
+.feat{transition:box-shadow .3s ease,transform .3s ease}
+.feat:hover{transform:translateY(-2px);box-shadow:rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 4px 8px, rgba(0,0,0,0.04) 0px 12px 16px -8px, #fafafa 0px 0px 0px 1px}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}#net{display:none}}
 
 /* Features */
 .features{max-width:1100px;margin:0 auto;padding:0 24px 96px}
@@ -108,6 +119,7 @@ footer .mono{font-size:12px;color:var(--gray-400)}
 </nav>
 
 <section class="hero">
+<canvas id="net"></canvas>
 <div class="badge"><span class="dot"></span>Open source · Free · Self-hosted</div>
 <h1>Free proxy pool,<br>engineered like infrastructure.</h1>
 <p>Proxy Scraper is an open-source proxy pool manager — 400+ sources, live validation, SQLite-backed, geolocation scoring, and a rotating gateway for automation. Built to be deployed, not rented.</p>
@@ -118,29 +130,29 @@ footer .mono{font-size:12px;color:var(--gray-400)}
 </section>
 
 <section class="stats" id="stats">
-<div class="stat"><div class="num" id="statSources">400+</div><div class="label">Proxy Sources</div><div class="sub">SCALING CONTINUOUSLY</div></div>
-<div class="stat"><div class="num" id="statCountries">100+</div><div class="label">Countries</div><div class="sub">GEO-TAGGED POOL</div></div>
-<div class="stat"><div class="num" id="statProxies">2.4k</div><div class="label">Live Proxies</div><div class="sub">VALIDATED POOL</div></div>
-<div class="stat"><div class="num" id="statFresh">99</div><div class="label">Fresh &lt; 1h</div><div class="sub">REFRESHED EVERY 2H</div></div>
+<div class="stat reveal"><div class="num" id="statSources">400+</div><div class="label">Proxy Sources</div><div class="sub">SCALING CONTINUOUSLY</div></div>
+<div class="stat reveal"><div class="num" id="statCountries">100+</div><div class="label">Countries</div><div class="sub">GEO-TAGGED POOL</div></div>
+<div class="stat reveal"><div class="num" id="statProxies">2.4k</div><div class="label">Live Proxies</div><div class="sub">VALIDATED POOL</div></div>
+<div class="stat reveal"><div class="num" id="statFresh">99</div><div class="label">Fresh &lt; 1h</div><div class="sub">REFRESHED EVERY 2H</div></div>
 </section>
 
 <section class="features" id="features">
 <h2>Everything you need.<br>Nothing you don't.</h2>
 <div class="grid">
-<div class="feat"><div class="mono">Validation</div><h3>TLS-certified pool</h3><p>Every proxy passes real TLS relay checks — MITM and dead proxies are pruned automatically.</p></div>
-<div class="feat"><div class="mono">Gateway</div><h3>Sticky &amp; rotating</h3><p>Session-sticky or per-request rotation, region pinning, SOCKS4/5 + HTTP upstreams.</p></div>
-<div class="feat"><div class="mono">Anti-Detection</div><h3>Fingerprint aware</h3><p>Header hygiene, mobile UA, JA3 Chrome impersonation, residential-only filtering.</p></div>
-<div class="feat"><div class="mono">Operations</div><h3>Auto-refresh</h3><p>2-hour pool refresh, 30-minute revalidation, source health monitoring, usage logs.</p></div>
-<div class="feat"><div class="mono">Data</div><h3>SQLite + snapshots</h3><p>Local SQLite pool with JSON/text snapshot exports pushed straight to GitHub.</p></div>
-<div class="feat"><div class="mono">Deploy</div><h3>Single file</h3><p>One Python gateway, systemd-ready, no dependencies beyond the standard library.</p></div>
+<div class="feat reveal"><div class="mono">Validation</div><h3>TLS-certified pool</h3><p>Every proxy passes real TLS relay checks — MITM and dead proxies are pruned automatically.</p></div>
+<div class="feat reveal"><div class="mono">Gateway</div><h3>Sticky &amp; rotating</h3><p>Session-sticky or per-request rotation, region pinning, SOCKS4/5 + HTTP upstreams.</p></div>
+<div class="feat reveal"><div class="mono">Anti-Detection</div><h3>Fingerprint aware</h3><p>Header hygiene, mobile UA, JA3 Chrome impersonation, residential-only filtering.</p></div>
+<div class="feat reveal"><div class="mono">Operations</div><h3>Auto-refresh</h3><p>2-hour pool refresh, 30-minute revalidation, source health monitoring, usage logs.</p></div>
+<div class="feat reveal"><div class="mono">Data</div><h3>SQLite + snapshots</h3><p>Local SQLite pool with JSON/text snapshot exports pushed straight to GitHub.</p></div>
+<div class="feat reveal"><div class="mono">Deploy</div><h3>Single file</h3><p>One Python gateway, systemd-ready, no dependencies beyond the standard library.</p></div>
 </div>
 </section>
 
 <section class="pipeline">
 <div class="grid">
-<div class="step step-1"><div class="mono">Scrape</div><h3>400+ sources</h3><p>GitHub, APIs, Telegram channels — countries from Andorra to Zimbabwe.</p></div>
-<div class="step step-2"><div class="mono">Validate</div><h3>TLS relay tests</h3><p>Real CONNECT + certificate verification. Fake certs get blacklisted.</p></div>
-<div class="step step-3"><div class="mono">Serve</div><h3>Gateway API</h3><p>Sticky sessions, region pinning, health endpoint, on-demand refresh.</p></div>
+<div class="step step-1 reveal"><div class="mono">Scrape</div><h3>400+ sources</h3><p>GitHub, APIs, Telegram channels — countries from Andorra to Zimbabwe.</p></div>
+<div class="step step-2 reveal"><div class="mono">Validate</div><h3>TLS relay tests</h3><p>Real CONNECT + certificate verification. Fake certs get blacklisted.</p></div>
+<div class="step step-3 reveal"><div class="mono">Serve</div><h3>Gateway API</h3><p>Sticky sessions, region pinning, health endpoint, on-demand refresh.</p></div>
 </div>
 </section>
 
@@ -149,13 +161,64 @@ footer .mono{font-size:12px;color:var(--gray-400)}
 </footer>
 
 <script>
+// === Node network animation (proxy pool metaphor) — vanilla canvas, no deps ===
+(()=>{
+const cv=document.getElementById('net');if(!cv)return;
+const ctx=cv.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;init()}
+function init(){
+  const n=Math.min(90,Math.floor(W*H/9000));
+  nodes=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.6+.8}));
+}
+let raf;const DPR=Math.min(window.devicePixelRatio||1,2);
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of nodes){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;
+    if(p.y<0||p.y>H)p.vy*=-1;
+  }
+  ctx.strokeStyle='rgba(23,23,23,0.08)';ctx.lineWidth=1;
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;
+      if(d2<140*140){ctx.globalAlpha=(1-d2/19600)*.5;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+    }
+  }
+  ctx.globalAlpha=1;
+  ctx.fillStyle='#171717';
+  for(const p of nodes){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill()}
+  raf=requestAnimationFrame(draw);
+}
+const mq=window.matchMedia('(prefers-reduced-motion: reduce)');
+if(mq.matches){resize();ctx.clearRect(0,0,W,H);init();ctx.fillStyle='#171717';nodes.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill()})}
+else{resize();draw()}
+window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resize();if(!mq.matches)draw()});
+})();
+
+// === Scroll reveal ===
+(()=>{
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+
+// === Count-up stats ===
+function countUp(el,target,dur=1200){
+  const t0=performance.now();
+  function tick(t){
+    const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(target*e).toLocaleString();
+    if(p<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
 // Live stats from proxies-stats.json (GitHub Actions updates every 2h)
 fetch('proxies-stats.json').then(r=>r.json()).then(d=>{
 const s=document.getElementById('statSources'),c=document.getElementById('statCountries'),
 p=document.getElementById('statProxies'),f=document.getElementById('statFresh');
-// Format: {total, by_country, by_protocol, generated_at}
-if(d.by_country){c.textContent=Object.keys(d.by_country).length}
-if(d.total){p.textContent=d.total.toLocaleString()}
+if(d.by_country){c.textContent=Object.keys(d.by_country).length;countUp(c,Object.keys(d.by_country).length)}
+if(d.total){countUp(p,d.total)}
 }).catch(()=>{});
 </script>
 </body>
