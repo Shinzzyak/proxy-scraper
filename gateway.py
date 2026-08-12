@@ -857,7 +857,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     env.setdefault("PROXY_SOURCE_MAX_BYTES", "2000000")
                     env.setdefault("PROXY_MAX_PROXIES_PER_SOURCE", "15000")
                     subprocess.run(
-                        [sys.executable, "freshen_pool.py", "--max-validate", "400"],
+                        [sys.executable, "freshen_pool.py", "--max-validate", "800"],
                         cwd=os.path.dirname(os.path.abspath(__file__)),
                         env=env, timeout=900,
                     )

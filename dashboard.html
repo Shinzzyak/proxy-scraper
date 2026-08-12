@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proxy Scraper Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#e0e0e0;padding:20px}
+h1{font-size:1.8em;margin-bottom:8px;color:#00ff88}
+h2{font-size:1.2em;margin:16px 0 8px;color:#00ccff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:#1a1a2e;border-radius:10px;padding:16px;text-align:center;border:1px solid #2a2a4a}
+.stat .num{font-size:2em;font-weight:700;color:#00ff88}
+.stat .label{font-size:.85em;color:#888;margin-top:4px}
+table{width:100%;border-collapse:collapse;background:#1a1a2e;border-radius:10px;overflow:hidden;margin-bottom:20px}
+th{background:#16213e;padding:10px 12px;text-align:left;font-size:.85em;color:#aaa;position:sticky;top:0}
+td{padding:8px 12px;border-top:1px solid #222;font-size:.85em}
+tr:hover{background:#1e2a4a}
+.badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.75em;font-weight:600}
+.badge-http{background:#1a3a2e;color:#00ff88}
+.badge-socks5{background:#2e1a3a;color:#cc88ff}
+.badge-elite{background:#3a2e1a;color:#ffcc00}
+.badge-transparent{background:#3a1a1a;color:#ff6644}
+.score{font-weight:700;font-size:1.1em}
+.score-high{color:#00ff88}
+.score-mid{color:#ffcc00}
+.score-low{color:#ff4444}
+.filters{margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap}
+.filters input,.filters select{background:#16213e;border:1px solid #333;color:#e0e0e0;padding:6px 12px;border-radius:6px;font-size:.85em}
+.filters input{width:200px}
+.badge-country{background:#16213e;color:#00ccff;font-size:.75em;padding:2px 6px;border-radius:4px}
+footer{text-align:center;color:#555;font-size:.8em;margin-top:20px;padding:16px}
+</style>
+</head>
+<body>
+<h1>🔄 Proxy Scraper Dashboard</h1>
+<p style="color:#888;margin-bottom:16px">Last updated: <span id="lastUpdate">loading...</span></p>
+
+<div class="stats" id="statsGrid"></div>
+
+<h2>Filters</h2>
+<div class="filters">
+<input type="text" id="searchIP" placeholder="Search IP...">
+<select id="filterProtocol"><option value="">All Protocols</option><option value="http">HTTP</option><option value="socks5">SOCKS5</option></select>
+<select id="filterCountry"><option value="">All Countries</option></select>
+<select id="filterAnonymity"><option value="">All Anonymity</option><option value="elite">Elite</option><option value="transparent">Transparent</option></select>
+<select id="sortBy"><option value="score">Sort: Score</option><option value="speed">Sort: Speed</option><option value="country">Sort: Country</option></select>
+</div>
+
+<h2>Proxies (<span id="proxyCount">0</span>)</h2>
+<div style="overflow-x:auto;max-height:70vh;overflow-y:auto">
+<table>
+<thead><tr><th>Score</th><th>IP</th><th>Port</th><th>Protocol</th><th>Speed</th><th>Anonymity</th><th>Country</th><th>City</th><th>ISP</th><th>Last Seen</th></tr></thead>
+<tbody id="proxyTable"></tbody>
+</table>
+</div>
+
+<footer>Free Proxy Scraper v5 — Auto-updated every 3 hours via GitHub Actions</footer>
+
+<script>
+async function load(){
+const r=await fetch('proxies.json');
+const proxies=await r.json();
+document.getElementById('lastUpdate').textContent=proxies.length?proxies[0].last_seen:'N/A';
+document.getElementById('proxyCount').textContent=proxies.length;
+
+// Stats
+const protocols={},anonymities={},countries={};
+let totalSpeed=0;
+proxies.forEach(p=>{
+protocols[p.protocol]=(protocols[p.protocol]||0)+1;
+anonymities[p.anonymity]=(anonymities[p.anonymity]||0)+1;
+if(p.country_code)countries[p.country_code]=(countries[p.country_code]||0)+1;
+totalSpeed+=p.response_time_ms||0;
+});
+const avgSpeed=Math.round(totalSpeed/proxies.length);
+const grid=document.getElementById('statsGrid');
+grid.innerHTML=`
+<div class="stat"><div class="num">${proxies.length}</div><div class="label">Total Proxies</div></div>
+<div class="stat"><div class="num">${Object.keys(countries).length}</div><div class="label">Countries</div></div>
+<div class="stat"><div class="num">${avgSpeed}ms</div><div class="label">Avg Response</div></div>
+${Object.entries(protocols).map(([k,v])=>`<div class="stat"><div class="num">${v}</div><div class="label">${k.toUpperCase()}</div></div>`).join('')}
+`;
+
+// Country filter
+const cs=document.getElementById('filterCountry');
+Object.keys(countries).sort().forEach(c=>{
+const o=document.createElement('option');o.value=c;o.textContent=c;cs.appendChild(o);
+});
+
+render(proxies);
+document.getElementById('searchIP').oninput=()=>render(proxies);
+document.getElementById('filterProtocol').onchange=()=>render(proxies);
+document.getElementById('filterCountry').onchange=()=>render(proxies);
+document.getElementById('filterAnonymity').onchange=()=>render(proxies);
+document.getElementById('sortBy').onchange=()=>render(proxies);
+}
+
+function render(proxies){
+const q=document.getElementById('searchIP').value.toLowerCase();
+const fp=document.getElementById('filterProtocol').value;
+const fc=document.getElementById('filterCountry').value;
+const fa=document.getElementById('filterAnonymity').value;
+const sb=document.getElementById('sortBy').value;
+let f=proxies.filter(p=>{
+if(q&&!p.ip.includes(q))return false;
+if(fp&&p.protocol!==fp)return false;
+if(fc&&p.country_code!==fc)return false;
+if(fa&&p.anonymity!==fa)return false;
+return true;
+});
+f.sort((a,b)=>{
+if(sb==='score')return(b.score||0)-(a.score||0);
+if(sb==='speed')return(a.response_time_ms||9999)-(b.response_time_ms||9999);
+if(sb==='country')return(a.country_code||'ZZ').localeCompare(b.country_code||'ZZ');
+return 0;
+});
+document.getElementById('proxyCount').textContent=f.length;
+const tb=document.getElementById('proxyTable');
+tb.innerHTML=f.slice(0,500).map(p=>`<tr>
+<td class="score ${p.score>=70?'score-high':p.score>=40?'score-mid':'score-low'}">${p.score||0}</td>
+<td>${p.ip}</td><td>${p.port}</td>
+<td><span class="badge badge-${p.protocol}">${p.protocol}</span></td>
+<td>${p.response_time_ms}ms</td>
+<td><span class="badge badge-${p.anonymity}">${p.anonymity}</span></td>
+<td><span class="badge-country">${p.country_code||'??'}</span> ${p.country||''}</td>
+<td>${p.city||''}</td><td>${p.isp||''}</td>
+<td>${p.last_seen||''}</td></tr>`).join('');
+}
+load();
+</script>
+</body>
+</html>
