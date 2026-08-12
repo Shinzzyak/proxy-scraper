@@ -591,6 +591,23 @@ PROXY_SOURCES = [
     ("TazaProxy-troxy", "https://raw.githubusercontent.com/abusaeeidx/TazaProxy-Troxy/main/working_proxies.txt", "protocolipport"),
     ("BrenoFariasdaSilva-socks", "https://raw.githubusercontent.com/BrenoFariasdaSilva/Proxy-List-Generator/main/Proxies_List/socks_proxy_proxies.txt", "host:port"),
     ("BrenoFariasdaSilva-free", "https://raw.githubusercontent.com/BrenoFariasdaSilva/Proxy-List-Generator/main/Proxies_List/free_proxy_list_proxies.txt", "host:port"),
+    # ── R34-GH1: GitHub batch 1 (verified 2026-08-12 live) ──
+    # vakhov (pushed hari ini): http 9789B, socks4 3458B, socks5 436B raw — update harian
+    ("vakhov-http", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/http.txt", "host:port"),
+    ("vakhov-socks4", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/socks4.txt", "host:port"),
+    ("vakhov-socks5", "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/socks5.txt", "host:port"),
+    # Pxys-io/DailyProxyList — daily, protocolipport (http:// & socks5:// prefix)
+    ("pxys-daily", "https://raw.githubusercontent.com/Pxys-io/DailyProxyList/master/working_proxies.txt", "protocolipport"),
+    # Argh94/Proxy-List — pushed hari ini, protocolipport
+    ("argh94-http", "https://raw.githubusercontent.com/Argh94/Proxy-List/main/HTTP.txt", "protocolipport"),
+    ("argh94-socks4", "https://raw.githubusercontent.com/Argh94/Proxy-List/main/SOCKS4.txt", "protocolipport"),
+    ("argh94-socks5", "https://raw.githubusercontent.com/Argh94/Proxy-List/main/SOCKS5.txt", "protocolipport"),
+    # azestkingscrown — daily working list, protocolipport
+    ("azest-working", "https://raw.githubusercontent.com/azestkingscrown/Free_Proxy_List/main/working_proxies.txt", "protocolipport"),
+    # aQuiner — harian, host:port
+    ("aQuiner-http", "https://raw.githubusercontent.com/aQuiner/free-proxy-list/main/http.txt", "host:port"),
+    # afrcloud-net/ProxyList-Scaner — csv ip,port,country,org (~1MB, update harian)
+    ("afrcloud-scaner", "https://raw.githubusercontent.com/afrcloud-net/ProxyList-Scaner/main/rawProxyList.txt", "csv"),
     # ── R33-GH3: databay-labs by-country + proxy-free + nguywnben
     # (verified 2026-08-12 live: EC 3/5, ID 3/6, RU 4/6, SG 4/6, TR 4/6, US 4/6,
     # VN 3/6, TH 3/6, IR 2/3, KZ 2/3, BD 2/6, KR 2/4, MY 2/3, PH 2/6, IN 2/6,
@@ -868,6 +885,18 @@ def extract_proxies(text, fmt="", max_items=None):
                                     return proxies
         except Exception:
             pass
+        return proxies
+    # R34-GH1: fmt "csv" — ip,port[,country,org] (afrcloud-net/ProxyList-Scaner)
+    if fmt == "csv":
+        for line in text.splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = line.split(",")
+            if len(parts) >= 2 and _is_valid_ipv4(parts[0]) and parts[1].isdigit() and is_valid_proxy_port(int(parts[1])) and not is_blocked_ip(parts[0]):
+                proxies.append(f"{parts[0]}:{parts[1]}")
+                if limit and len(proxies) >= limit:
+                    return proxies
         return proxies
     for line in text.splitlines():
         line = line.strip()
