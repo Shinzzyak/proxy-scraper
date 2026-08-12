@@ -927,6 +927,10 @@ PROXY_SOURCES = [
     ("dlb-country-FR", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/fr/http.txt", "host:port"),
     ("dlb-country-JP", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/jp/http.txt", "host:port"),
     ("dlb-country-GB", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/gb/http.txt", "host:port"),
+    # ── R39-CC5: proxyscrape v4 http per negara (verified 2026-08-12 live:
+    # NL 4/6, DE 2/6; FR 0/6, JP 0/4 → skip; IN/JP http sudah ada di psv4-country-*)
+    ("psv4-country-NL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=NL&timeout=5000", "protocolipport"),
+    ("psv4-country-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=DE&timeout=5000", "protocolipport"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
