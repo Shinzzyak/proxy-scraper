@@ -857,7 +857,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     env.setdefault("PROXY_SOURCE_MAX_BYTES", "2000000")
                     env.setdefault("PROXY_MAX_PROXIES_PER_SOURCE", "15000")
                     subprocess.run(
-                        [sys.executable, "freshen_pool.py", "--max-validate", "1200"],
+                        [sys.executable, "freshen_pool.py", "--max-validate", "4000"],
                         cwd=os.path.dirname(os.path.abspath(__file__)),
                         env=env, timeout=900,
                     )
@@ -880,7 +880,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 db.close()
             except Exception:
                 before = {"total": -1, "fresh_1h": -1}
-            body = {"status": "started", "detail": "freshen_pool.py --max-validate 1200", "pool_before": before}
+            body = {"status": "started", "detail": "freshen_pool.py --max-validate 4000", "pool_before": before}
             self.send_response(202)
         payload = json.dumps(body).encode()
         self.send_header("Content-Type", "application/json")
