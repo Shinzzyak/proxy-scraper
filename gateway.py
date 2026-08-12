@@ -283,7 +283,7 @@ def _enqueue_usage(ip, port, success, duration_ms=0, error=""):
         _dropped_usage += 1  # bounded queue — drop under burst, count it
 
 
-def _pick_proxy(country="", exclude=None, protocol=""):
+def _pick_proxy(country="", exclude=None, protocol="", non_dc=False):
     """Select a fresh proxy from the pool.
 
     Returns 'host:port' string (or 'socks5://host:port'). Falls back to
@@ -299,6 +299,7 @@ def _pick_proxy(country="", exclude=None, protocol=""):
             rows = search_proxies(
                 protocol=protocol, country_code=country, min_score=1,
                 max_age_minutes=180, max_results=20,
+                residential_only=non_dc,  # R32-P3
             )
             for r in rows:
                 candidate = f"{r['ip']}:{r['port']}"
@@ -312,6 +313,18 @@ def _pick_proxy(country="", exclude=None, protocol=""):
             if country:
                 return None
         proxy = get_best_proxy(protocol=protocol, country_code=country, min_score=1, max_age_minutes=0)  # max_age=0: freshness disabled — free pool volatile; failover+cooldown handles dead ones
+        if non_dc and proxy and proxy.get("is_datacenter"):
+            # R32-P3: non_dc diminta tapi get_best_proxy balik datacenter →
+            # cari alternatif via search_proxies (residential_only)
+            rows = search_proxies(
+                protocol=protocol, country_code=country, min_score=1,
+                max_age_minutes=60, max_results=10,
+                residential_only=True,
+            )
+            if rows:
+                proxy = rows[0]
+            else:
+                proxy = None
         if proxy:
             cand = f"{proxy['ip']}:{proxy['port']}"
             if proxy.get("protocol") == "socks5":
@@ -472,6 +485,10 @@ class GatewayHandler(BaseHTTPRequestHandler):
         prefer_socks = self.headers.get("X-Prefer", "").lower() == "socks"
         if prefer_socks and not protocol:
             protocol = "socks5"
+        # R32-P3: X-Non-DC: 1 — cuma pilih proxy non-datacenter
+        # (is_datacenter=0 = residential/ISP). Premium proxy = residential,
+        # bukan datacenter (datacenter IP gampang di-detect web besar).
+        self._non_dc = self.headers.get("X-Non-DC", "").lower() == "1"
         if self.server.mode == "rotate":
             return _next_proxy_round_robin(self.server.rotate_state, country, exclude, protocol)
         # R32-P1 (premium mode): rotasi per request — sesi TIDAK sticky,
@@ -480,12 +497,12 @@ class GatewayHandler(BaseHTTPRequestHandler):
         if self.server.mode == "premium":
             session_id = sid or self.headers.get("X-Session-ID", "")
             if session_id:
-                proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
+                proxy = _pick_proxy(country, exclude=exclude, protocol=protocol, non_dc=self._non_dc)
                 if proxy is None:
                     raise CountryUnavailable(country)
                 return proxy  # per-request pick (TIDAK di-cache session)
             # tanpa sid → rotasi penuh tiap request
-            proxy = _pick_proxy(country, exclude=exclude, protocol=protocol)
+            proxy = _pick_proxy(country, exclude=exclude, protocol=protocol, non_dc=self._non_dc)
             if proxy is None:
                 raise CountryUnavailable(country)
             return proxy
