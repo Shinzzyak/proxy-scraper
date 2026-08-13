@@ -320,7 +320,10 @@ def get_best_proxy(protocol: str = "", country_code: str = "", min_score: int = 
         # Sebelumnya ORDER BY score, rt → satu proxy rt 1ms nge-dominasi semua
         # request, sisanya (216.22.13.244 dll) gak pernah ke-pick.
         # pakai last_seen ASC: lama (kecil) dulu → semua proxy kebagian.
-        q += " ORDER BY score DESC, julianday(last_seen) ASC, response_time_ms ASC LIMIT 1"
+        # R43-RES: non-datacenter (ISP/residential) DIDAHULUKAN — Grok/OpenAI/
+        # Microsoft blokir DC IP (403 SSO). is_datacenter=0 (ISP) > 1 (DC).
+        # is_datacenter=-1 (unknown) di tengah — jangan langsung DC.
+        q += " ORDER BY CASE is_datacenter WHEN 0 THEN 0 WHEN -1 THEN 1 ELSE 2 END, score DESC, julianday(last_seen) ASC, response_time_ms ASC LIMIT 1"
         row = conn.execute(q, params).fetchone()
         return dict(row) if row else None
     finally:
@@ -505,7 +508,7 @@ def search_proxies(protocol: str = "", country_code: str = "", min_score: int = 
             cutoff = (datetime.now(timezone.utc) - timedelta(minutes=max_age_minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
             q += " AND julianday(last_seen) >= julianday(?)"
             params.append(cutoff)
-        q += " ORDER BY score DESC, last_seen DESC, response_time_ms ASC LIMIT ?"
+        q += " ORDER BY CASE is_datacenter WHEN 0 THEN 0 WHEN -1 THEN 1 ELSE 2 END, score DESC, last_seen DESC, response_time_ms ASC LIMIT ?"
         params.append(max_results)
         rows = conn.execute(q, params).fetchall()
         return [dict(r) for r in rows]
