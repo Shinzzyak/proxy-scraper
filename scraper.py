@@ -1106,6 +1106,15 @@ PROXY_SOURCES = [
     ("psv2dp-US", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=US&ssl=all&anonymity=all", "host:port"),
     ("psv2dp-NL", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=NL&ssl=all&anonymity=all", "host:port"),
     ("psv2dp-GB", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=GB&ssl=all&anonymity=all", "host:port"),
+    # R42-GROK: sunny9577 socks5 raw (http sudah via github.io), Pxys-io proxylistdaily
+    # (beda repo dari DailyProxyList), elliottophellia by-country US/NL (global sudah R38).
+    # Verified 2026-08-13 live: sunny-s5 9/117, pxys-daily 2/60, eo-http-US 11/18,
+    # eo-http-NL 6/8, eo-s5-US 2/4. US/EU = relevan untuk AI.
+    ("sunny9577-socks5", "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/generated/socks5_proxies.txt", "host:port"),
+    ("pxys-proxylistdaily", "https://raw.githubusercontent.com/Pxys-io/proxylistdaily/main/working_proxies.txt", "protocolipport"),
+    ("eoph-http-US", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/http/country/US/http_US_checked.txt", "host:port"),
+    ("eoph-http-NL", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/http/country/NL/http_NL_checked.txt", "host:port"),
+    ("eoph-socks5-US", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/socks5/country/US/socks5_US_checked.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
