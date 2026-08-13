@@ -1132,6 +1132,19 @@ PROXY_SOURCES = [
     ("morpheusadam-all", "https://raw.githubusercontent.com/morpheusadam/v2ray-config/main/proxies/all.txt", "host:port"),
     ("relayglass-elite-http", "https://raw.githubusercontent.com/relayglass/free-proxy-list/main/anonymity/elite/http/http.txt", "host:port"),
     ("relayglass-elite-socks5", "https://raw.githubusercontent.com/relayglass/free-proxy-list/main/anonymity/elite/socks5/socks5.txt", "host:port"),
+    # ── R43-RES: residential/ISP-focused + fresh US/EU/JP (verified 2026-08-13) ──
+    # hproxy JP by-country — 1548 IP, update harian. Live 5/15 (56.155.73.159 AWS JP,
+    # 47.91.29.151 Alibaba JP) — JP exit untuk AI/Outlook region APAC.
+    ("hproxy-country-JP", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/JP.txt", "host:port"),
+    # free-proxy-list.net per-negara DE/FR/NL (parser table) — 300 rows masing-masing,
+    # live 3-4/15. EU exit bersih (GTHost IT, Telone ZW residential-style, M247 SG).
+    ("fpl-de", "https://free-proxy-list.net/de/", "table"),
+    ("fpl-fr", "https://free-proxy-list.net/fr/", "table"),
+    ("fpl-nl", "https://free-proxy-list.net/nl/", "table"),
+    # proxyspace.pro socks5 — 2268 IP, update harian. Live 3/30 (8.213.x Alibaba).
+    ("proxyspace-socks5", "https://proxyspace.pro/socks5.txt", "host:port"),
+    # databay US socks4 — 19 IP, by-country socks4 belum ada di source lain.
+    ("dlb-country-US-socks4", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/us/socks4.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
