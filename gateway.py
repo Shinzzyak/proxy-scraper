@@ -523,12 +523,20 @@ class GatewayHandler(BaseHTTPRequestHandler):
                         exclude = set(exclude or ()) | {old}
                 # R32-P1: sticky optional — sid yang sama → proxy yang sama
                 # (via SessionManager mapping, TTL DEFAULT_SESSION_TTL).
+                # R42-FIX: ttl 300s terlalu pendek buat automation (Outlook/
+                # Grok session ganti IP tiap 5 menit). Naikin ke 1 jam default
+                # kalau client gak minta X-Session-TTL eksplisit.
+                ttl_sec = DEFAULT_SESSION_TTL
+                try:
+                    ttl_sec = min(int(self.headers.get("X-Session-TTL", "")), 3600)
+                except ValueError:
+                    pass
                 picked = _pick_proxy(country, exclude=exclude, protocol=protocol,
                                      non_dc=self._non_dc, prefer_socks=prefer_socks)
                 if picked is None:
                     raise CountryUnavailable(country)
                 return self.server.session_manager.get_or_create(
-                    session_id, lambda: picked, ttl=DEFAULT_SESSION_TTL
+                    session_id, lambda: picked, ttl=ttl_sec if ttl_sec > 0 else DEFAULT_SESSION_TTL
                 )
             # tanpa sid → rotasi penuh tiap request: round-robin atas pool
             # fresh, exclude yang baru gagal (R21-GW3), skip reuse sampai
@@ -1357,7 +1365,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
         pass
 
 
-def _cleanup_loop(session_manager, interval=60):
+def _cleanup_loop(session_manager, interval=60, no_share_blacklist=False):
     """Background thread: purge expired sessions + auto-ban bad proxies periodically."""
     while True:
         time.sleep(interval)
@@ -1365,6 +1373,11 @@ def _cleanup_loop(session_manager, interval=60):
         if removed:
             print(f"♻️ Purged {removed} expired sessions", file=sys.stderr)
         try:
+            if no_share_blacklist:
+                # R42-FIX: gateway lain (8080) share proxies.db — auto-ban dia
+                # nge-prune pool kita. Skip auto-ban DB kalau flag ini set.
+                time.sleep(1)
+                continue
             from proxy_pool import auto_ban_bad_proxies, get_db
             banned = auto_ban_bad_proxies()
             if banned:
@@ -1397,6 +1410,11 @@ def main():
     parser.add_argument("--allow-mitm", action="store_true",
                         help="R22-GW4: izinkan proxy MITM (fake cert). DEFAULT OFF = aman; "
                              "ON = semua proxy dipakai (TLS bisa dibaca proxy — jangan kirim credential)")
+    parser.add_argument("--no-share-blacklist", action="store_true",
+                        help="R42-FIX: jangan auto-ban/blacklist proxy ke DB shared — "
+                             "blacklist in-memory doang. Dipakai kalau ada gateway lain "
+                             "(misal 8080 milik user lain) yang share proxies.db — "
+                             "auto-ban dia nge-prune pool kita")
     args = parser.parse_args()
 
     sm = SessionManager(default_ttl=args.session_ttl)
@@ -1404,13 +1422,14 @@ def main():
     server.daemon_threads = True  # R11-5: shutdown ga nunggu tunnel idle
     server.session_manager = sm
     server.mode = args.mode
+    server.no_share_blacklist = args.no_share_blacklist
     server.rotate_state = {"list": None, "index": 0, "refreshed": 0, "blacklist": {}}
     server._last_req = {}  # R37-B1: per-client throttle state (X-Rate)
     server.mitm_cache = {}  # R22-GW4: proxy → (ts, is_mitm) cache 300s
     server.allow_mitm = args.allow_mitm
     server.auth_secret = args.auth_secret
 
-    cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), daemon=True)
+    cleanup = threading.Thread(target=_cleanup_loop, args=(sm,), kwargs={"no_share_blacklist": args.no_share_blacklist}, daemon=True)
     cleanup.start()
     writer = threading.Thread(target=_usage_writer, daemon=True)
     writer.start()
