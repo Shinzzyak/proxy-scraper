@@ -53,6 +53,17 @@ PROXY_SOURCES = [
     ("proxylist-to-http", "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/http.txt", "host:port"),
     ("proxylist-to-socks5", "https://raw.githubusercontent.com/proxylist-to/proxy-list/main/socks5.txt", "host:port"),
     ("goodproxy-raw", "https://raw.githubusercontent.com/yuceltoluyag/GoodProxy/main/raw.txt", "host:port"),
+    # ── R42-OUTL: proxy untuk automation Outlook/Microsoft (bulk account creation,
+    # login). Microsoft ketat soal IP datacenter (3724/MSA sering block) — source
+    # di bawah campuran US/EU + gabungan, semuanya fresh (push <7 hari, verified
+    # 2026-08-13: curl 200 + live test via http/https/socks5). ──
+    ("goodproxy-goodtxt", "https://raw.githubusercontent.com/yuceltoluyag/GoodProxy/main/GoodProxy.txt", "host:port"),
+    ("goodproxy-backup", "https://raw.githubusercontent.com/yuceltoluyag/GoodProxy/main/ProxyBackup.txt", "host:port"),
+    ("kangproxy-xres", "https://raw.githubusercontent.com/officialputuid/KangProxy/main/xResults/Proxies.txt", "host:port"),
+    ("kangproxy-xraw", "https://raw.githubusercontent.com/officialputuid/KangProxy/main/xResults/RAW.txt", "protocolipport"),
+    ("hproxy-all", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/all.txt", "host:port"),
+    ("databay-us-socks5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/us/socks5.txt", "host:port"),
+    ("openproxyhub-all", "https://raw.githubusercontent.com/openproxyhub/proxy-exports/main/all_proxies.txt", "host:port"),
     ("anon-http", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/http_proxies.txt", "host:port"),
     ("anon-https", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/https_proxies.txt", "host:port"),
     ("anon-socks5", "https://raw.githubusercontent.com/Anonym0usWork1221/Free-Proxies/main/proxy_files/socks5_proxies.txt", "host:port"),
@@ -1082,6 +1093,11 @@ PROXY_SOURCES = [
     ("dlb-country-PK", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/pk/http.txt", "host:port"),
     ("dlb-country-SA", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/sa/http.txt", "host:port"),
     ("dlb-country-RO", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/ro/http.txt", "host:port"),
+    # R42-GROK: hproxy by-country EU datacenter (NL/PL belum ada; DE/FR/SE/US
+    # sudah di R28/R39). Verified 2026-08-13 live: NL 11/30, PL 4/30.
+    # EU datacenter IP umumnya lebih bersih untuk AI (grok/x.ai, openai, claude).
+    ("hproxy-country-NL", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/NL.txt", "host:port"),
+    ("hproxy-country-PL", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/PL.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
