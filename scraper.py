@@ -1098,6 +1098,14 @@ PROXY_SOURCES = [
     # EU datacenter IP umumnya lebih bersih untuk AI (grok/x.ai, openai, claude).
     ("hproxy-country-NL", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/NL.txt", "host:port"),
     ("hproxy-country-PL", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/PL.txt", "host:port"),
+    # R42-GROK: proxyscrape v2 displayproxies (beda dari getproxies di R20).
+    # Verified 2026-08-13 live: http-all 75/773, socks5 27/265, US 20/171,
+    # NL 4/4, GB 1/11. Format host:port polos. US/EU = relevan untuk AI.
+    ("psv2dp-http", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all", "host:port"),
+    ("psv2dp-socks5", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=all&ssl=all&anonymity=all", "host:port"),
+    ("psv2dp-US", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=US&ssl=all&anonymity=all", "host:port"),
+    ("psv2dp-NL", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=NL&ssl=all&anonymity=all", "host:port"),
+    ("psv2dp-GB", "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=GB&ssl=all&anonymity=all", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
