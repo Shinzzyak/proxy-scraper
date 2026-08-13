@@ -54,6 +54,30 @@ _UA_MOBILE = ("Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/UD1A.231105.004) "
               "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.6422.165 "
               "Mobile Safari/537.36")
 
+# R42-OA (OmniRoute #10222 pattern): sintesis UA CLI per-target biar target
+# yang nolak UA generik dari datacenter IP gak 429. opencode.ai free tier
+# (/zen/v1) nolak curl/SDK UA dari datacenter → ganti dengan opencode-cli/1.0.0.
+# Mirip X-JA3: target yang strict butuh identity sintetis.
+_UA_TARGET_MAP = {
+    "opencode.ai": "opencode-cli/1.0.0",
+    "zen.opencode.ai": "opencode-cli/1.0.0",
+}
+_UA_CLI_OPENAUTH = "opencode-cli/1.0.0"
+
+
+def _ua_for_target(url: str, client_ua: str = "") -> str:
+    """Pilih UA untuk target tertentu. Kalau client kirim UA eksplisit,
+    hormati KECUALI target di _UA_TARGET_MAP (sintesis CLI UA, pola
+    OmniRoute #10222 — non-CLI UA dari datacenter = 429 dari opencode).
+    Jatuh balik ke _UA_MOBILE."""
+    host = url.split("/")[2].lower() if "://" in url else url.lower()
+    for dom in _UA_TARGET_MAP:
+        if host == dom or host.endswith("." + dom):
+            return _UA_TARGET_MAP[dom]
+    if client_ua:
+        return client_ua
+    return _UA_MOBILE
+
 # Cooldown mapping per failure type (farukbagci/proxy-pool — 3M records @48req/s):
 # timeout/refused = transient → short; 429/403 = site-level ban → long (R5)
 COOLDOWN_MAP = {
@@ -1088,6 +1112,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 # kontradiksi sama egress proxy → target deteksi). X-Spoof-IP
                 # opsional: set XFF palsu (efektif dgn elite proxy yang gak append).
                 has_ua = False
+                client_ua = ""
                 for key, val in self.headers.items():
                     kl = key.lower()
                     # R7-1: NEVER forward Proxy-Authorization (HMAC client creds)
@@ -1097,11 +1122,19 @@ class GatewayHandler(BaseHTTPRequestHandler):
                         continue
                     if kl == "user-agent":
                         has_ua = True
+                        client_ua = val
                     req.add_header(key, val)
                 # R31-GW5: UA default browser mobile — Python-urllib/3.x = sinyal
                 # bot gede; target sering filter UA proxy/datacenter.
+                # R42-OA: target strict (opencode.ai) → sintesis CLI UA biar gak 429.
                 if not has_ua:
-                    req.add_header("User-Agent", _UA_MOBILE)
+                    req.add_header("User-Agent", _ua_for_target(url))
+                elif has_ua and _ua_for_target(url) != client_ua and any(
+                    t in url.lower() for t in ("opencode", "zen.opencode")
+                ):
+                    # OmniRoute #10222: non-CLI UA (curl/SDK) ke opencode → ganti
+                    # dengan CLI UA (FreeUsageLimitError 429 dari datacenter).
+                    req.add_header("User-Agent", _ua_for_target(url))
                 spoof = self.headers.get("X-Spoof-IP", "").strip()
                 if spoof:
                     req.add_header("X-Forwarded-For", spoof)
