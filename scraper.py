@@ -1057,6 +1057,18 @@ PROXY_SOURCES = [
     # ── R40-GH2: ProxyScrape GH mirror protocol-only (by-country sudah ada R39-CC1) ──
     ("psgh-http", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/protocols/http/data.txt", "protocolipport"),
     ("psgh-socks5", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/protocols/socks5/data.txt", "protocolipport"),
+    # R41-TUT: meta-source guide (gfpcom sources.txt, iw4p, monosans config)
+    ("hendrikbgr-free-proxy", "https://raw.githubusercontent.com/hendrikbgr/Free-Proxy-Repo/master/proxy_list.txt", "host:port"),
+    ("gitrecon1455-proxylist", "https://raw.githubusercontent.com/gitrecon1455/fresh-proxy-list/refs/heads/main/proxylist.txt", "host:port"),
+    ("vpslab-http-elite", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_elite.txt", "host:port"),
+    ("vpslab-http-ssl-elite", "https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_ssl_elite.txt", "host:port"),
+    ("claude89757-isz-https", "https://raw.githubusercontent.com/claude89757/free_https_proxies/main/isz_https_proxies.txt", "host:port"),
+    ("proxyspace-http", "https://proxyspace.pro/http.txt", "host:port"),
+    ("proxyscrape-v3-http", "https://api.proxyscrape.com/v3/free-proxy-list/get?request=displayproxies&protocol=http&proxy_format=ipport&format=text&timeout=20000", "host:port"),
+    ("proxyscrape-v3-socks5", "https://api.proxyscrape.com/v3/free-proxy-list/get?request=displayproxies&protocol=socks5&proxy_format=ipport&format=text&timeout=20000", "host:port"),
+    ("fyvri-https", "https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/https.txt", "host:port"),
+    ("sevenworks-unknown", "https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/unknown.txt", "host:port"),
+    ("eoph-pmix", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/pmix_checked.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
