@@ -496,6 +496,22 @@ class GatewayHandler(BaseHTTPRequestHandler):
         # client kirim X-Session-ID / sid, tetap hormati (sticky optional).
         if self.server.mode == "premium":
             session_id = sid or self.headers.get("X-Session-ID", "")
+            # R41-GROK: X-Grok-Mode=1 — session sticky ketat per target buat
+            # automation akun (Grok rate-limit per-IP). Satu sid = satu IP
+            # (TTL 6 jam, bukan 300s) + auto-rotate pas kena 429 (lihat
+            # _forward_via_proxy: X-Grok-Mode → release mapping + exclude).
+            # DICEK SEBELUM session_id biasa biar gak ke-shadow oleh
+            # sticky biasa (line 514-516 return duluan).
+            if self.headers.get("X-Grok-Mode", "").lower() == "1":
+                gsid = sid or session_id or self.client_address[0]
+                if gsid:
+                    picked = _pick_proxy(country, exclude=exclude, protocol=protocol,
+                                         non_dc=self._non_dc, prefer_socks=prefer_socks)
+                    if picked is None:
+                        raise CountryUnavailable(country)
+                    return self.server.session_manager.get_or_create(
+                        gsid, lambda: picked, ttl=21600  # 6 jam sticky
+                    )
             if session_id:
                 if self.headers.get("X-Rotate", "").lower() == "1":
                     # R39-P2: paksa ganti egress untuk sid ini — lepas mapping
@@ -1083,6 +1099,25 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     req.add_header("X-Forwarded-For", spoof)
                 resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
                 self._log_usage(session_proxy, True, duration_ms=int((time.monotonic() - t0) * 1000))
+                # R41-GROK: deteksi 429/403 dari target — kalau X-Grok-Mode=1,
+                # auto-rotate: release sticky mapping + blacklist proxy itu
+                # (biar request berikutnya dapat IP fresh, bukan IP yang
+                # di-stamp rate-limit). HANYA untuk target Grok (host header
+                # mengandung grok / x.ai / openai) — jangan rotate untuk
+                # ifconfig.me/api.ipify (403/429 dari CDN umum bukan rate-limit
+                # per-IP, malah bikin session ganti IP terus).
+                if (
+                    resp.status in (429, 403)
+                    and self.headers.get("X-Grok-Mode", "").lower() == "1"
+                    and any(t in url.lower() for t in ("grok", "x.ai", "openai", "chatgpt"))
+                ):
+                    try:
+                        sid = self.headers.get("X-Session-ID", "")
+                        if sid:
+                            self.server.session_manager.release(sid)
+                        self._blacklist_proxy(session_proxy, f"grok-{resp.status}")
+                    except Exception:
+                        pass
                 self.send_response(resp.status)
                 for key, val in resp.headers.items():
                     if key.lower() not in ("transfer-encoding", "connection"):
