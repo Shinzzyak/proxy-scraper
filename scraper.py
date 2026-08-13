@@ -1115,6 +1115,12 @@ PROXY_SOURCES = [
     ("eoph-http-US", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/http/country/US/http_US_checked.txt", "host:port"),
     ("eoph-http-NL", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/http/country/NL/http_NL_checked.txt", "host:port"),
     ("eoph-socks5-US", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/socks5/country/US/socks5_US_checked.txt", "host:port"),
+    # R42-GROK: morpheusadam/v2ray-config (TLS-tested harian) + relayglass elite
+    # by-anonymity (all.txt sudah R20, elite belum). Verified 2026-08-13 live:
+    # morpheusadam 20/60, rg-elite-http 27/132, rg-elite-s5 26/118.
+    ("morpheusadam-all", "https://raw.githubusercontent.com/morpheusadam/v2ray-config/main/proxies/all.txt", "host:port"),
+    ("relayglass-elite-http", "https://raw.githubusercontent.com/relayglass/free-proxy-list/main/anonymity/elite/http/http.txt", "host:port"),
+    ("relayglass-elite-socks5", "https://raw.githubusercontent.com/relayglass/free-proxy-list/main/anonymity/elite/socks5/socks5.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
