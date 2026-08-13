@@ -1145,6 +1145,22 @@ PROXY_SOURCES = [
     ("proxyspace-socks5", "https://proxyspace.pro/socks5.txt", "host:port"),
     # databay US socks4 — 19 IP, by-country socks4 belum ada di source lain.
     ("dlb-country-US-socks4", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/us/socks4.txt", "host:port"),
+    # ── R43-API: psv4 socks5/socks4 country + JSON (verified 2026-08-13, 3/3 live) ──
+    ("psv4-s5-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=US&timeout=5000", "protocolipport"),
+    ("psv4-s5-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=DE&timeout=5000", "protocolipport"),
+    ("psv4-s5-FR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=FR&timeout=5000", "protocolipport"),
+    ("psv4-s5-NL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=NL&timeout=5000", "protocolipport"),
+    ("psv4-socks4-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=US&timeout=5000", "protocolipport"),
+    ("psv4-socks4-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=DE&timeout=5000", "protocolipport"),
+    ("psv4-json-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=json&format=json&protocol=http&timeout=5000", "jsonproxies"),
+    ("psv4-json-socks5", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=json&format=json&protocol=socks5&timeout=5000", "jsonproxies"),
+    ("psv4-json-socks4", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=json&format=json&protocol=socks4&timeout=5000", "jsonproxies"),
+    ("psv4-json-https", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=json&format=json&protocol=https&timeout=5000", "jsonproxies"),
+    # geonode single-protocol country (pool only punya combined protocols) — 3/3 live
+    ("geonode-s5-US", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5&country=US", "geonode"),
+    ("geonode-socks4-US", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks4&country=US", "geonode"),
+    ("geonode-https-US", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https&country=US", "geonode"),
+    ("geonode-h-ID", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http&country=ID", "geonode"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
