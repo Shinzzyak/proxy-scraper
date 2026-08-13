@@ -91,6 +91,17 @@ PROXY_SOURCES = [
     ("vmheaven-all", "https://raw.githubusercontent.com/vmheaven/VMHeaven.io-Free-Proxy-List/main/allproxy.txt", "host:port"),
     ("theriturajps-all", "https://raw.githubusercontent.com/theriturajps/proxy-list/main/proxies.txt", "host:port"),
     ("akshay7273-all", "https://raw.githubusercontent.com/Akshay7273/ProxyMan-free-proxy-list/main/proxies.txt", "host:port"),
+    # ── R43-FRESH: 2026-08-13 — GitHub search (q='proxy list'/'free-proxy', sort=updated),
+    # semua verified curl 200 + live test ≥3 proxy (curl -x/-socks5-hostname ifconfig.me).
+    # Fokus region US/EU/SG/JP (lolos AI/Outlook). ──
+    ("akshay7273-http", "https://raw.githubusercontent.com/Akshay7273/ProxyMan-free-proxy-list/main/protocols/http.txt", "host:port"),
+    ("stormsia-socks5", "https://raw.githubusercontent.com/stormsia/proxy-list/main/socks5.txt", "host:port"),
+    ("databay-sg-socks5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/sg/socks5.txt", "host:port"),
+    ("databay-nl-socks5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/nl/socks5.txt", "host:port"),
+    ("proxmint-all", "https://raw.githubusercontent.com/proxmint/free-proxy-list/main/proxies/all.txt", "host:port"),
+    ("proxyfree-http", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/http.txt", "host:port"),
+    ("proxyscrape-gh-all", "https://raw.githubusercontent.com/proxyscrape/free-proxy-list/main/proxies/all/data.txt", "host:port"),
+
     ("fate0-proxylist", "https://raw.githubusercontent.com/fate0/proxylist/master/proxy.list", "jsonlines"),
     ("mishakorzik-all", "https://raw.githubusercontent.com/mishakorzik/Free-Proxy/main/proxy.txt", "host:port"),
     ("solispirit-http", "https://raw.githubusercontent.com/SoliSpirit/proxy-list/main/http.txt", "host:port"),
