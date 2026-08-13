@@ -1069,25 +1069,19 @@ PROXY_SOURCES = [
     ("fyvri-https", "https://raw.githubusercontent.com/fyvri/fresh-proxy-list/archive/storage/classic/https.txt", "host:port"),
     ("sevenworks-unknown", "https://raw.githubusercontent.com/SevenworksDev/proxy-list/main/proxies/unknown.txt", "host:port"),
     ("eoph-pmix", "https://raw.githubusercontent.com/elliottophellia/proxylist/master/results/pmix_checked.txt", "host:port"),
-    # ── R41-REG: region jarang — Africa/ME/Asia-Central/Asia-Selatan/E-Eropa/Nordik/Oceania ──
-    # psv4 http by-country (verified 2026-08-13: AE 2/3, KZ 1/2, BG 1/3, FI 1/6 live;
-    # SA/GE/CZ 0-1 live; NG/MA/DZ/QA/KW/UZ/PK/LK/NP/RO/SI/SK/HU/LT/LV/MD/AM/AZ/NO/DK/IS/NZ → 0 proxy → skip)
+    # ── R41-REG: region jarang — psv4 http by-country ──
+    # (verified 2026-08-13: AE 2/3, KZ 1/2, BG 1/3, FI 1/6 live; NG/MA/DZ/QA/KW/UZ/PK/
+    # LK/NP/RO/SI/SK/HU/LT/LV/MD/AM/AZ/NO/DK/IS/NZ → 0 proxy → skip. proxifly BD/FI/SA,
+    # dlb ZA/PK/SA/RO/BD sudah ada di blok R25-EU/R39 → jangan duplikat)
     ("psv4-country-AE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=AE&timeout=5000", "protocolipport"),
     ("psv4-country-KZ", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=KZ&timeout=5000", "protocolipport"),
     ("psv4-country-BG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=BG&timeout=5000", "protocolipport"),
     ("psv4-country-FI", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=FI&timeout=5000", "protocolipport"),
-    # proxifly country region jarang (verified 2026-08-13 live: BD 1/15, FI 1/14,
-    # SA 1/3 http; CZ/SE socks5 1/10 — tapi CZ/SE sudah ada R25-EU → skip)
-    ("proxifly-country-BD", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/BD/data.txt", "host:port"),
-    ("proxifly-country-FI", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/FI/data.txt", "host:port"),
-    ("proxifly-country-SA", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/SA/data.txt", "host:port"),
-    # databay-labs by-country region jarang (verified 2026-08-13 live: ZA 2/15,
-    # PK 1/6, SA 1/3, RO 1/3, BD 1/5; NG/KE/EG/NP/GE/FI/UZ/AM/CZ/BG/HU → 0 live → skip)
-    ("dlb-country-ZA", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/za/http.txt", "host:port"),
+    # databay by-country region jarang (verified 2026-08-13 live: PK 1/6, SA 1/3,
+    # RO 1/3; ZA/BD sudah ada R39 → skip. NG/KE/EG/NP/GE/FI/UZ/AM/CZ/BG/HU → 0 live)
     ("dlb-country-PK", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/pk/http.txt", "host:port"),
     ("dlb-country-SA", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/sa/http.txt", "host:port"),
     ("dlb-country-RO", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/ro/http.txt", "host:port"),
-    ("dlb-country-BD", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/bd/http.txt", "host:port"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
