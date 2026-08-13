@@ -1003,6 +1003,39 @@ PROXY_SOURCES = [
     ("ermaozi-clash", "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/clash.yml", "clash-yaml"),
     # mahdibland/V2RayAggregator — 4.4k node flow-style YAML, pushed 2026-08-12
     ("mahdibland-clash", "https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/sub_merge_yaml.yml", "clash-yaml"),
+    # ── R40-API: vakhov.github.io fresh-proxy-list (mirror) ──
+    ("vakhov-http-mirror", "https://vakhov.github.io/fresh-proxy-list/http.txt", "host:port"),
+    ("vakhov-s5-mirror", "https://vakhov.github.io/fresh-proxy-list/socks5.txt", "host:port"),
+    # ── R40-API: proxydb.net (parser proxydb — <a href="/IP/PORT#proto">) ──
+    ("proxydb-http", "https://proxydb.net/?protocol=http&anon=1&offset=0", "proxydb"),
+    ("proxydb-s5", "https://proxydb.net/?protocol=socks5&anon=1&offset=0", "proxydb"),
+    # ── R40-API: psv4 v4 socks5 per-country (protocol=socks5) ──
+    ("psv4s5-country-KR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=KR&timeout=5000", "protocolipport"),
+    ("psv4s5-country-SG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=SG&timeout=5000", "protocolipport"),
+    ("psv4s5-country-NL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=NL&timeout=5000", "protocolipport"),
+    ("psv4s5-country-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=DE&timeout=5000", "protocolipport"),
+    ("psv4s5-country-VN", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=VN&timeout=5000", "protocolipport"),
+    ("psv4s5-country-JP", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=JP&timeout=5000", "protocolipport"),
+    ("psv4s5-country-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=US&timeout=5000", "protocolipport"),
+    # ── R40-API: psv4 v4 socks4 per-country ──
+    ("psv4s4-country-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=US&timeout=5000", "protocolipport"),
+    ("psv4s4-country-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=DE&timeout=5000", "protocolipport"),
+    # ── R40-API: psv4 v4 http per-country BARU (yang belum ada) ──
+    ("psv4-country-BR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=BR&timeout=5000", "protocolipport"),
+    ("psv4-country-AU", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=AU&timeout=5000", "protocolipport"),
+    ("psv4-country-CA", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=CA&timeout=5000", "protocolipport"),
+    ("psv4-country-PH", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=PH&timeout=5000", "protocolipport"),
+    ("psv4-country-MY", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=MY&timeout=5000", "protocolipport"),
+    ("psv4-country-BD", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=BD&timeout=5000", "protocolipport"),
+    ("psv4-country-RU", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=RU&timeout=5000", "protocolipport"),
+    ("psv4-country-UA", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=UA&timeout=5000", "protocolipport"),
+    ("psv4-country-PL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=PL&timeout=5000", "protocolipport"),
+    ("psv4-country-TR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=TR&timeout=5000", "protocolipport"),
+    ("psv4-country-IT", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=IT&timeout=5000", "protocolipport"),
+    ("psv4-country-ES", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=ES&timeout=5000", "protocolipport"),
+    ("psv4-country-AR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=AR&timeout=5000", "protocolipport"),
+    ("psv4-country-IL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=IL&timeout=5000", "protocolipport"),
+    ("psv4-country-ZA", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=ZA&timeout=5000", "protocolipport"),
     # ── R40-GH2: Telegram MTProto proxy sources (parser mtproto-link) ──
     # dubblebyte/free-mtproto-proxies — 118 link, update 2026-08-13 00:11 UTC
     ("dubblebyte-mtproto", "https://raw.githubusercontent.com/dubblebyte/free-mtproto-proxies/main/all_proxies.txt", "mtproto-link"),
@@ -1218,6 +1251,14 @@ def extract_proxies(text, fmt="", max_items=None):
     # R36-GH: Telegram MTProto proxy links — t.me/proxy?server=IP&port=PORT&secret=...
     if fmt == "mtproto-link":
         for m in re.finditer(r"server=(\d{1,3}(?:\.\d{1,3}){3})&port=(\d{1,5})", text):
+            proxies.append(f"{m.group(1)}:{m.group(2)}")
+            if limit and len(proxies) >= limit:
+                break
+        return proxies
+    # R40-API: proxydb.net — sel berisi <a href="/IP/PORT#protocol"> bukan IP polos.
+    # Regex href="/IP/PORT#http|https|socks5" → ip:port
+    if fmt == "proxydb":
+        for m in re.finditer(r'href="/(\d{1,3}(?:\.\d{1,3}){3})/(\d+)#(?:http|https|socks5|socks4)"', text):
             proxies.append(f"{m.group(1)}:{m.group(2)}")
             if limit and len(proxies) >= limit:
                 break
