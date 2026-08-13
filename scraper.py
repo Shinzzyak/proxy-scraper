@@ -174,7 +174,6 @@ PROXY_SOURCES = [
     ("gem-cyberh4ck3r-https", "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/https-proxies.txt", "host:port"),
     ("gem-cyberh4ck3r-socks4", "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/socks4-proxies.txt", "host:port"),
     ("gem-cyberh4ck3r-socks5", "https://raw.githubusercontent.com/cyberh4ck3r/free-proxy-list/main/socks5-proxies.txt", "host:port"),
-    ("gem-databay-http", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/http.txt", "host:port"),
     ("gem-databay-socks4", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks4.txt", "host:port"),
     ("gem-databay-socks5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks5.txt", "host:port"),
     ("gem-vanndev-http", "https://raw.githubusercontent.com/Vann-Dev/proxy-list/main/proxies/http.txt", "host:port"),
@@ -397,7 +396,6 @@ PROXY_SOURCES = [
     ("sslproxies", "https://www.sslproxies.org/", "table"),
     # ── R27-OB3: proxygenerator1 Unstable (5338 http) + Bes-js (1227) ──
     ("gem-proxygen-unstable-http", "https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/Unstable/http.txt", "host:port"),
-    ("gem-besjs", "https://raw.githubusercontent.com/Bes-js/public-proxy-list/main/proxies.txt", "host:port"),
     # free-proxy-list.net halaman per-negara (tabel, verified 2026-08-11:
     # 100 UK proxy fresh)
     ("fpl-uk", "https://free-proxy-list.net/uk-proxy.html", "table"),
@@ -417,12 +415,7 @@ PROXY_SOURCES = [
     # hproxy-com/free-proxy-list by-country files (verified 2026-08-11 live:
     # CN 1813 raw / 80% CONNECT-alive, HK 958 / 45%+refusing, ID 2449, SG 598,
     # KR 1025, TH 853 — update tiap jam, format host:port)
-    ("hproxy-country-CN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CN.txt", "host:port"),
-    ("hproxy-country-HK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/HK.txt", "host:port"),
-    ("hproxy-country-ID", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ID.txt", "host:port"),
     ("hproxy-country-SG", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SG.txt", "host:port"),
-    ("hproxy-country-KR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KR.txt", "host:port"),
-    ("hproxy-country-TH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TH.txt", "host:port"),
     # proxifly country files China (verified 2026-08-11: CN 26, HK 29 raw)
     ("proxifly-country-CN", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/CN/data.txt", "host:port"),
     ("proxifly-country-HK", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/HK/data.txt", "host:port"),
@@ -440,7 +433,6 @@ PROXY_SOURCES = [
     ("hproxy-country-VN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/VN.txt", "host:port"),
     ("hproxy-country-MY", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/MY.txt", "host:port"),
     ("hproxy-country-PH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/PH.txt", "host:port"),
-    ("hproxy-country-IN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/IN.txt", "host:port"),
     ("hproxy-country-BD", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/BD.txt", "host:port"),
     ("hproxy-country-PK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/PK.txt", "host:port"),
     # proxifly country files Asia Tenggara (verified 2026-08-11: ID 79,
@@ -495,7 +487,6 @@ PROXY_SOURCES = [
     ("proxifly-country-NP", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/NP/data.txt", "host:port"),
     ("proxifly-country-IQ", "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/IQ/data.txt", "host:port"),
     # hproxy JP/TW (verified 2026-08-11: JP 1476, TW 26 raw)
-    ("hproxy-country-JP", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/JP.txt", "host:port"),
     ("hproxy-country-TW", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TW.txt", "host:port"),
     # ── R29-EU1: hproxy-com by-country EU kecil ──
     # (verified 2026-08-11 live: AL 18, RS 15, EE 9, CY 8, HR 6, BA 5, GR 4,
@@ -512,7 +503,6 @@ PROXY_SOURCES = [
     # ── R29-AF1: hproxy-com by-country Afrika ──
     # (verified 2026-08-11 live: ZA 720, MA 77, KE 34, EG 37, NG 26, GH 8,
     # BW 8, TZ 7, SN 3 raw — update tiap jam; DZ/TN/ET/CI/CM/UG/ZW/NA 0-1 → skip)
-    ("hproxy-country-ZA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ZA.txt", "host:port"),
     ("hproxy-country-MA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/MA.txt", "host:port"),
     ("hproxy-country-KE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KE.txt", "host:port"),
     ("hproxy-country-EG", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/EG.txt", "host:port"),
@@ -573,7 +563,6 @@ PROXY_SOURCES = [
     # (verified 2026-08-12 live: 243 raw, 6/15)
     ("anutmagang-http", "https://raw.githubusercontent.com/anutmagang/Free-HighQuality-Proxy-Socks/main/results/http.txt", "host:port"),
     # psv4 EC (verified 2026-08-12: 8-9 raw, 4/8) + proxyscrape v2 EC (14 raw, 3/8)
-    ("psv4-country-EC", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=EC&timeout=5000", "protocolipport"),
     ("proxyscrape-v2-EC", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http&timeout=10000&country=EC&ssl=all&anonymity=all", "host:port"),
     # (verified 2026-08-12: 6 raw, 4/6 host:port; scheme 4/6)
     ("Xnuvers007-proxy-active", "https://raw.githubusercontent.com/Xnuvers007/free-proxy/main/proxy_active.txt", "host:port"),
@@ -610,9 +599,7 @@ PROXY_SOURCES = [
     # ── R34-GH2: GitHub batch 2 (verified 2026-08-12 live) ──
     # proxy-free/free-proxy-list — update harian, host:port + jsonproxies
     ("proxyfree-all", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/all.txt", "host:port"),
-    ("proxyfree-http", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/http.txt", "host:port"),
     ("proxyfree-socks4", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/socks4.txt", "host:port"),
-    ("proxyfree-socks5", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/socks5.txt", "host:port"),
     ("proxyfree-json", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/proxies.json", "jsonproxies"),
     # snove999/emby-proxy-list — output/all.txt: tabel hasil cek, ip:port valid ~463
     ("emby-all", "https://raw.githubusercontent.com/snove999/emby-proxy-list/main/output/all.txt", "host:port"),
@@ -693,9 +680,6 @@ PROXY_SOURCES = [
     ("dlb-country-IE", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/ie/http.txt", "host:port"),
     ("dlb-country-GH", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/gh/http.txt", "host:port"),
     ("dlb-http", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/http.txt", "host:port"),
-    ("proxyfree-http", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/http.txt", "host:port"),
-    ("proxyfree-socks5", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/socks5.txt", "host:port"),
-    ("proxyfree-all", "https://raw.githubusercontent.com/proxy-free/free-proxy-list/main/all.txt", "host:port"),
     ("nguywnben-http", "https://raw.githubusercontent.com/nguywnben/daily-proxy-updates/main/proxies/http.txt", "host:port"),
     # ── R35-N1: niche countries batch 1 (verified 2026-08-12 live) ──
     # hproxy (verified live: BO 3/6, DO 3/50, EC 5/50, GE 5/27, GT 4/25, LV 3/9,
@@ -741,10 +725,8 @@ PROXY_SOURCES = [
     ("worldpool-country-FR", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/FR.txt", "host:port"),
     ("worldpool-country-RU", "https://raw.githubusercontent.com/CelestialBrain/worldpool/main/proxies/by-country/RU.txt", "host:port"),
     # R36-GH: batch A — hproxy multi-protocol + json (verified: 2229-2523 per file, json 24515)
-    ("hproxy-http", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/http.txt", "host:port"),
     ("hproxy-https", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/https.txt", "host:port"),
     ("hproxy-socks4", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks4.txt", "host:port"),
-    ("hproxy-socks5", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/socks5.txt", "host:port"),
     ("hproxy-json", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/all.json", "jsonproxies"),
     # batch B — repo besar 1000+
     ("syscallh00k-http", "https://raw.githubusercontent.com/syscallh00k/proxylist/main/proxies/http.txt", "host:port"),
@@ -756,18 +738,8 @@ PROXY_SOURCES = [
     ("tomjiu-all", "https://raw.githubusercontent.com/tomjiu/proxy-pipeline/main/dist/online/all.txt", "host:port"),
     ("javadbazokar-http", "https://raw.githubusercontent.com/Javadbazokar/proxy-list/main/http.txt", "host:port"),
     # batch C — r00tee + cyberh4ck3r + shubhamshendre
-    ("r00tee-Https", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Https.txt", "host:port"),
-    ("r00tee-Socks4", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks4.txt", "host:port"),
-    ("r00tee-Socks5", "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt", "host:port"),
     # batch D — komutan + proxmint + vakhov + clearproxy + ianlusule
     # batch E — hproxy by-country (verified: ID 2341, JP 1354, KR 996, IN 1821, CN 1881, HK 928, TH 821, US 1885, DE 723, FR 899, GB 395, SE 731, AU 1276, CA 847, ZA 697)
-    ("hproxy-country-ID", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ID.txt", "host:port"),
-    ("hproxy-country-JP", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/JP.txt", "host:port"),
-    ("hproxy-country-KR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/KR.txt", "host:port"),
-    ("hproxy-country-IN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/IN.txt", "host:port"),
-    ("hproxy-country-CN", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CN.txt", "host:port"),
-    ("hproxy-country-HK", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/HK.txt", "host:port"),
-    ("hproxy-country-TH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TH.txt", "host:port"),
     ("hproxy-country-US", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/US.txt", "host:port"),
     ("hproxy-country-DE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/DE.txt", "host:port"),
     ("hproxy-country-FR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/FR.txt", "host:port"),
@@ -775,9 +747,7 @@ PROXY_SOURCES = [
     ("hproxy-country-SE", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/SE.txt", "host:port"),
     ("hproxy-country-AU", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/AU.txt", "host:port"),
     ("hproxy-country-CA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CA.txt", "host:port"),
-    ("hproxy-country-ZA", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/ZA.txt", "host:port"),
     # batch F — pelengkap (verified)
-    ("vann-http", "https://raw.githubusercontent.com/Vann-Dev/proxy-list/main/proxies/http.txt", "host:port"),
     ("kevinriverrrr-http", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/http.txt", "host:port"),
     ("kevinriverrrr-socks4", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/socks4.txt", "host:port"),
     ("kevinriverrrr-socks5", "https://raw.githubusercontent.com/kevinriverrrr-sudo/auto-proxies/main/socks5.txt", "host:port"),
@@ -991,6 +961,71 @@ PROXY_SOURCES = [
     ("iparrot-https", "https://raw.githubusercontent.com/IPParrot/proxy_ips/main/proxies/https.txt", "host:port"),
     # ── R39-GH2: GitHub batch 2 (verified 2026-08-12 live: naravid-all 3/4,
     # naravid-json 3/6, iparrot-https 3/12, relayglass-all 3/11, parserpp-txt 3/10) ──
+    # ── R40-SOCKS1: mzyui/proxy-list — 106k proxy, refresh tiap 3 jam (verified 2026-08-13:
+    # 25 URL 200; socks5 501KB, all 2MB, elite/anonymous by-anonymity) ──
+    ("mzyui-socks5", "https://raw.githubusercontent.com/mzyui/proxy-list/main/socks5.txt", "host:port"),
+    ("mzyui-socks4", "https://raw.githubusercontent.com/mzyui/proxy-list/main/socks4.txt", "host:port"),
+    ("mzyui-all", "https://raw.githubusercontent.com/mzyui/proxy-list/main/all.txt", "host:port"),
+    ("mzyui-elite", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-anonymity/elite.txt", "host:port"),
+    ("mzyui-anon", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-anonymity/anonymous.txt", "host:port"),
+    # ── R40-SOCKS2: mzyui by-country (gap BR 1→, TR 2→, RU 3→, VN, TH, ID, JP, KR, IN) ──
+    ("mzyui-c-ID", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/id-http.txt", "host:port"),
+    ("mzyui-c-JP", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/jp-http.txt", "host:port"),
+    ("mzyui-c-KR", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/kr-socks4.txt", "host:port"),
+    ("mzyui-c-VN", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/vn-http.txt", "host:port"),
+    ("mzyui-c-TH", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/th-http.txt", "host:port"),
+    ("mzyui-c-BR", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/br-socks4.txt", "host:port"),
+    ("mzyui-c-IN", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/in-http.txt", "host:port"),
+    ("mzyui-c-RU", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/ru-http.txt", "host:port"),
+    ("mzyui-c-TR", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/tr-http.txt", "host:port"),
+    ("mzyui-c-RU-s5", "https://raw.githubusercontent.com/mzyui/proxy-list/main/output/by-country/ru-socks5.txt", "host:port"),
+    # ── R40-SOCKS3: repos socks5-heavy aktif (verified 2026-08-13: gnx 200/9.7KB,
+    # ALIILAPRO s5 200/6.5KB s4 200/4.8KB; Chumbayoumba MTProto RU 200) ──
+    ("gnx-socks5-list", "https://raw.githubusercontent.com/gnxD3RfTT2WE/proxy-list-socks5/main/socks5.txt", "host:port"),
+    ("aliilapro-socks5", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks5.txt", "host:port"),
+    ("aliilapro-socks4", "https://raw.githubusercontent.com/ALIILAPRO/Proxy/main/socks4.txt", "host:port"),
+    # ── R40-SOCKS4: elite/anonymity (verified 2026-08-13: geonode s5 elite 200/46KB,
+    # proxyscrape v2 s5 elite 200/5.4KB; TopChina clash_sub.yaml 200/62KB 263 node) ──
+    ("geonode-socks5-elite", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks5&anonymity=elite", "geonode"),
+    ("psv2-socks5-elite", "https://api.proxyscrape.com/v2/?request=getproxies&protocol=socks5&timeout=10000&country=all&anonymity=elite", "host:port"),
+    ("topchina-clash", "https://raw.githubusercontent.com/TopChina/proxy-list/main/clash_sub.yaml", "clash"),
+    # ── R40-SOCKS5: free-proxy-list.net per-negara (verified 2026-08-13: id/tr/ru 200,
+    # 300 rows table; jp/kr/vn/br/in/sa 404 → skip) ──
+    ("fpl-id", "https://free-proxy-list.net/id/", "table"),
+    ("fpl-tr", "https://free-proxy-list.net/tr/", "table"),
+    ("fpl-ru", "https://free-proxy-list.net/ru/", "table"),
+    # ── R40-GH2: Clash YAML sources (parser clash-yaml, block & flow style) ──
+    # anaer/Sub — 2.3k+ node (vmess/vless/trojan), update tiap jam, pushed 2026-08-12
+    ("anaer-clash", "https://raw.githubusercontent.com/anaer/Sub/main/clash.yaml", "clash-yaml"),
+    # mfuu/v2ray — 132 node trojan-heavy, pushed 2026-08-12
+    ("mfuu-clash", "https://raw.githubusercontent.com/mfuu/v2ray/master/clash.yaml", "clash-yaml"),
+    # ermaozi/get_subscribe — 43 node (http/vmess), pushed 2026-08-13
+    ("ermaozi-clash", "https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/clash.yml", "clash-yaml"),
+    # mahdibland/V2RayAggregator — 4.4k node flow-style YAML, pushed 2026-08-12
+    ("mahdibland-clash", "https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/sub_merge_yaml.yml", "clash-yaml"),
+    # ── R40-GH2: Telegram MTProto proxy sources (parser mtproto-link) ──
+    # dubblebyte/free-mtproto-proxies — 118 link, update 2026-08-13 00:11 UTC
+    ("dubblebyte-mtproto", "https://raw.githubusercontent.com/dubblebyte/free-mtproto-proxies/main/all_proxies.txt", "mtproto-link"),
+    # SoliSpirit/mtproto — 222 link (21 IP), master branch
+    ("solispirit-mtproto", "https://raw.githubusercontent.com/SoliSpirit/mtproto/master/all_proxies.txt", "mtproto-link"),
+    # Argh94/Proxy-List — MTProto.txt 244 link (12 IP)
+    ("argh94-mtproto", "https://raw.githubusercontent.com/Argh94/Proxy-List/main/MTProto.txt", "mtproto-link"),
+    # MustafaBaqer/VestraNet-Nodes — 211 link (109 IP)
+    ("vestranet-mtproto", "https://raw.githubusercontent.com/MustafaBaqer/VestraNet-Nodes/refs/heads/main/protocols/mtproto.txt", "mtproto-link"),
+    # Surfboardv2ray/TGProto — 116 link (94 IP)
+    ("surfboard-tgproto", "https://raw.githubusercontent.com/Surfboardv2ray/TGProto/refs/heads/main/proxies.txt", "mtproto-link"),
+    # ALIILAPRO/MTProtoProxy — 20 link
+    ("aliilapro-mtproto", "https://raw.githubusercontent.com/ALIILAPRO/MTProtoProxy/main/mtproto.txt", "mtproto-link"),
+    # Grim1313/mtproto-for-telegram — 222 link (21 IP), master
+    ("grim1313-mtproto", "https://raw.githubusercontent.com/Grim1313/mtproto-for-telegram/refs/heads/master/all_proxies.txt", "mtproto-link"),
+    # kort0881 — file MTProto EU/US tambahan (RU sudah ada R39-LOC2)
+    ("kort0881-eu-mtproto", "https://raw.githubusercontent.com/kort0881/telegram-proxy-collector/main/proxy_eu.txt", "mtproto-link"),
+    ("kort0881-us-mtproto", "https://raw.githubusercontent.com/kort0881/telegram-proxy-collector/main/proxy_us.txt", "mtproto-link"),
+    # kort0881 — SOCKS5 via tg://socks?server=IP&port= (parser mtproto-link sama)
+    ("kort0881-tgsocks", "https://raw.githubusercontent.com/kort0881/telegram-proxy-collector/main/socks5.txt", "mtproto-link"),
+    # ── R40-GH2: ProxyScrape GH mirror protocol-only (by-country sudah ada R39-CC1) ──
+    ("psgh-http", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/protocols/http/data.txt", "protocolipport"),
+    ("psgh-socks5", "https://raw.githubusercontent.com/ProxyScrape/free-proxy-list/main/proxies/protocols/socks5/data.txt", "protocolipport"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
@@ -1305,6 +1340,32 @@ def extract_proxies(text, fmt="", max_items=None):
     # <span>IP</span>...</td><td>PORT</td> (litport.net/free-proxy)
     if fmt == "litport":
         for m in re.finditer(r'<tr class="proxy-row"><td>\w+</td><td>(\d{1,3}(?:\.\d{1,3}){3})<div.*?</td><td>(\d{1,5})</td>', text, re.S):
+            ip, port = m.group(1), m.group(2)
+            if _is_valid_ipv4(ip) and port.isdigit() and is_valid_proxy_port(int(port)) and not is_blocked_ip(ip):
+                proxies.append(f"{ip}:{port}")
+                if limit and len(proxies) >= limit:
+                    return proxies
+        return proxies
+    # R40-SOCKS: fmt "clash" — Clash YAML: "- name: x\n  server: IP\n  port: N\n  type: socks5/http"
+    if fmt == "clash":
+        for m in re.finditer(r"server:\s*(\d{1,3}(?:\.\d{1,3}){3})\s*\n\s*port:\s*(\d{1,5})", text):
+            ip, port = m.group(1), m.group(2)
+            if _is_valid_ipv4(ip) and port.isdigit() and is_valid_proxy_port(int(port)) and not is_blocked_ip(ip):
+                proxies.append(f"{ip}:{port}")
+                if limit and len(proxies) >= limit:
+                    return proxies
+        return proxies
+    # R40-GH2: fmt "clash-yaml" — Clash YAML node. Dua gaya:
+    # block  : "- name: x\n  server: IP\n  port: N" (anaer/Sub, mfuu/v2ray)
+    # flow   : "- {'name': 'x', 'server': 'IP', 'port': N}" (mahdibland sub_merge_yaml.yml)
+    if fmt == "clash-yaml":
+        for m in re.finditer(r"['\"]?server['\"]?:\s*['\"]?(\d{1,3}(?:\.\d{1,3}){3})['\"]?[,}]?[^}]{0,80}?['\"]?port['\"]?:\s*['\"]?(\d{1,5})", text):
+            ip, port = m.group(1), m.group(2)
+            if _is_valid_ipv4(ip) and port.isdigit() and is_valid_proxy_port(int(port)) and not is_blocked_ip(ip):
+                proxies.append(f"{ip}:{port}")
+                if limit and len(proxies) >= limit:
+                    return proxies
+        for m in re.finditer(r"server:\s*(\d{1,3}(?:\.\d{1,3}){3})\s*\n\s*port:\s*(\d{1,5})", text):
             ip, port = m.group(1), m.group(2)
             if _is_valid_ipv4(ip) and port.isdigit() and is_valid_proxy_port(int(port)) and not is_blocked_ip(ip):
                 proxies.append(f"{ip}:{port}")
