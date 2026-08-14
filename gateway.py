@@ -104,6 +104,30 @@ def _cooldown_for(error: str) -> int:
     return COOLDOWN_MAP["default"]
 
 
+def _safe_header_value(val: str) -> str:
+    """Neutralize header smuggling in a client-supplied header value before
+    forwarding (R47). Two vectors:
+      * CRLF + non-space   -> email parser splits into a NEW header line
+      * CRLF + space/tab   -> folded continuation: smuggled 'Name: value'
+                               lands inside OUR header value, and the origin
+                               (any RFC7230 parser) unfolds it into a real
+                               header. Proxies/backends honor the smuggled
+                               header (e.g. X-Forwarded-For spoofing).
+    Strip CR/LF entirely (safe: no valid header value needs them)."""
+    return (val or "").replace("\r", "").replace("\n", "")
+
+
+def _safe_content_length(raw: str) -> int:
+    """Parse Content-Length; 0 on malformed/negative (R47: 'abc' crashed the
+    request thread with ValueError — client saw a connection reset, no HTTP
+    response)."""
+    try:
+        n = int(raw)
+        return n if n > 0 else 0
+    except (TypeError, ValueError):
+        return 0
+
+
 def _check_auth(secret: str, client_id: str, ts: str, sig: str, window: int = AUTH_WINDOW) -> bool:
     """HMAC-SHA256 auth: sig = HMAC(secret, f'{client_id}{ts}'). Replay-safe."""
     import hashlib
@@ -1082,7 +1106,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
             return
         url = self.path
         body = None
-        content_length = int(self.headers.get("Content-Length", 0))
+        content_length = _safe_content_length(self.headers.get("Content-Length", "0"))
         if content_length > 0:
             body = self.rfile.read(content_length)
         t0 = time.monotonic()
@@ -1123,7 +1147,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     if kl == "user-agent":
                         has_ua = True
                         client_ua = val
-                    req.add_header(key, val)
+                    # R47: strip CR/LF — header injection into upstream request
+                    req.add_header(key, _safe_header_value(val))
                 # R31-GW5: UA default browser mobile — Python-urllib/3.x = sinyal
                 # bot gede; target sering filter UA proxy/datacenter.
                 # R42-OA: target strict (opencode.ai) → sintesis CLI UA biar gak 429.
@@ -1135,7 +1160,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     # OmniRoute #10222: non-CLI UA (curl/SDK) ke opencode → ganti
                     # dengan CLI UA (FreeUsageLimitError 429 dari datacenter).
                     req.add_header("User-Agent", _ua_for_target(url))
-                spoof = self.headers.get("X-Spoof-IP", "").strip()
+                spoof = _safe_header_value(self.headers.get("X-Spoof-IP", "").strip())
                 if spoof:
                     req.add_header("X-Forwarded-For", spoof)
                 resp = opener.open(req, timeout=UPSTREAM_PROXY_TIMEOUT)
@@ -1219,14 +1244,15 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 pass  # fallback urllib di bawah
         try:
             if body is None:
-                content_length = int(self.headers.get("Content-Length", 0))
+                content_length = _safe_content_length(self.headers.get("Content-Length", "0"))
                 if content_length > 0:
                     body = self.rfile.read(content_length)
             req = urllib.request.Request(url, data=body, method=method)
             for key, val in self.headers.items():
                 # R7-1: never forward Proxy-Authorization to origin either
+                # R47: strip CR/LF — header injection into origin request
                 if key.lower() not in ("proxy-connection", "x-session-id", "proxy-authorization"):
-                    req.add_header(key, val)
+                    req.add_header(key, _safe_header_value(val))
             resp = urllib.request.urlopen(req, timeout=GATEWAY_TIMEOUT)
             self.send_response(resp.status)
             for key, val in resp.headers.items():
@@ -1264,7 +1290,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
         """
         from curl_cffi import requests as cffi
         if body is None:
-            content_length = int(self.headers.get("Content-Length", 0))
+            content_length = _safe_content_length(self.headers.get("Content-Length", "0"))
             if content_length > 0:
                 body = self.rfile.read(content_length)
         headers = {}
@@ -1373,7 +1399,17 @@ class GatewayHandler(BaseHTTPRequestHandler):
                     break
                 if not readable:
                     # R16-G4: jangan break saat idle — SO_KEEPALIVE yang deteksi
-                    # peer mati; tunnel tetap hidup untuk TLS session resumption
+                    # peer mati; tunnel tetap hidup untuk TLS session resumption.
+                    # R47: SO_KEEPALIVE tidak cukup — kernel hanya probe setelah
+                    # 60s idle + 5x10s = ~110s. Client yang idle di bawah itu
+                    # (misal streaming API long-poll 30-60s) PUTUS di sini:
+                    # select timeout → break → tunnel mati. Ganti: select
+                    # timeout = kirim 1-byte keepalive probe; kalau peer mati,
+                    # sendall error → keluar. Tunnel idle 120s+ tetap hidup.
+                    try:
+                        client.sendall(b"\x00")
+                    except (OSError, ValueError):
+                        return
                     continue
                 for sock in readable:
                     try:
