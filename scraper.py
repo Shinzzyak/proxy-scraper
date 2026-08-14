@@ -1193,6 +1193,23 @@ PROXY_SOURCES = [
     ("geonode-socks4-US", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=socks4&country=US", "geonode"),
     ("geonode-https-US", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=https&country=US", "geonode"),
     ("geonode-h-ID", "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&protocols=http&country=ID", "geonode"),
+    # ── R44-LOC: proxyhub.me country pages (fmt proxyhub, 20 proxy/negara,
+    # update tiap jam, verified 2026-08-14 live: KR 3/3 socks5, JP 1/3 http,
+    # CN 3/3 http, ID 2/3 http, TH 1/3 http, RU 1/3 http, TR 1/3, MX 1/3,
+    # IN 1/3, AE 1/3; page all sudah ada sbg proxyhub-tr, country pages kasih
+    # IP beda — overlap 0 dengan all page) ──
+    ("proxyhub-c-KR", "https://proxyhub.me/en/kr-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-JP", "https://proxyhub.me/en/jp-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-CN", "https://proxyhub.me/en/cn-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-ID", "https://proxyhub.me/en/id-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-TH", "https://proxyhub.me/en/th-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-VN", "https://proxyhub.me/en/vn-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-RU", "https://proxyhub.me/en/ru-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-BR", "https://proxyhub.me/en/br-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-MX", "https://proxyhub.me/en/mx-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-TR", "https://proxyhub.me/en/tr-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-IN", "https://proxyhub.me/en/in-free-proxy-list.html", "proxyhub"),
+    ("proxyhub-c-AE", "https://proxyhub.me/en/ae-free-proxy-list.html", "proxyhub"),
 ]
 
 # ── Credential proxy sources (ip:port:user:pass) ──────────────────────
