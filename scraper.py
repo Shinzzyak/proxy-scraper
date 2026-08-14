@@ -1047,21 +1047,16 @@ PROXY_SOURCES = [
     ("proxydb-s5", "https://proxydb.net/?protocol=socks5&anon=1&offset=0", "proxydb"),
     # ── R46-LOC: source alternatif non-GitHub/non-proxyscrape (verified 2026-08-14:
     # curl 200 + live test ≥3). fpl-es/it/pl/pt = free-proxy-list.net per-negara
-    # (parser table); hide-mn = hide.mn (parser table, 64 row/halaman);
-    # proxylistplus = list.proxylistplus.com (parser plp — kolom[1]=ip kolom[2]=port);
-    # proxydb offset 100/200 = halaman 2/3 proxydb.net. ──
+    # (parser table); hide-mn-id/jp = hide.mn country page (parser table, 64
+    # row/halaman; en/de/nl/fr/sg 0-1/12 live → dihapus R46); proxylistplus =
+    # list.proxylistplus.com (parser plp — kolom[1]=ip kolom[2]=port; main page
+    # 0/12 live → dihapus); proxydb offset 100/200 = halaman 2/3 proxydb.net. ──
     ("fpl-es", "https://free-proxy-list.net/es/", "table"),
     ("fpl-it", "https://free-proxy-list.net/it/", "table"),
     ("fpl-pl", "https://free-proxy-list.net/pl/", "table"),
     ("fpl-pt", "https://free-proxy-list.net/pt/", "table"),
-    ("hide-mn-en", "https://hide.mn/en/proxy-list/", "table"),
-    ("hide-mn-de", "https://hide.mn/de/proxy-list/", "table"),
-    ("hide-mn-nl", "https://hide.mn/en/proxy-list/countries/netherlands/", "table"),
-    ("hide-mn-fr", "https://hide.mn/en/proxy-list/countries/france/", "table"),
-    ("hide-mn-sg", "https://hide.mn/en/proxy-list/countries/singapore/", "table"),
     ("hide-mn-id", "https://hide.mn/en/proxy-list/countries/indonesia/", "table"),
     ("hide-mn-jp", "https://hide.mn/en/proxy-list/countries/japan/", "table"),
-    ("plp-main", "https://list.proxylistplus.com/", "plp"),
     ("plp-ssl", "https://list.proxylistplus.com/SSL-Proxy", "plp"),
     ("plp-socks", "https://list.proxylistplus.com/Socks-Proxy", "plp"),
     ("proxydb-http-o100", "https://proxydb.net/?protocol=http&anon=1&offset=100", "proxydb"),
