@@ -351,6 +351,22 @@ PROXY_SOURCES = [
     # psv4 country filter Amerika (verified 2026-08-11: US 45, MX 7, CL 5,
     # CO 6, VE 10, EC 5; CA 1, BR 2, AR 2, PE 1, UY/BO/PY 0 → skip)
     ("psv4-country-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=US&timeout=5000", "protocolipport"),
+    # ── R44-PERCOUNTRY: 2026-08-14 — source per-negara baru (hproxy, databay,
+    # psv4 socks5), verified curl 200 + live test ≥1. psv4 socks5 KR/VN/GB sudah
+    # ada di R46 (psv4s5-country-*) → tidak duplikat. US socks5 0/9 live, geonode-AU
+    # 0/6, hproxy-KR/ZA/AR 0/6, dlb-cl/pe/ca-s4 0/6 → skip. hproxy volume besar
+    # (BR 708, MX 592, TH 1138, CO 413 entry) → dipakai meski sample acak tipis
+    # (list harian, banyak entry = host sama beda port). ──
+    ("psv4-http-GB", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=GB&timeout=5000", "protocolipport"),
+    ("hproxy-BR", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/BR.txt", "host:port"),
+    ("hproxy-MX", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/MX.txt", "host:port"),
+    ("hproxy-TH", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/TH.txt", "host:port"),
+    ("hproxy-CO", "https://raw.githubusercontent.com/hproxy-com/free-proxy-list/main/by-country/CO.txt", "host:port"),
+    ("dlb-ca-http", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/ca/http.txt", "host:port"),
+    ("dlb-gb-s5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/gb/socks5.txt", "host:port"),
+    ("dlb-au-s5", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/au/socks5.txt", "host:port"),
+    ("dlb-br-http", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/br/http.txt", "host:port"),
+    ("dlb-tw-http", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/tw/http.txt", "host:port"),
     ("psv4-country-MX", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=MX&timeout=5000", "protocolipport"),
     ("psv4-country-CL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=CL&timeout=5000", "protocolipport"),
     ("psv4-country-CO", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=CO&timeout=5000", "protocolipport"),
@@ -1029,6 +1045,27 @@ PROXY_SOURCES = [
     # ── R40-API: proxydb.net (parser proxydb — <a href="/IP/PORT#proto">) ──
     ("proxydb-http", "https://proxydb.net/?protocol=http&anon=1&offset=0", "proxydb"),
     ("proxydb-s5", "https://proxydb.net/?protocol=socks5&anon=1&offset=0", "proxydb"),
+    # ── R46-LOC: source alternatif non-GitHub/non-proxyscrape (verified 2026-08-14:
+    # curl 200 + live test ≥3). fpl-es/it/pl/pt = free-proxy-list.net per-negara
+    # (parser table); hide-mn = hide.mn (parser table, 64 row/halaman);
+    # proxylistplus = list.proxylistplus.com (parser plp — kolom[1]=ip kolom[2]=port);
+    # proxydb offset 100/200 = halaman 2/3 proxydb.net. ──
+    ("fpl-es", "https://free-proxy-list.net/es/", "table"),
+    ("fpl-it", "https://free-proxy-list.net/it/", "table"),
+    ("fpl-pl", "https://free-proxy-list.net/pl/", "table"),
+    ("fpl-pt", "https://free-proxy-list.net/pt/", "table"),
+    ("hide-mn-en", "https://hide.mn/en/proxy-list/", "table"),
+    ("hide-mn-de", "https://hide.mn/de/proxy-list/", "table"),
+    ("hide-mn-nl", "https://hide.mn/en/proxy-list/countries/netherlands/", "table"),
+    ("hide-mn-fr", "https://hide.mn/en/proxy-list/countries/france/", "table"),
+    ("hide-mn-sg", "https://hide.mn/en/proxy-list/countries/singapore/", "table"),
+    ("hide-mn-id", "https://hide.mn/en/proxy-list/countries/indonesia/", "table"),
+    ("hide-mn-jp", "https://hide.mn/en/proxy-list/countries/japan/", "table"),
+    ("plp-main", "https://list.proxylistplus.com/", "plp"),
+    ("plp-ssl", "https://list.proxylistplus.com/SSL-Proxy", "plp"),
+    ("plp-socks", "https://list.proxylistplus.com/Socks-Proxy", "plp"),
+    ("proxydb-http-o100", "https://proxydb.net/?protocol=http&anon=1&offset=100", "proxydb"),
+    ("proxydb-http-o200", "https://proxydb.net/?protocol=http&anon=1&offset=200", "proxydb"),
     # ── R40-API: psv4 v4 socks5 per-country (protocol=socks5) ──
     ("psv4s5-country-KR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=KR&timeout=5000", "protocolipport"),
     ("psv4s5-country-SG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=SG&timeout=5000", "protocolipport"),
@@ -1514,6 +1551,25 @@ def extract_proxies(text, fmt="", max_items=None):
                 proxies.append(f"{ip}:{port}")
                 if limit and len(proxies) >= limit:
                     return proxies
+        return proxies
+    # R46-LOC: fmt "plp" — proxylistplus.com. <tr class="cells"> 9 kolom,
+    # kolom[0] KOSONG (spacer), ip=kolom[1], port=kolom[2] (verified 2026-08-14).
+    # fmt "table" baku tidak bisa (ip bukan kolom pertama).
+    if fmt == "plp":
+        for m in re.finditer(r'<tr class="cells"[^>]*>(.*?)</tr>', text, re.S):
+            cells = re.findall(r"<td[^>]*>(.*?)</td>", m.group(1), re.S)
+            if len(cells) >= 3:
+                ip = re.sub(r"<[^>]+>", "", cells[1]).strip()
+                port = re.sub(r"<[^>]+>", "", cells[2]).strip()
+                if (
+                    _is_valid_ipv4(ip)
+                    and port.isdigit()
+                    and is_valid_proxy_port(int(port))
+                    and not is_blocked_ip(ip)
+                ):
+                    proxies.append(f"{ip}:{port}")
+                    if limit and len(proxies) >= limit:
+                        return proxies
         return proxies
     for line in text.splitlines():
         line = line.strip()
