@@ -96,8 +96,13 @@ def update_reputation(source_name: str, submitted: int, valid: int):
             # (< 0.01% = <1 valid per 10k submitted) — sampling rusak (R21-ML
             # ranking/prior), bukan source jelek. fyvri: 35k submitted, 1 valid.
             sample_broken = valid_ever > 0 and total_sub / max(valid_ever, 1) > 10000
-            if runs < 2 or valid_ever == 0 or sample_broken:
-                reason = "sample broken" if sample_broken else f"valid_ever={valid_ever}"
+            # R47-FIX: grace valid_ever==0 TIDAK boleh abadi. 99+ run berturut-turut
+            # 0 valid (jetkai-http 22262/0, gfp-socks4 259380/0, mishakorzik 307507/0)
+            # = source sampah yang tetap di-scrape tiap tick, menghabiskan budget
+            # validasi → pool kelaparan (~60 proxy dari 882 source). Cap grace di
+            # 4 run: setelah 4+ run 0 valid, source layak ban.
+            if runs < 2 or (valid_ever == 0 and runs < 4) or sample_broken:
+                reason = "sample broken" if sample_broken else f"valid_ever={valid_ever} runs={runs}"
                 print(f"ℹ️  GRACE: {source_name} (run ke-{runs}, {reason}, {final_rate:.1%} — skip ban)")
             else:
                 conn.execute(

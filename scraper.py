@@ -13,6 +13,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+import urllib.error
 from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError
 from typing import List, Set, Tuple, Dict
 
@@ -1062,16 +1063,9 @@ PROXY_SOURCES = [
     ("proxydb-http-o100", "https://proxydb.net/?protocol=http&anon=1&offset=100", "proxydb"),
     ("proxydb-http-o200", "https://proxydb.net/?protocol=http&anon=1&offset=200", "proxydb"),
     # ── R40-API: psv4 v4 socks5 per-country (protocol=socks5) ──
-    ("psv4s5-country-KR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=KR&timeout=5000", "protocolipport"),
-    ("psv4s5-country-SG", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=SG&timeout=5000", "protocolipport"),
-    ("psv4s5-country-NL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=NL&timeout=5000", "protocolipport"),
-    ("psv4s5-country-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=DE&timeout=5000", "protocolipport"),
     ("psv4s5-country-VN", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=VN&timeout=5000", "protocolipport"),
     ("psv4s5-country-JP", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=JP&timeout=5000", "protocolipport"),
-    ("psv4s5-country-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=US&timeout=5000", "protocolipport"),
     # ── R40-API: psv4 v4 socks4 per-country ──
-    ("psv4s4-country-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=US&timeout=5000", "protocolipport"),
-    ("psv4s4-country-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=DE&timeout=5000", "protocolipport"),
     # ── R40-API: psv4 v4 http per-country BARU (yang belum ada) ──
     ("psv4-country-BR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=BR&timeout=5000", "protocolipport"),
     ("psv4-country-AU", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=http&country=AU&timeout=5000", "protocolipport"),
@@ -1178,10 +1172,6 @@ PROXY_SOURCES = [
     # databay US socks4 — 19 IP, by-country socks4 belum ada di source lain.
     ("dlb-country-US-socks4", "https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/by-country/us/socks4.txt", "host:port"),
     # ── R43-API: psv4 socks5/socks4 country + JSON (verified 2026-08-13, 3/3 live) ──
-    ("psv4-s5-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=US&timeout=5000", "protocolipport"),
-    ("psv4-s5-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=DE&timeout=5000", "protocolipport"),
-    ("psv4-s5-FR", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=FR&timeout=5000", "protocolipport"),
-    ("psv4-s5-NL", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks5&country=NL&timeout=5000", "protocolipport"),
     ("psv4-socks4-US", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=US&timeout=5000", "protocolipport"),
     ("psv4-socks4-DE", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=protocolipport&format=text&protocol=socks4&country=DE&timeout=5000", "protocolipport"),
     ("psv4-json-http", "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&proxy_format=json&format=json&protocol=http&timeout=5000", "jsonproxies"),
@@ -1262,8 +1252,31 @@ BLOCKED_SUBNETS = [
 
 
 def is_blocked_ip(ip: str) -> bool:
-    """Return True for IPs in proven-dead subnets (evidence round 3)."""
-    return any(ip.startswith(prefix) for prefix in BLOCKED_SUBNETS)
+    """Return True for IPs in proven-dead subnets (evidence round 3).
+
+    R47-FIX: tambah blokir loopback/private/link-local — 0.0.0.0, 127.x,
+    10.x, 192.168.x, 172.16-31.x, 169.254.x, 224+ multicast. Sebelumnya
+    proxy palsu (0.0.0.0/127.0.0.1 dari list sampah) lolos parser → masuk
+    pool (cuma di-filter saat SELECT get_best/search). Validasi di trust
+    boundary: jangan sampai masuk DB sama sekali.
+    """
+    if any(ip.startswith(prefix) for prefix in BLOCKED_SUBNETS):
+        return True
+    first = ip.split(".")[0]
+    if first in ("0", "127", "169", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255"):
+        return True
+    if first == "10":
+        return True
+    if first == "192" and ip.startswith("192.168."):
+        return True
+    if first == "172":
+        try:
+            second = int(ip.split(".")[1])
+            if 16 <= second <= 31:
+                return True
+        except (IndexError, ValueError):
+            return True
+    return False
 
 # ── User-Agent rotation (Rate Limit Protection) ───────────────────────
 USER_AGENTS = [
@@ -1319,7 +1332,13 @@ def fetch_via_relay(url, timeout=15):
 
 
 def fetch(url, timeout=15, retries=3, backoff=1.5):
-    """Fetch URL with retry + exponential backoff + UA rotation + optional relay fallback."""
+    """Fetch URL with retry + exponential backoff + UA rotation + optional relay fallback.
+
+    R47-FIX: HTTP 429 (rate limit) dikenali — urllib raise HTTPError.
+    Jangan retry langsung (bikin makin kena ban); backoff panjang 10s+,
+    dan kalau Retry-After ada, hormati. 4xx lain (403/404/5xx) = gagal
+    permanen run ini — retry singkat tetap jalan (source kadang flaky).
+    """
     prefer_relay = os.getenv("PROXY_RELAY_FIRST", "").lower() in {"1", "true", "yes"}
     methods = [fetch_via_relay, fetch_direct] if prefer_relay else [fetch_direct, fetch_via_relay]
     last_err = None
@@ -1329,6 +1348,19 @@ def fetch(url, timeout=15, retries=3, backoff=1.5):
                 text = method(url, timeout=timeout)
                 if text:
                     return text
+            except urllib.error.HTTPError as e:
+                last_err = e
+                if e.code == 429:
+                    retry_after = e.headers.get("Retry-After") if e.headers else None
+                    try:
+                        delay = min(float(retry_after), 30) if retry_after else 10.0
+                    except ValueError:
+                        delay = 10.0
+                    print(f"  ⚠ 429 {url}: sleep {delay:.0f}s (attempt {attempt+1}/{retries})", file=sys.stderr)
+                    time.sleep(delay)
+                    break  # jangan coba method lain — 429 = rate limit, ganti method juga kena
+                # 4xx/5xx lain: coba method lain dulu
+                continue
             except Exception as e:
                 last_err = e
                 continue

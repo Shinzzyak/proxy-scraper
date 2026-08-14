@@ -88,11 +88,12 @@ def pick_usage_priority(budget: int) -> list:
     try:
         rows = conn.execute(
             """SELECT p.ip, p.port, p.protocol FROM proxies p
-               JOIN (SELECT ip, port, COUNT(*) as cnt FROM usage_log
-                     WHERE success = 1 GROUP BY ip, port ORDER BY cnt DESC LIMIT ?) u
-                 ON u.ip = p.ip AND u.port = p.port
-               WHERE p.last_seen != ''
-               ORDER BY u.cnt DESC LIMIT ?""",
+              JOIN (SELECT ip, port, COUNT(*) as cnt FROM usage_log
+                    WHERE success = 1 GROUP BY ip, port ORDER BY cnt DESC LIMIT ?) u
+                ON u.ip = p.ip AND u.port = p.port
+              WHERE p.last_seen != ''
+                AND p.source_name != 'manual-light'  -- R47-FIX: proxy user private, JANGAN di-revalidate
+              ORDER BY u.cnt DESC LIMIT ?""",
             (budget, budget),
         ).fetchall()
         return [(r["ip"], r["port"], r["protocol"]) for r in rows]
@@ -107,12 +108,13 @@ def pick_failed_usage(budget: int) -> list:
     try:
         rows = conn.execute(
             """SELECT p.ip, p.port, p.protocol FROM proxies p
-               JOIN (SELECT ip, port, COUNT(*) as fails FROM usage_log
-                     WHERE success = 0 AND timestamp >= datetime('now', '-3 days')
-                     GROUP BY ip, port HAVING fails >= 2) u
-                 ON u.ip = p.ip AND u.port = p.port
-               WHERE p.last_seen != '' AND p.score > 0
-               ORDER BY u.fails DESC LIMIT ?""",
+              JOIN (SELECT ip, port, COUNT(*) as fails FROM usage_log
+                    WHERE success = 0 AND timestamp >= datetime('now', '-3 days')
+                    GROUP BY ip, port HAVING fails >= 2) u
+                ON u.ip = p.ip AND u.port = p.port
+              WHERE p.last_seen != '' AND p.score > 0
+                AND p.source_name != 'manual-light'  -- R47-FIX: proxy user private, JANGAN di-revalidate
+              ORDER BY u.fails DESC LIMIT ?""",
             (budget,),
         ).fetchall()
         return [(r["ip"], r["port"], r["protocol"]) for r in rows]
@@ -194,11 +196,12 @@ def revalidate(budget: int = 300, mode: str = "mixed", do_anonymity: bool = Fals
         now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         conn.executemany(
             """UPDATE proxies SET last_seen = ?, score = MIN(100, score + 5)
-               WHERE ip = ? AND port = ?""",
+              WHERE ip = ? AND port = ? AND source_name != 'manual-light'""",
             [(now, ip, port) for ip, port in alive],
         )
         conn.executemany(
-            """UPDATE proxies SET last_seen = '', score = 0 WHERE ip = ? AND port = ?""",
+            """UPDATE proxies SET last_seen = '', score = 0
+              WHERE ip = ? AND port = ? AND source_name != 'manual-light'""",
             [(ip, port) for ip, port in dead],
         )
         conn.commit()

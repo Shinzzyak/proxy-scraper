@@ -26,6 +26,13 @@ def get_db() -> sqlite3.Connection:
     """Get database connection. Schema created once per process (P2-9: was
     running CREATE TABLE IF NOT EXISTS + PRAGMA on EVERY connection — 5-15ms
     per call in the request path)."""
+    global DB_PATH
+    # R47-TEST: PROXY_DB env dibaca per-call — test bisa set env setelah import
+    # tanpa proxy_pool terikat DB production. Aman: gateway/session path juga
+    # dapat benefit (env override runtime).
+    env_db = os.environ.get("PROXY_DB")
+    if env_db:
+        DB_PATH = env_db
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     _init_db_once()
@@ -34,15 +41,18 @@ def get_db() -> sqlite3.Connection:
 
 _init_lock = threading.Lock()
 _init_done = False
+_init_db_path = None
 
 
 def _init_db_once():
     """Create tables + WAL once per process (thread-safe)."""
-    global _init_done
-    if _init_done:
+    global _init_done, _init_db_path
+    # R47-TEST: kalau DB_PATH berubah (test ganti PROXY_DB per-case), init ulang
+    # untuk DB baru — schema table tidak ada di file baru.
+    if _init_done and _init_db_path == DB_PATH:
         return
     with _init_lock:
-        if _init_done:
+        if _init_done and _init_db_path == DB_PATH:
             return
         os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
         conn = sqlite3.connect(DB_PATH)
@@ -52,6 +62,7 @@ def _init_db_once():
         finally:
             conn.close()
         _init_done = True
+        _init_db_path = DB_PATH
 
 
 def _create_tables(conn: sqlite3.Connection):
