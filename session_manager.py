@@ -1,14 +1,5 @@
-"""In-memory session→proxy mapping with per-entry TTL.
-
-This provides the "sticky" layer for the local gateway:
-each session_id maps to one upstream proxy until TTL expires
-or the session is explicitly released.
-"""
 import threading
 import time
-
-
-MAX_SESSIONS = 10000  # hard cap — evict oldest when exceeded (P1-5)
 
 
 class SessionManager:
@@ -18,7 +9,7 @@ class SessionManager:
     provider_fn is called only when no live mapping exists.
     """
 
-    def __init__(self, default_ttl=300, failure_penalty_seconds=60, max_sessions=MAX_SESSIONS):
+    def __init__(self, default_ttl=300, failure_penalty_seconds=60, max_sessions=10000):
         self._default_ttl = default_ttl
         self._failure_penalty_seconds = failure_penalty_seconds
         self._max_sessions = max_sessions
@@ -34,6 +25,11 @@ class SessionManager:
 
         R4-4: provider_fn runs OUTSIDE the lock — a slow SQLite pick must not
         block every other session lookup.
+        R47-FIX (race): concurrent first-create for the same session_id could
+        hand out TWO different proxies — thread A ran provider_fn outside the
+        lock, thread B passed the empty-map check, both stored, each caller
+        got its own proxy. Same session = 2 egress IPs. Now the provider runs
+        under the lock: first caller wins, everyone else reads the mapping.
         """
         ttl = ttl if ttl is not None else self._default_ttl
         if ttl <= 0:
@@ -49,16 +45,16 @@ class SessionManager:
                 # R9-8: entry expired/blacklisted — hapus sekarang, jangan nunggu cleanup
                 del self._sessions[session_id]
                 # fall through to re-pick
-        proxy = provider_fn()
-        # never hand out a blacklisted proxy; bound the retry loop so a
-        # provider returning the same dead proxy cannot hang forever (P0-1)
-        attempts = 0
-        while proxy in self._blacklist and now < self._blacklist[proxy] and attempts < 5:
+            # R47-FIX: provider runs INSIDE the lock — no concurrent double-create.
             proxy = provider_fn()
-            attempts += 1
-        if proxy in self._blacklist and now < self._blacklist[proxy]:
-            proxy = "DIRECT"  # all candidates blacklisted — fail open
-        with self._lock:
+            # never hand out a blacklisted proxy; bound the retry loop so a
+            # provider returning the same dead proxy cannot hang forever (P0-1)
+            attempts = 0
+            while proxy in self._blacklist and now < self._blacklist[proxy] and attempts < 5:
+                proxy = provider_fn()
+                attempts += 1
+            if proxy in self._blacklist and now < self._blacklist[proxy]:
+                proxy = "DIRECT"  # all candidates blacklisted — fail open
             # R4-9: never cache DIRECT — a session pinned to DIRECT stays
             # direct for the full TTL even after the pool recovers.
             if proxy != "DIRECT":
@@ -67,7 +63,7 @@ class SessionManager:
                     oldest = min(self._sessions, key=lambda sid: self._sessions[sid][1])
                     del self._sessions[oldest]
                 self._sessions[session_id] = (proxy, now + ttl)
-        return proxy
+            return proxy
 
     def report_failure(self, proxy):
         """Blacklist a proxy briefly after a failed request."""
