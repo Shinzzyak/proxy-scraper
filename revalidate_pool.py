@@ -70,6 +70,7 @@ def pick_stale_first(budget: int, min_score: int = 1) -> list:
         rows = conn.execute(
             """SELECT ip, port, protocol, score FROM proxies
                WHERE last_seen != ''
+                 AND source_name != 'manual-light'  -- R43-FIX: proxy user private, JANGAN di-prune
                  AND julianday(last_seen) < julianday('now', '-30 minutes')
                  AND score >= ?
                ORDER BY julianday(last_seen) ASC, score DESC, response_time_ms ASC
@@ -126,6 +127,7 @@ def pick_zombies(budget: int) -> list:
         rows = conn.execute(
             """SELECT ip, port, protocol FROM proxies
                WHERE last_seen = ''
+                 AND source_name != 'manual-light'  -- R43-FIX: proxy user private, JANGAN di-revive/prune
                ORDER BY score DESC LIMIT ?""",
             (budget,),
         ).fetchall()
