@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-16T02:02:34Z",
+  "generated_at": "2026-08-16T04:02:37Z",
   "total_sources": 971,
-  "alive_sources": 818,
-  "dead_sources": 153,
-  "total_proxies": 1077624,
+  "alive_sources": 822,
+  "dead_sources": 149,
+  "total_proxies": 1077593,
   "sources": {
     "afrcloud-scaner": {
       "url": null,
@@ -17,14 +17,14 @@
       "alive": true,
       "proxies": 15000,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "akbarali-https": {
       "url": null,
       "alive": true,
       "proxies": 15000,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "akbarali-socks4": {
       "url": null,
@@ -73,14 +73,14 @@
       "alive": true,
       "proxies": 15000,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "gem-sevenworks-socks5": {
       "url": null,
       "alive": true,
       "proxies": 15000,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "gem-tuanminpay-all": {
       "url": null,
@@ -318,7 +318,7 @@
       "alive": true,
       "proxies": 6492,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "ebrasha-https": {
       "url": null,
@@ -346,7 +346,7 @@
       "alive": true,
       "proxies": 5848,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "openproxylist-http": {
       "url": null,
@@ -374,7 +374,7 @@
       "alive": true,
       "proxies": 5292,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "tianndev-http": {
       "url": null,
@@ -2742,13 +2742,6 @@
       "error": null,
       "last_seen": "2026-08-13 05:36:45"
     },
-    "proxifly-socks5-raw": {
-      "url": null,
-      "alive": true,
-      "proxies": 207,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
     "thordata-https": {
       "url": null,
       "alive": true,
@@ -2812,12 +2805,12 @@
       "error": null,
       "last_seen": "2026-08-10 11:18:47"
     },
-    "relayglass-elite-http": {
+    "proxifly-socks5-raw": {
       "url": null,
       "alive": true,
-      "proxies": 189,
+      "proxies": 188,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "hproxy-country-VE": {
       "url": null,
@@ -2861,12 +2854,26 @@
       "error": null,
       "last_seen": "2026-08-14 10:03:15"
     },
+    "monosans-socks5": {
+      "url": null,
+      "alive": true,
+      "proxies": 170,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "proxifly-country-DE": {
       "url": null,
       "alive": true,
       "proxies": 170,
       "error": null,
       "last_seen": "2026-08-10 22:02:07"
+    },
+    "relayglass-elite-http": {
+      "url": null,
+      "alive": true,
+      "proxies": 170,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
     },
     "gem-proxmint-socks5": {
       "url": null,
@@ -2889,13 +2896,6 @@
       "error": null,
       "last_seen": "2026-08-11 10:01:48"
     },
-    "akshay7273-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 164,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
     "geonode-s5-US": {
       "url": null,
       "alive": true,
@@ -2916,13 +2916,6 @@
       "proxies": 162,
       "error": null,
       "last_seen": "2026-08-10 11:23:44"
-    },
-    "parserpp-txt": {
-      "url": null,
-      "alive": true,
-      "proxies": 162,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "geonode-ID": {
       "url": null,
@@ -2952,12 +2945,12 @@
       "error": null,
       "last_seen": "2026-08-11 10:01:47"
     },
-    "monosans-socks5": {
+    "stormsia-socks5": {
       "url": null,
       "alive": true,
-      "proxies": 154,
+      "proxies": 152,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "morawski-youtube": {
       "url": null,
@@ -3015,13 +3008,6 @@
       "error": null,
       "last_seen": "2026-08-10 11:23:44"
     },
-    "relayglass-elite-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 135,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
     "ab57-proxylist": {
       "url": null,
       "alive": true,
@@ -3064,6 +3050,13 @@
       "error": null,
       "last_seen": "2026-08-10 11:23:43"
     },
+    "relayglass-elite-socks5": {
+      "url": null,
+      "alive": true,
+      "proxies": 129,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
+    },
     "dlb-country-PH": {
       "url": null,
       "alive": true,
@@ -3084,6 +3077,13 @@
       "proxies": 123,
       "error": null,
       "last_seen": "2026-08-13 12:29:22"
+    },
+    "akshay7273-http": {
+      "url": null,
+      "alive": true,
+      "proxies": 120,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "ch4120n-socks5": {
       "url": null,
@@ -3267,13 +3267,6 @@
       "error": null,
       "last_seen": "2026-08-15 04:02:04"
     },
-    "stormsia-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 93,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
     "dlb-country-BD": {
       "url": null,
       "alive": true,
@@ -3288,19 +3281,26 @@
       "error": null,
       "last_seen": "2026-08-14 16:03:31"
     },
-    "worldpool-country-US": {
-      "url": null,
-      "alive": true,
-      "proxies": 89,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
     "dufrasne-tr": {
       "url": null,
       "alive": true,
       "proxies": 88,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
+    },
+    "worldpool-country-US": {
+      "url": null,
+      "alive": true,
+      "proxies": 85,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "parserpp-txt": {
+      "url": null,
+      "alive": true,
+      "proxies": 83,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
     },
     "proxifly-country-ID": {
       "url": null,
@@ -3449,12 +3449,19 @@
       "error": null,
       "last_seen": "2026-08-14 18:02:50"
     },
+    "psv4-socks4-US": {
+      "url": null,
+      "alive": true,
+      "proxies": 61,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
+    },
     "proxydb-http": {
       "url": null,
       "alive": true,
       "proxies": 60,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "proxydb-http-o100": {
       "url": null,
@@ -3512,13 +3519,6 @@
       "error": null,
       "last_seen": "2026-08-11 11:55:58"
     },
-    "psv4-country-US": {
-      "url": null,
-      "alive": true,
-      "proxies": 55,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
     "dlb-country-IN": {
       "url": null,
       "alive": true,
@@ -3539,6 +3539,13 @@
       "proxies": 53,
       "error": null,
       "last_seen": "2026-08-13 20:02:53"
+    },
+    "psv4-country-US": {
+      "url": null,
+      "alive": true,
+      "proxies": 53,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4s4-country-US": {
       "url": null,
@@ -3617,13 +3624,6 @@
       "error": null,
       "last_seen": "2026-08-13 12:03:03"
     },
-    "proxyscrape-as-CN": {
-      "url": null,
-      "alive": true,
-      "proxies": 48,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
     "ps-country-SG": {
       "url": null,
       "alive": true,
@@ -3686,6 +3686,13 @@
       "proxies": 45,
       "error": null,
       "last_seen": "2026-08-11 11:52:54"
+    },
+    "proxyscrape-as-CN": {
+      "url": null,
+      "alive": true,
+      "proxies": 45,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-am-AR": {
       "url": null,
@@ -3790,7 +3797,7 @@
       "alive": true,
       "proxies": 40,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "geonode-eu-UA": {
       "url": null,
@@ -3805,13 +3812,6 @@
       "proxies": 38,
       "error": null,
       "last_seen": "2026-08-11 20:01:52"
-    },
-    "worldpool-country-CN": {
-      "url": null,
-      "alive": true,
-      "proxies": 38,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "geonode-SG": {
       "url": null,
@@ -3911,6 +3911,13 @@
       "error": null,
       "last_seen": "2026-08-11 00:53:21"
     },
+    "worldpool-country-CN": {
+      "url": null,
+      "alive": true,
+      "proxies": 33,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "hproxy-country-NG": {
       "url": null,
       "alive": true,
@@ -4000,7 +4007,7 @@
       "alive": true,
       "proxies": 28,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "ermaozi-clash": {
       "url": null,
@@ -4121,13 +4128,6 @@
       "error": null,
       "last_seen": "2026-08-14 10:03:14"
     },
-    "proxifly-country-CN": {
-      "url": null,
-      "alive": true,
-      "proxies": 24,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
     "proxifly-country-HK": {
       "url": null,
       "alive": true,
@@ -4149,13 +4149,6 @@
       "error": null,
       "last_seen": "2026-08-15 18:02:52"
     },
-    "worldpool-country-RU": {
-      "url": null,
-      "alive": true,
-      "proxies": 24,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
     "geonode-SY": {
       "url": null,
       "alive": true,
@@ -4170,12 +4163,26 @@
       "error": null,
       "last_seen": "2026-08-15 04:02:04"
     },
+    "proxifly-country-CN": {
+      "url": null,
+      "alive": true,
+      "proxies": 23,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "proxyscrape-am-BR": {
       "url": null,
       "alive": true,
       "proxies": 23,
       "error": null,
       "last_seen": "2026-08-11 18:01:25"
+    },
+    "worldpool-country-FR": {
+      "url": null,
+      "alive": true,
+      "proxies": 23,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-eu-FR": {
       "url": null,
@@ -4184,19 +4191,12 @@
       "error": null,
       "last_seen": "2026-08-11 22:01:27"
     },
-    "Xnuvers007-proxy-active": {
+    "worldpool-country-RU": {
       "url": null,
       "alive": true,
-      "proxies": 21,
+      "proxies": 22,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "Xnuvers007-proxy-scheme": {
-      "url": null,
-      "alive": true,
-      "proxies": 21,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "kort0881-us-mtproto": {
       "url": null,
@@ -4224,7 +4224,7 @@
       "alive": true,
       "proxies": 21,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "vakhov-socks5": {
       "url": null,
@@ -4331,19 +4331,19 @@
       "error": null,
       "last_seen": "2026-08-15 00:03:18"
     },
-    "ps-country-GB": {
+    "psv4-country-TR": {
       "url": null,
       "alive": true,
       "proxies": 20,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
-    "psv4-country-JP": {
+    "worldpool-country-HK": {
       "url": null,
       "alive": true,
       "proxies": 20,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "dlb-country-LY": {
       "url": null,
@@ -4464,12 +4464,12 @@
       "error": null,
       "last_seen": "2026-08-15 04:02:05"
     },
-    "worldpool-country-FR": {
+    "worldpool-country-ID": {
       "url": null,
       "alive": true,
       "proxies": 18,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "geonode-country-GT": {
       "url": null,
@@ -4478,12 +4478,19 @@
       "error": null,
       "last_seen": "2026-08-15 06:02:35"
     },
-    "proxyscrape-as-SG": {
+    "psv4-country-JP": {
       "url": null,
       "alive": true,
       "proxies": 17,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "psv4-country-RU": {
+      "url": null,
+      "alive": true,
+      "proxies": 17,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
     },
     "watchttvv-http": {
       "url": null,
@@ -4583,6 +4590,13 @@
       "error": null,
       "last_seen": "2026-08-11 10:01:47"
     },
+    "ps-country-GB": {
+      "url": null,
+      "alive": true,
+      "proxies": 15,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "psv4-country-VE": {
       "url": null,
       "alive": true,
@@ -4590,12 +4604,26 @@
       "error": null,
       "last_seen": "2026-08-11 18:01:25"
     },
-    "psv4s5-country-HK": {
+    "Xnuvers007-proxy-active": {
       "url": null,
       "alive": true,
-      "proxies": 15,
+      "proxies": 14,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "Xnuvers007-proxy-scheme": {
+      "url": null,
+      "alive": true,
+      "proxies": 14,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "databay-sg-socks5": {
+      "url": null,
+      "alive": true,
+      "proxies": 14,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "dlb-country-UA": {
       "url": null,
@@ -4603,13 +4631,6 @@
       "proxies": 14,
       "error": null,
       "last_seen": "2026-08-14 22:02:50"
-    },
-    "eoph-socks5-US": {
-      "url": null,
-      "alive": true,
-      "proxies": 14,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "geonode-JP": {
       "url": null,
@@ -4653,20 +4674,6 @@
       "error": null,
       "last_seen": "2026-08-11 11:39:28"
     },
-    "databay-sg-socks5": {
-      "url": null,
-      "alive": true,
-      "proxies": 13,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
-    "eoph-http-NL": {
-      "url": null,
-      "alive": true,
-      "proxies": 13,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
     "geonode-KR": {
       "url": null,
       "alive": true,
@@ -4702,12 +4709,12 @@
       "error": null,
       "last_seen": "2026-08-14 14:03:08"
     },
-    "worldpool-country-VN": {
+    "HankNovic-socks5": {
       "url": null,
       "alive": true,
-      "proxies": 13,
+      "proxies": 12,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "dlb-country-GT": {
       "url": null,
@@ -4723,12 +4730,26 @@
       "error": null,
       "last_seen": "2026-08-15 02:02:20"
     },
+    "eoph-socks5-US": {
+      "url": null,
+      "alive": true,
+      "proxies": 12,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
+    },
     "geonode-country-GE": {
       "url": null,
       "alive": true,
       "proxies": 12,
       "error": null,
       "last_seen": "2026-08-15 22:01:34"
+    },
+    "hanknovic-cn-socks5url": {
+      "url": null,
+      "alive": true,
+      "proxies": 12,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-CZ": {
       "url": null,
@@ -4744,6 +4765,13 @@
       "error": null,
       "last_seen": "2026-08-14 12:03:08"
     },
+    "proxyscrape-eu-ES": {
+      "url": null,
+      "alive": true,
+      "proxies": 12,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "psv4-country-MX": {
       "url": null,
       "alive": true,
@@ -4757,13 +4785,6 @@
       "proxies": 12,
       "error": null,
       "last_seen": "2026-08-11 11:30:00"
-    },
-    "worldpool-country-SG": {
-      "url": null,
-      "alive": true,
-      "proxies": 12,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "dlb-country-PL": {
       "url": null,
@@ -4814,26 +4835,19 @@
       "error": null,
       "last_seen": "2026-08-11 20:01:50"
     },
-    "proxyscrape-as-HK": {
-      "url": null,
-      "alive": true,
-      "proxies": 11,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
     "psv4s5-country-CN": {
       "url": null,
       "alive": true,
       "proxies": 11,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
-    "HankNovic-socks5": {
+    "worldpool-country-SG": {
       "url": null,
       "alive": true,
-      "proxies": 10,
+      "proxies": 11,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "geonode-KZ": {
       "url": null,
@@ -4848,20 +4862,6 @@
       "proxies": 10,
       "error": null,
       "last_seen": "2026-08-10 05:04:59"
-    },
-    "hanknovic-cn-socks5url": {
-      "url": null,
-      "alive": true,
-      "proxies": 10,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "hide-mn-jp": {
-      "url": null,
-      "alive": true,
-      "proxies": 10,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "proxifly-country-BD": {
       "url": null,
@@ -4884,13 +4884,6 @@
       "error": null,
       "last_seen": "2026-08-14 12:03:08"
     },
-    "proxifly-country-SC": {
-      "url": null,
-      "alive": true,
-      "proxies": 10,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
     "prxchk-socks5": {
       "url": null,
       "alive": true,
@@ -4904,6 +4897,27 @@
       "proxies": 10,
       "error": null,
       "last_seen": "2026-08-14 14:03:08"
+    },
+    "psv4s5-country-HK": {
+      "url": null,
+      "alive": true,
+      "proxies": 10,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "worldpool-country-DE": {
+      "url": null,
+      "alive": true,
+      "proxies": 10,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "dlb-country-MY": {
+      "url": null,
+      "alive": true,
+      "proxies": 9,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "dlb-country-PK": {
       "url": null,
@@ -4961,19 +4975,12 @@
       "error": null,
       "last_seen": "2026-08-12 05:07:46"
     },
-    "worldpool-country-DE": {
+    "eoph-http-NL": {
       "url": null,
       "alive": true,
-      "proxies": 9,
+      "proxies": 8,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "worldpool-country-ID": {
-      "url": null,
-      "alive": true,
-      "proxies": 9,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-EG": {
       "url": null,
@@ -4994,7 +5001,7 @@
       "alive": true,
       "proxies": 8,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "hproxy-country-GH": {
       "url": null,
@@ -5015,7 +5022,7 @@
       "alive": true,
       "proxies": 8,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "proxifly-country-CL": {
       "url": null,
@@ -5031,6 +5038,13 @@
       "error": null,
       "last_seen": "2026-08-11 14:00:53"
     },
+    "proxifly-country-SE": {
+      "url": null,
+      "alive": true,
+      "proxies": 8,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "proxyscrape-am-VE": {
       "url": null,
       "alive": true,
@@ -5038,12 +5052,26 @@
       "error": null,
       "last_seen": "2026-08-14 12:03:08"
     },
-    "worldpool-country-HK": {
+    "dlb-country-KR": {
       "url": null,
       "alive": true,
-      "proxies": 8,
+      "proxies": 7,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "dlb-country-NG": {
+      "url": null,
+      "alive": true,
+      "proxies": 7,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "dlb-gb-s5": {
+      "url": null,
+      "alive": true,
+      "proxies": 7,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "geonode-eu-IT": {
       "url": null,
@@ -5052,12 +5080,19 @@
       "error": null,
       "last_seen": "2026-08-11 22:01:27"
     },
+    "hide-mn-jp": {
+      "url": null,
+      "alive": true,
+      "proxies": 7,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
+    },
     "hproxy-country-LV": {
       "url": null,
       "alive": true,
       "proxies": 7,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "hproxy-country-TZ": {
       "url": null,
@@ -5065,13 +5100,6 @@
       "proxies": 7,
       "error": null,
       "last_seen": "2026-08-11 20:01:52"
-    },
-    "proxifly-country-SE": {
-      "url": null,
-      "alive": true,
-      "proxies": 7,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
     },
     "proxyscrape-am-CL": {
       "url": null,
@@ -5087,13 +5115,6 @@
       "error": null,
       "last_seen": "2026-08-16 02:02:29"
     },
-    "psv2dp-NL": {
-      "url": null,
-      "alive": true,
-      "proxies": 7,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
     "worldpool-country-KR": {
       "url": null,
       "alive": true,
@@ -5107,13 +5128,6 @@
       "proxies": 6,
       "error": null,
       "last_seen": "2026-08-15 16:03:05"
-    },
-    "dlb-country-MY": {
-      "url": null,
-      "alive": true,
-      "proxies": 6,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "geonode-eu-CZ": {
       "url": null,
@@ -5178,6 +5192,13 @@
       "error": null,
       "last_seen": "2026-08-15 08:02:46"
     },
+    "proxifly-country-SC": {
+      "url": null,
+      "alive": true,
+      "proxies": 6,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "proxifly-country-VE": {
       "url": null,
       "alive": true,
@@ -5190,7 +5211,21 @@
       "alive": true,
       "proxies": 6,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "proxyscrape-eu-IT": {
+      "url": null,
+      "alive": true,
+      "proxies": 6,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "proxyscrape-eu-NL": {
+      "url": null,
+      "alive": true,
+      "proxies": 6,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4s4-country-DE": {
       "url": null,
@@ -5199,33 +5234,12 @@
       "error": null,
       "last_seen": "2026-08-14 08:03:30"
     },
-    "dlb-ca-http": {
-      "url": null,
-      "alive": true,
-      "proxies": 5,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
     "dlb-country-KZ": {
       "url": null,
       "alive": true,
       "proxies": 5,
       "error": null,
       "last_seen": "2026-08-15 20:01:22"
-    },
-    "dlb-country-NG": {
-      "url": null,
-      "alive": true,
-      "proxies": 5,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "dlb-gb-s5": {
-      "url": null,
-      "alive": true,
-      "proxies": 5,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
     },
     "geonode-KH": {
       "url": null,
@@ -5253,7 +5267,7 @@
       "alive": true,
       "proxies": 5,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "hproxy-country-HR": {
       "url": null,
@@ -5267,7 +5281,7 @@
       "alive": true,
       "proxies": 5,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-EC": {
       "url": null,
@@ -5290,12 +5304,33 @@
       "error": null,
       "last_seen": "2026-08-13 10:02:25"
     },
-    "proxyscrape-eu-NL": {
+    "proxyscrape-eu-SE": {
       "url": null,
       "alive": true,
       "proxies": 5,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "psv2dp-NL": {
+      "url": null,
+      "alive": true,
+      "proxies": 5,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:34"
+    },
+    "psv4-http-GB": {
+      "url": null,
+      "alive": true,
+      "proxies": 5,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "dlb-ca-http": {
+      "url": null,
+      "alive": true,
+      "proxies": 4,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "dlb-country-AM": {
       "url": null,
@@ -5303,13 +5338,6 @@
       "proxies": 4,
       "error": null,
       "last_seen": "2026-08-16 00:02:24"
-    },
-    "dlb-country-KR": {
-      "url": null,
-      "alive": true,
-      "proxies": 4,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "hproxy-country-LB": {
       "url": null,
@@ -5337,7 +5365,7 @@
       "alive": true,
       "proxies": 4,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-AL": {
       "url": null,
@@ -5358,7 +5386,7 @@
       "alive": true,
       "proxies": 4,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-DK": {
       "url": null,
@@ -5366,13 +5394,6 @@
       "proxies": 4,
       "error": null,
       "last_seen": "2026-08-14 14:03:08"
-    },
-    "proxifly-country-DO": {
-      "url": null,
-      "alive": true,
-      "proxies": 4,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "proxifly-country-NO": {
       "url": null,
@@ -5388,33 +5409,26 @@
       "error": null,
       "last_seen": "2026-08-16 00:02:24"
     },
-    "proxyscrape-eu-ES": {
+    "psv4-country-BG": {
       "url": null,
       "alive": true,
       "proxies": 4,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:34"
     },
-    "proxyscrape-eu-IT": {
+    "psv4-country-CL": {
       "url": null,
       "alive": true,
       "proxies": 4,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
-    "psv4-country-AL": {
+    "dlb-country-BY": {
       "url": null,
       "alive": true,
-      "proxies": 4,
+      "proxies": 3,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
-    "psv4-http-GB": {
-      "url": null,
-      "alive": true,
-      "proxies": 4,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "fatezero-http": {
       "url": null,
@@ -5437,6 +5451,13 @@
       "error": null,
       "last_seen": "2026-08-11 20:01:52"
     },
+    "proxifly-country-CY": {
+      "url": null,
+      "alive": true,
+      "proxies": 3,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "proxifly-country-IQ": {
       "url": null,
       "alive": true,
@@ -5449,21 +5470,14 @@
       "alive": true,
       "proxies": 3,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "proxifly-country-NG": {
-      "url": null,
-      "alive": true,
-      "proxies": 3,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-NP": {
       "url": null,
       "alive": true,
       "proxies": 3,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-PE": {
       "url": null,
@@ -5500,19 +5514,12 @@
       "error": null,
       "last_seen": "2026-08-14 12:03:08"
     },
-    "proxyscrape-eu-SE": {
+    "worldpool-country-VN": {
       "url": null,
       "alive": true,
       "proxies": 3,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
-    "psv4-country-CL": {
-      "url": null,
-      "alive": true,
-      "proxies": 3,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "disc-001": {
       "url": null,
@@ -5521,33 +5528,26 @@
       "error": null,
       "last_seen": "2026-08-12 07:11:44"
     },
-    "dlb-country-BY": {
+    "dlb-au-s5": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "dlb-country-MA": {
-      "url": null,
-      "alive": true,
-      "proxies": 2,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "dlb-country-SA": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "dlb-tw-http": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "hproxy-country-BA": {
       "url": null,
@@ -5563,47 +5563,68 @@
       "error": null,
       "last_seen": "2026-08-14 12:03:08"
     },
+    "proxifly-country-AE": {
+      "url": null,
+      "alive": true,
+      "proxies": 2,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "proxifly-country-BW": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "proxifly-country-GE": {
+      "url": null,
+      "alive": true,
+      "proxies": 2,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-GR": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
-    "proxifly-country-IL": {
+    "proxifly-country-NG": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-RS": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-SK": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-eu-PL": {
       "url": null,
       "alive": true,
       "proxies": 2,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "proxyscrape-eu-RO": {
+      "url": null,
+      "alive": true,
+      "proxies": 2,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psalm01-json": {
       "url": null,
@@ -5612,12 +5633,19 @@
       "error": null,
       "last_seen": "2026-08-16 00:02:24"
     },
+    "psv4-country-PT": {
+      "url": null,
+      "alive": true,
+      "proxies": 2,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "debro-json": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "disc-000": {
       "url": null,
@@ -5626,110 +5654,110 @@
       "error": null,
       "last_seen": "2026-08-12 07:11:44"
     },
-    "dlb-au-s5": {
+    "dlb-country-IE": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "dlb-country-MA": {
+      "url": null,
+      "alive": true,
+      "proxies": 1,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "dlb-country-RO": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
-    "proxifly-country-AE": {
+    "iplocate-country-ZA": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
-    "proxifly-country-CY": {
+    "proxifly-country-DO": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-EE": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
-    "proxifly-country-GE": {
+    "proxifly-country-IL": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-LY": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "proxifly-country-LY-raw": {
+      "url": null,
+      "alive": true,
+      "proxies": 1,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-TR": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
-    "proxyscrape-eu-RO": {
+    "psv4-country-AL": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-CY": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-EE": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
-    "psv4-country-HR": {
-      "url": null,
-      "alive": true,
-      "proxies": 1,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
-    },
-    "psv4-country-PT": {
-      "url": null,
-      "alive": true,
-      "proxies": 1,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-RS": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-TW": {
       "url": null,
       "alive": true,
       "proxies": 1,
       "error": null,
-      "last_seen": "2026-08-16 02:02:29"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "abobys228-http": {
       "url": null,
@@ -5757,7 +5785,7 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "amani-socks5": {
       "url": null,
@@ -5939,14 +5967,7 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "dlb-country-IE": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "fir-proxy-http": {
       "url": null,
@@ -5960,133 +5981,133 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-AL": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-BA": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-CL": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-CY": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-DK": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-EE": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-HR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-IL": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-LK": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-MD": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-MM": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-MY": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-PS": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:31"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-PY": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-SI": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-UZ": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-country-AM": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:31"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-country-AZ": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:31"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "geonode-p2-https": {
       "url": null,
@@ -6107,7 +6128,7 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "ianlusule-all": {
       "url": null,
@@ -6115,13 +6136,6 @@
       "proxies": 0,
       "error": null,
       "last_seen": "2026-08-12 04:30:44"
-    },
-    "iplocate-country-ZA": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "komutan-http": {
       "url": null,
@@ -6170,14 +6184,14 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "parserpp-json": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "prestonator-http": {
       "url": null,
@@ -6205,7 +6219,7 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxifly-country-BA": {
       "url": null,
@@ -6220,13 +6234,6 @@
       "proxies": 0,
       "error": null,
       "last_seen": "2026-08-13 05:36:43"
-    },
-    "proxifly-country-LY-raw": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
     },
     "proxmint-http": {
       "url": null,
@@ -6256,75 +6263,89 @@
       "error": null,
       "last_seen": "2026-08-12 04:30:43"
     },
+    "proxyscrape-as-HK": {
+      "url": null,
+      "alive": false,
+      "proxies": 0,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
+    },
     "proxyscrape-as-IN": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-as-IR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-as-JP": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-as-KR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-as-KZ": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
+    },
+    "proxyscrape-as-SG": {
+      "url": null,
+      "alive": false,
+      "proxies": 0,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-as-TH": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-as-TR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-as-VN": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "proxyscrape-v2-EC": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv2dp-GB": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv3-http": {
       "url": null,
@@ -6352,238 +6373,224 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv3d-country-ZA": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-AE": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-AR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-AU": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-BD": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "psv4-country-BG": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-BR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-CA": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-DE": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-EG": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-ES": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-FI": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
+    },
+    "psv4-country-HR": {
+      "url": null,
+      "alive": false,
+      "proxies": 0,
+      "error": null,
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-IL": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-IT": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-KE": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-KR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-KZ": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-MY": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-NL": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-PH": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-PL": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-PY": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "psv4-country-RU": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-SG": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-TH": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "psv4-country-TR": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-UA": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-country-VN": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4-country-ZA": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-json-http": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:31"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-json-https": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:31"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-json-socks4": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:31"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-json-socks5": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:31"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4-s5-DE": {
       "url": null,
@@ -6611,84 +6618,77 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
-    },
-    "psv4-socks4-US": {
-      "url": null,
-      "alive": false,
-      "proxies": 0,
-      "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4s5-country-DE": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4s5-country-FR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4s5-country-GB": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4s5-country-ID": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4s5-country-IN": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4s5-country-JP": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4s5-country-KR": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4s5-country-NL": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "psv4s5-country-SG": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "psv4s5-country-VN": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:34"
     },
     "rhoniey1011-all": {
       "url": null,
@@ -6709,21 +6709,21 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "sevenworks-socks4": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "sevenworks-socks5": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "seyedng-http": {
       "url": null,
@@ -6765,21 +6765,21 @@
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "syscallh00k-socks4": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "syscallh00k-socks5": {
       "url": null,
       "alive": false,
       "proxies": 0,
       "error": null,
-      "last_seen": "2026-08-16 02:02:30"
+      "last_seen": "2026-08-16 04:02:33"
     },
     "tgproto-socks5": {
       "url": null,
